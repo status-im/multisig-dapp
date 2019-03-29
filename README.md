@@ -1,4 +1,4 @@
-# status.im Simple Multisig
+# Multisig Dapp
 
 v0.0.2 features: 
 - bootstrap ui
@@ -22,9 +22,8 @@ Usage:
  nvm install v10.15
  nvm use v10.15
  npm install -g embark
- git clone https://github.com/status-im/contracts.git
- cd contracts
- git checkout multisig
+ git clone https://github.com/status-im/multisig-dapp.git
+ cd multisig-dapp
  npm install
  embark run 
  ```

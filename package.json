@@ -1,20 +1,20 @@
 {
-  "name": "status-multisig",
+  "name": "multisig-dapp",
   "version": "0.0.2",
-  "description": "Simple multisig UI",
+  "description": "Simple multisig-dapp UI",
   "scripts": {
     "test": "embark test"
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/status-im/contracts.git"
+    "url": "git+https://github.com/status-im/multisig-dapp.git"
   },
   "author": "Status Research & Development GMBH",
-  "license": "ISC",
+  "license": "CC0",
   "bugs": {
-    "url": "https://github.com/status-im/contracts/issues"
+    "url": "https://github.com/status-im/multisig-dapp/issues"
   },
-  "homepage": "https://github.com/status-im/contracts#readme",
+  "homepage": "https://github.com/status-im/multisig-dapp#readme",
   "devDependencies": {
     "embarkjs-connector-web3": "^4.0.0",
     "react": "^16.7.0",
