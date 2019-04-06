@@ -1,6 +1,7 @@
 import React from 'react';
-import { Table, Button } from 'react-bootstrap';
+import { Table, Button, Alert } from 'react-bootstrap';
 import MSWAddOwner from './owner-add';
+import Blockies from 'react-blockies';
 
 class MSWOwnerTable extends React.Component {
 
@@ -10,12 +11,12 @@ class MSWOwnerTable extends React.Component {
         control: props.control,
         account: props.account,
         mswInstance: props.instance,
-        owners: []
+        owners: [],
+        error: null
       }   
-      this.load()   
     }  
     
-    load() {
+    componentDidMount() {
         this.state.mswInstance.methods.getOwners().call().then((owners) => {
             this.setState({owners:owners});
         })
@@ -23,12 +24,12 @@ class MSWOwnerTable extends React.Component {
 
     async removeOwner(e, account){
         e.preventDefault();
+        let target = e.target;
 
-
-        this.setState({output: null, error: null, receipt: null});
+        this.setState({error: null, receipt: null});
 
         try {
-
+            target.disabled = true;
             const toSend = this.state.mswInstance.methods.removeOwner(account);
             const MsSend = this.state.mswInstance.methods.submitTransaction(
                 this.state.mswInstance._address, 0, toSend.encodeABI()
@@ -40,14 +41,14 @@ class MSWOwnerTable extends React.Component {
                 gasLimit: estimatedGas
             });
 
-            console.log(receipt);
-
             this.setState({receipt});
 
 
         } catch(err) {
             console.error(err);
             this.setState({error: err.message});
+        } finally {
+            target.disabled = null;
         }
     }
     
@@ -55,8 +56,9 @@ class MSWOwnerTable extends React.Component {
 
         const owners = this.state.owners.map((address, index) => (
             <tr key={index}>
+                <td><Blockies seed={address.toLowerCase()} size={8} scale={3}/></td>
                 <td>{address}</td>
-                <td><Button disabled={!this.state.control} type="submit" bsStyle="primary" onClick={(e) => this.removeOwner(e, address)}>Remove</Button></td>
+                <td><Button bsStyle="danger" disabled={!this.state.control} type="submit" onClick={(e) => this.removeOwner(e, address)}>Remove</Button></td>
             </tr>)
         )
 
@@ -64,11 +66,13 @@ class MSWOwnerTable extends React.Component {
             <React.Fragment>
                 {this.state.control && <MSWAddOwner instance={this.state.mswInstance} account={this.state.account} />}
                     <div>
+                    { this.state.error != null && <Alert onDismiss={()=>{}} bsStyle="danger">{this.state.error}</Alert> }
                     <Table size="sm" responsive={true} striped bordered hover >
                         <thead>
                             <tr>
+                                <th>Icon</th>
                                 <th>Owner</th>
-                                <th></th>
+                                <th>Remove</th>
                             </tr>
                         </thead>
                         <tbody>

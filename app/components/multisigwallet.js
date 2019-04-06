@@ -1,13 +1,10 @@
-import EmbarkJS from 'Embark/EmbarkJS';
-import MultiSigWallet from 'Embark/contracts/MultiSigWallet';
 import React from 'react';
-import {Tabs, Tab} from 'react-bootstrap';
+import { Tabs, Tab } from 'react-bootstrap';
 import MSWTransactionTable from './multisigwallet/transaction-table';
 import MSWOwnerTable from './multisigwallet/owner-table';
- 
+import Blockies from 'react-blockies';
 
-
-class MultiSigWalletUI extends React.Component {
+class MSWUI extends React.Component {
 
     constructor(props) {
       super(props);
@@ -30,7 +27,7 @@ class MultiSigWalletUI extends React.Component {
   render() {
     return (
       <React.Fragment>
-        <h2>{this.state.mswInstance._address}</h2>
+        <h2><Blockies seed={this.state.mswInstance._address.toLowerCase()} size={8} scale={3}/> {this.state.mswInstance._address}</h2>
         <Tabs id="multisig-controls">
           <Tab eventKey={1} title="Transactions">
             <MSWTransactionTable instance={this.state.mswInstance} account={this.state.account} control={this.state.isOwner}  />
@@ -45,4 +42,4 @@ class MultiSigWalletUI extends React.Component {
 }
 
 
-export default MultiSigWalletUI;
+export default MSWUI;

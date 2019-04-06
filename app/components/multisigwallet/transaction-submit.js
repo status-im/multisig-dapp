@@ -1,5 +1,9 @@
 import React from 'react';
 import { FormGroup, ControlLabel, FormControl, Button, Alert } from 'react-bootstrap';
+function isSuccess(status) {
+    return status === "0x1" || status === true;
+}
+
 class MSWSubmitTransaction extends React.Component {
     constructor(props){
         super(props);
@@ -12,7 +16,6 @@ class MSWSubmitTransaction extends React.Component {
                 data: ''
             },
             error: null,
-            mined: null
         };
     }
 
@@ -64,7 +67,7 @@ class MSWSubmitTransaction extends React.Component {
     }
 
     render(){
-        const {input, value, error, output, receipt} = this.state;
+        const {input, error, receipt} = this.state;
 
         return <div className="formSection">
             <h3>submitTransaction</h3>
@@ -97,13 +100,13 @@ class MSWSubmitTransaction extends React.Component {
                     />
                 </FormGroup>
 
-                { error != null && <Alert bsStyle="danger">{error}</Alert> }
+                { error != null && <Alert onDismiss={()=>{}} bsStyle="danger">{error}</Alert> }
 
                 <Button type="submit" bsStyle="primary" onClick={(e) => this.handleClick(e)}>Send</Button>
                 {
                 receipt &&
                 <Fragment>
-                    <Alert bsStyle={isSuccess(receipt.status) ? 'success' : 'danger'}>{isSuccess(receipt.status) ? 'Success' : 'Failure / Revert'} - Transaction Hash: {receipt.transactionHash}</Alert>
+                    <Alert onDismiss={()=>{}} bsStyle={isSuccess(receipt.status) ? 'success' : 'danger'}>{isSuccess(receipt.status) ? 'Success' : 'Failure / Revert'} - Transaction Hash: {receipt.transactionHash}</Alert>
                 </Fragment>
 
                 }

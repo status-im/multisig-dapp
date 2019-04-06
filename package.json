@@ -1,24 +1,39 @@
 {
   "name": "multisig-dapp",
-  "version": "0.0.2",
+  "version": "0.0.3",
   "description": "Simple multisig-dapp UI",
   "scripts": {
-    "test": "embark test"
+    "start": "npx embark run",
+    "ci": "npm run qa",
+    "clean": "npm run reset",
+    "package": "npm pack",
+    "qa": "npm-run-all test package",
+    "reset": "npx embark-reset && npx rimraf embark-*.tgz package",
+    "test": "npx embark test"
   },
   "repository": {
     "type": "git",
     "url": "git+https://github.com/status-im/multisig-dapp.git"
   },
   "author": "Status Research & Development GMBH",
-  "license": "CC0",
+  "license": "CC0-1.0",
   "bugs": {
     "url": "https://github.com/status-im/multisig-dapp/issues"
   },
   "homepage": "https://github.com/status-im/multisig-dapp#readme",
   "devDependencies": {
+    "embark": "^4.0.1",
     "embarkjs-connector-web3": "^4.0.0",
     "react": "^16.7.0",
     "react-bootstrap": "^0.32.4",
     "react-dom": "^16.7.0"
+  },
+  "dependencies": {
+    "rc-slider": "^8.6.9",
+    "react-blockies": "^1.4.1",
+    "react-rangeslider": "^2.2.0",
+    "react-router-dom": "^5.0.0",
+    "react-slider-simple": "^4.0.4",
+    "uuid": "^3.3.2"
   }
 }

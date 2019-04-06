@@ -2,7 +2,7 @@ module.exports = {
   default: {
     enabled: true,
     rpcHost: "localhost", 
-    rpcPort: 8545, 
+    rpcPort: 8745, 
     rpcCorsDomain: {
       auto: true,
       additionalCors: []
@@ -13,7 +13,7 @@ module.exports = {
       additionalCors: []
     },
     wsHost: "localhost",
-    wsPort: 8546 
+    wsPort: 8746 
   },
 
   development: {
@@ -59,7 +59,7 @@ module.exports = {
     networkType: "rinkeby",
     syncMode: "light",
     rpcHost: "localhost",
-    rpcPort: 8545,
+    rpcPort: 8745,
     rpcCorsDomain: "http://localhost:8000",
     accounts: [
       {

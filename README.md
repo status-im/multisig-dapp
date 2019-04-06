@@ -1,5 +1,9 @@
 # Multisig Dapp
 
+v0.0.3 features:
+- mutlisig wallet factory
+- ui allows deploy 
+
 v0.0.2 features: 
 - bootstrap ui
 - Identify if account is owner
@@ -25,6 +29,6 @@ Usage:
  git clone https://github.com/status-im/multisig-dapp.git
  cd multisig-dapp
  npm install
- embark run 
+ npm start
  ```
 

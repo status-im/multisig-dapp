@@ -11,14 +11,11 @@ class MSWConfirmation extends React.Component {
             account: props.account,
             accountConfirmed: false,
             confirmations: 0,
-            required: 0,
-            error: null,
-            mined: null
+            required: 0
         };
-        this.load()
     }   
 
-    load() { 
+    componentDidMount() { 
         this.state.mswInstance.methods.required().call().then((required) => {
             this.setState({required: required});
         })
@@ -35,13 +32,13 @@ class MSWConfirmation extends React.Component {
 
     async handleClick(e){
         e.preventDefault();
-
+        let target = e.target;
         const {transactionId, value} = this.state;
 
         this.setState({output: null, error: null, receipt: null});
 
         try {
-
+            target.disabled = true;
             const toSend = this.state.accountConfirmed ? this.state.mswInstance.methods.revokeConfirmation(transactionId) : this.state.mswInstance.methods.confirmTransaction(transactionId);
             const estimatedGas = await toSend.estimateGas({from: this.state.account});
             const receipt = await toSend.send({
@@ -54,9 +51,11 @@ class MSWConfirmation extends React.Component {
             this.setState({receipt});
 
 
-        } catch(err) {
-            console.error(err);
-            this.setState({error: err.message});
+        } catch(error) {
+            console.error(error);
+            this.props.onError(error.message);
+        } finally {
+            target.disabled = this.state.control;
         }
     }
 

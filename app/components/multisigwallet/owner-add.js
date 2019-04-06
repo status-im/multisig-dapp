@@ -1,7 +1,9 @@
 import React, { Fragment } from 'react';
 import { FormGroup, ControlLabel, FormControl, Button, Alert, } from 'react-bootstrap';
 
-
+function isSuccess(status) {
+    return status === "0x1" || status === true;
+}
 class MSWAddOwner extends React.Component {
     constructor(props){
         super(props);
@@ -11,8 +13,7 @@ class MSWAddOwner extends React.Component {
             input: {
                 owner: ''
             },
-            error: null,
-            mined: null
+            error: null
         };
     }
 
@@ -36,13 +37,13 @@ class MSWAddOwner extends React.Component {
 
     async handleClick(e){
         e.preventDefault();
+        let target = e.target;
+        const {input} = this.state;
 
-        const {input, value} = this.state;
-
-        this.setState({output: null, error: null, receipt: null});
+        this.setState({error: null, receipt: null});
 
         try {
-
+            target.disabled=true;
             const toSend = this.state.mswInstance.methods.addOwner(input.owner);
 
             const MsSend = this.state.mswInstance.methods.submitTransaction(
@@ -55,19 +56,19 @@ class MSWAddOwner extends React.Component {
                 gasLimit: estimatedGas
             });
 
-            console.log(receipt);
-
             this.setState({receipt});
 
 
         } catch(err) {
             console.error(err);
             this.setState({error: err.message});
+        } finally {
+            target.disabled=null;
         }
     }
 
     render(){
-        const {input, value, error, output, receipt} = this.state;
+        const {input, error, receipt} = this.state;
 
         return <div className="formSection">
             <h3>addOwner</h3>
@@ -88,7 +89,7 @@ class MSWAddOwner extends React.Component {
                 {
                 receipt &&
                 <Fragment>
-                    <Alert bsStyle={isSuccess(receipt.status) ? 'success' : 'danger'}>{isSuccess(receipt.status) ? 'Success' : 'Failure / Revert'} - Transaction Hash: {receipt.transactionHash}</Alert>
+                    <Alert onDismiss={()=>{}} bsStyle={isSuccess(receipt.status) ? 'success' : 'danger'}>{isSuccess(receipt.status) ? 'Success' : 'Failure / Revert'} - Transaction Hash: {receipt.transactionHash}</Alert>
                 </Fragment>
 
                 }
