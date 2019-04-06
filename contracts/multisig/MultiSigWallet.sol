@@ -43,42 +43,42 @@ contract MultiSigWallet {
      *  Modifiers
      */
     modifier onlyWallet() {
-        require(msg.sender == address(this));
+        require(msg.sender == address(this), "Bad call");
         _;
     }
 
     modifier ownerDoesNotExist(address owner) {
-        require(!isOwner[owner]);
+        require(!isOwner[owner], "Duplicated owner");
         _;
     }
 
     modifier ownerExists(address owner) {
-        require(isOwner[owner]);
+        require(isOwner[owner], "Unauthorized");
         _;
     }
 
     modifier transactionExists(uint transactionId) {
-        require(transactions[transactionId].destination != address(0));
+        require(transactions[transactionId].destination != address(0), "Unknown txId");
         _;
     }
 
     modifier confirmed(uint transactionId, address owner) {
-        require(confirmations[transactionId][owner]);
+        require(confirmations[transactionId][owner], "Not confirmed yet");
         _;
     }
 
     modifier notConfirmed(uint transactionId, address owner) {
-        require(!confirmations[transactionId][owner]);
+        require(!confirmations[transactionId][owner], "Already confirmed");
         _;
     }
 
     modifier notExecuted(uint transactionId) {
-        require(!transactions[transactionId].executed);
+        require(!transactions[transactionId].executed, "Already executed");
         _;
     }
 
     modifier notNull(address _address) {
-        require(_address != address(0));
+        require(_address != address(0), "Address cannot be null");
         _;
     }
 
@@ -86,7 +86,7 @@ contract MultiSigWallet {
         require(ownerCount <= MAX_OWNER_COUNT
             && _required <= ownerCount
             && _required != 0
-            && ownerCount != 0);
+            && ownerCount != 0, "Bad parameters");
         _;
     }
 
@@ -110,7 +110,7 @@ contract MultiSigWallet {
         validRequirement(_owners.length, _required)
     {
         for (uint i=0; i<_owners.length; i++) {
-            require(!isOwner[_owners[i]] && _owners[i] != address(0));
+            require(!isOwner[_owners[i]] && _owners[i] != address(0), "Bad parameters");
             isOwner[_owners[i]] = true;
         }
         owners = _owners;
