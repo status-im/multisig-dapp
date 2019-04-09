@@ -4,7 +4,6 @@ import Blockies from 'react-blockies';
 import { Button } from 'react-bootstrap';
 import './ListItem.css';
 
-
 class ListItem extends React.Component {
     constructor() {
         super();
@@ -42,7 +41,7 @@ class ListItem extends React.Component {
     renderRemoveButton() {
         if (!this.props.item.extraContent) {
             return (
-                <Button bsSize="xsmall" bsStyle="danger" onClick={(event) => this.handleRemove(event)} className="remove-button" >[x]</Button>
+                <Button size="sm" variant="danger" onClick={(event) => this.handleRemove(event)} className="remove-button" >[x]</Button>
             );
         }
     }

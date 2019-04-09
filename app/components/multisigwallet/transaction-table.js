@@ -1,105 +1,80 @@
 import React from 'react';
-import { Table, Alert } from 'react-bootstrap';
-import MSWConfirmation from './confirmation';
+import { CardColumns } from 'react-bootstrap';
 import MSWSubmitTransaction from './transaction-submit';
+import MSWTransactionCard from './transaction-card';
 
 
 class MSWTransactionTable extends React.Component {
 
     constructor(props) {
-      super(props);
-      this.state = {
-        control: props.control,
-        account: props.account,
-        mswInstance: props.instance,
-        transactionCount: 0,
-        executedTxs: [],
-        pendingTxs: [],
-        strError: null,
-        execWarn: true,
-      }   
-    }  
-    
-    componentDidMount() {
-        this.state.mswInstance.methods.transactionCount().call().then((count) => {
-            this.transactionCount = count;
-            if(count > 0){
-                for(var i=0; i < count; i++){
-                    this.loadTx(i);
-                }
-            }
-        }).catch(error => {
-            this.setError(error.message)
-        })
-        
+        super(props);
+        this.state = {
+            transactionCount: 0,
+            loadedCount: 0,
+            txIds: [],
+            executedTxs: [],
+            pendingTxs: [],
+            strError: null
+        }
     }
 
-    loadTx(txId) {
-        this.state.mswInstance.methods.transactions(txId).call().then((val) => {
-            val.id = txId;
-            if(val.executed){
-                this.state.executedTxs.push(val);
-            } else {
-                this.state.pendingTxs.push(val);
-            }
-            this.forceUpdate();
+    componentDidMount(val) {
+        this.load();
+    }
+
+    load() {
+        const { MultiSigWallet, mode } = this.props;
+        var pending, executed;
+        switch (mode) {
+            case "pending":
+                pending = true
+                executed = false
+                break;
+            case "executed":
+                pending = false
+                executed = true
+                break;
+            default:
+                pending = true
+                executed = true
+
+        }
+        console.log("this.props.pending, this.props.executed", pending, executed)
+        MultiSigWallet.methods.getTransactionCount(pending, executed).call().then((count) => {
+            console.log("count", count);
+            this.setState({ transactionCount: +count });
+            MultiSigWallet.methods.getTransactionIds("0", count, pending, executed).call().then((txIds) => {
+                console.log(txIds);
+                this.setState({ txIds: txIds });
+            }).catch(error => {
+                console.error(error);
+                this.setError(error.message)
+            })
         }).catch(error => {
+            console.error(error);
             this.setError(error.message)
         })
+    }
+
+    componentDidUpdate(prevProps, prevState) {
+        if (this.props.mode != prevProps.mode) {
+            this.load();
+        }
     }
 
     setError(strError) {
-        this.setState({strError: strError})
+        this.setState({ strError: strError })
     }
-    
+
     render() {
-        const pendingTxs = this.state.pendingTxs.map((tx, index) => (
-            <tr key={index}>
-                <td>{tx.id}</td>
-                <td><MSWConfirmation onError={this.setError} instance={this.state.mswInstance} control={this.state.control} account={this.state.account} id={tx.id} /></td>
-                <td>To: {tx.destination} <br/> 
-                Value: {tx.value}  <br/> 
-                Data: {tx.data}</td>
-            </tr>)
-        )
-        const executedTxs = this.state.executedTxs.map((tx, index) => (
-            <tr key={index}>
-                <td>{tx.id}</td>
-                <td>To: {tx.destination} <br/> 
-                Value: {tx.value}  <br/> 
-                Data: {tx.data}</td>
-            </tr>)
-        )
+        const txIds = this.state.txIds;
         return (
-            <React.Fragment>
-                {this.state.control && this.state.execWarn && <Alert onDismiss={()=>{this.setState({execWarn:false})}} bsStyle="warning">Warning: You are legally responsable by what you approve. Only approve when you are sure the execution is desired.</Alert> }
-                {this.state.control && <MSWSubmitTransaction instance={this.state.mswInstance} account={this.state.account} /> }
-                    <div>
-                    <Table size="sm" responsive={true} striped bordered hover >
-                        <thead>
-                            <tr>
-                                <th>TxId</th>
-                                <th>Confirmations</th>
-                                <th>Tx Info</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            {pendingTxs}
-                        </tbody>
-                    </Table>
-                    <Table size="sm" responsive={true} striped bordered hover >
-                        <thead>
-                            <tr>
-                                <th>TxId</th>
-                                <th>Tx Info</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            {executedTxs}
-                        </tbody>
-                    </Table>
-                </div>
-            </React.Fragment>
+            <CardColumns>
+                {this.props.isOwner && <MSWSubmitTransaction MultiSigWallet={this.props.MultiSigWallet} nextId={this.state.transactionCount}/>}
+                {txIds.reverse().map((value, index) => {
+                    return <MSWTransactionCard key={index} id={value} MultiSigWallet={this.props.MultiSigWallet} isOwner={this.props.isOwner} account={this.props.account} />
+                })}
+            </CardColumns>
         )
 
     }

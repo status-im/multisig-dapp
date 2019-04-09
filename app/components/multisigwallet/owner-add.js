@@ -1,5 +1,5 @@
-import React, { Fragment } from 'react';
-import { FormGroup, ControlLabel, FormControl, Button, Alert, } from 'react-bootstrap';
+import React from 'react';
+import { Form, Button, Alert, } from 'react-bootstrap';
 
 function isSuccess(status) {
     return status === "0x1" || status === true;
@@ -8,8 +8,6 @@ class MSWAddOwner extends React.Component {
     constructor(props){
         super(props);
         this.state = {
-            account: props.account,
-            mswInstance: props.instance,
             input: {
                 owner: ''
             },
@@ -44,15 +42,15 @@ class MSWAddOwner extends React.Component {
 
         try {
             target.disabled=true;
-            const toSend = this.state.mswInstance.methods.addOwner(input.owner);
+            const toSend = this.props.MultiSigWallet.methods.addOwner(input.owner);
 
-            const MsSend = this.state.mswInstance.methods.submitTransaction(
-                this.state.mswInstance._address, 0, toSend.encodeABI()
+            const MsSend = this.props.MultiSigWallet.methods.submitTransaction(
+                this.props.MultiSigWallet._address, 0, toSend.encodeABI()
             )
-            const estimatedGas = await MsSend.estimateGas({from: this.state.account});
+            const estimatedGas = await MsSend.estimateGas({from: this.props.account});
 
             const receipt = await MsSend.send({
-                from: this.state.account,
+                from: this.props.account,
                 gasLimit: estimatedGas
             });
 
@@ -73,24 +71,24 @@ class MSWAddOwner extends React.Component {
         return <div className="formSection">
             <h3>addOwner</h3>
             <form>
-                <FormGroup>
-                    <ControlLabel>owner</ControlLabel>
-                    <FormControl
+                <Form.Group>
+                    <Form.Label>owner</Form.Label>
+                    <Form.Control
                         type="text"
                         defaultValue={ input.owner }
                         placeholder="address"
                         onChange={(e) => this.handleChange(e, 'owner')}
                     />
-                </FormGroup>
+                </Form.Group>
 
-                { error != null && <Alert bsStyle="danger">{error}</Alert> }
+                { error != null && <Alert variant="danger">{error}</Alert> }
 
-                <Button type="submit" bsStyle="primary" onClick={(e) => this.handleClick(e)}>Send</Button>
+                <Button type="submit" variant="primary" onClick={(e) => this.handleClick(e)}>Send</Button>
                 {
                 receipt &&
-                <Fragment>
-                    <Alert onDismiss={()=>{}} bsStyle={isSuccess(receipt.status) ? 'success' : 'danger'}>{isSuccess(receipt.status) ? 'Success' : 'Failure / Revert'} - Transaction Hash: {receipt.transactionHash}</Alert>
-                </Fragment>
+                <React.Fragment>
+                    <Alert onClose={()=>{}} variant={isSuccess(receipt.status) ? 'success' : 'danger'}>{isSuccess(receipt.status) ? 'Success' : 'Failure / Revert'} - Transaction Hash: {receipt.transactionHash}</Alert>
+                </React.Fragment>
 
                 }
             </form>

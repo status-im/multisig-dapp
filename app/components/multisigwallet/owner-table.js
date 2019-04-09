@@ -1,23 +1,20 @@
 import React from 'react';
 import { Table, Button, Alert } from 'react-bootstrap';
 import MSWAddOwner from './owner-add';
-import Blockies from 'react-blockies';
+import ColorEthAddress from '../color-eth-address';
 
 class MSWOwnerTable extends React.Component {
 
     constructor(props) {
       super(props);
       this.state = {
-        control: props.control,
-        account: props.account,
-        mswInstance: props.instance,
         owners: [],
         error: null
       }   
     }  
     
     componentDidMount() {
-        this.state.mswInstance.methods.getOwners().call().then((owners) => {
+        this.props.MultiSigWallet && this.props.MultiSigWallet.methods.getOwners().call().then((owners) => {
             this.setState({owners:owners});
         })
     }
@@ -30,14 +27,14 @@ class MSWOwnerTable extends React.Component {
 
         try {
             target.disabled = true;
-            const toSend = this.state.mswInstance.methods.removeOwner(account);
-            const MsSend = this.state.mswInstance.methods.submitTransaction(
-                this.state.mswInstance._address, 0, toSend.encodeABI()
+            const toSend = this.props.MultiSigWallet.methods.removeOwner(account);
+            const MsSend = this.props.MultiSigWallet.methods.submitTransaction(
+                this.props.MultiSigWallet._address, 0, toSend.encodeABI()
             )
-            const estimatedGas = await MsSend.estimateGas({from: this.state.account});
+            const estimatedGas = await MsSend.estimateGas({from: this.props.account});
 
             const receipt = await MsSend.send({
-                from: this.state.account,
+                from: this.props.account,
                 gasLimit: estimatedGas
             });
 
@@ -56,21 +53,19 @@ class MSWOwnerTable extends React.Component {
 
         const owners = this.state.owners.map((address, index) => (
             <tr key={index}>
-                <td><Blockies seed={address.toLowerCase()} size={8} scale={3}/></td>
-                <td>{address}</td>
-                <td><Button bsStyle="danger" disabled={!this.state.control} type="submit" onClick={(e) => this.removeOwner(e, address)}>Remove</Button></td>
+                <td><ColorEthAddress address={address}/></td>
+                <td><Button variant="danger" disabled={!this.props.isOwner} type="submit" onClick={(e) => this.removeOwner(e, address)}>Remove</Button></td>
             </tr>)
         )
 
         return (
             <React.Fragment>
-                {this.state.control && <MSWAddOwner instance={this.state.mswInstance} account={this.state.account} />}
+                {this.props.isOwner && <MSWAddOwner MultiSigWallet={this.props.MultiSigWallet} account={this.props.account} />}
                     <div>
-                    { this.state.error != null && <Alert onDismiss={()=>{}} bsStyle="danger">{this.state.error}</Alert> }
+                    { this.state.error != null && <Alert onClose={()=>{}} variant="danger">{this.state.error}</Alert> }
                     <Table size="sm" responsive={true} striped bordered hover >
                         <thead>
                             <tr>
-                                <th>Icon</th>
                                 <th>Owner</th>
                                 <th>Remove</th>
                             </tr>

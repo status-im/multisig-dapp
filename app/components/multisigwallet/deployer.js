@@ -1,6 +1,6 @@
 import React from 'react';
 import MultiSigWallet from 'Embark/contracts/MultiSigWallet';
-import { Alert, FormGroup, ControlLabel, FormControl, Button } from 'react-bootstrap';
+import { Alert, Form, Button } from 'react-bootstrap';
 
 import EditableList from '../editable-list';
 
@@ -18,7 +18,6 @@ class MSWDeployer extends React.Component {
         this.state = {
             strError: null,
             activeKey: 1,
-            account: props.account,
             strError: null,
             owners: props.account ? [props.account] : [],
             required: 1
@@ -26,8 +25,8 @@ class MSWDeployer extends React.Component {
     }
 
 
-    onDeploy(mswInstance) {
-        this.props.onDeploy(mswInstance, this.state.owners.includes(this.props.account));
+    onDeploy(MultiSigWallet) {
+        this.props.onDeploy(MultiSigWallet);
     }
 
     onOwnersChange(list) {
@@ -58,7 +57,7 @@ class MSWDeployer extends React.Component {
             let deployTx = MultiSigWallet.deploy({ arguments: [this.state.owners, this.state.required] });
             deployTx.estimateGas().then(
                 (gas) => {
-                    deployTx.send({from: this.state.account, gas: gas}).then(this.onDeploy).catch((error) => {
+                    deployTx.send({from: this.props.account, gas: gas}).then(this.onDeploy).catch((error) => {
                         this.setState({ strError: "Error on deploy. " + error.message })
                     });
                 }
@@ -76,16 +75,16 @@ class MSWDeployer extends React.Component {
         return (
             <form>
                 <h2>Deploy MultiSigWallet</h2>
-                <FormGroup>
-                    <ControlLabel>Owners:</ControlLabel>
+                <Form.Group>
+                    <Form.Label>Owners:</Form.Label>
                     <EditableList onChange={this.onOwnersChange.bind(this)} title="Owners" items={this.state.owners} itemPlaceholder="+" />
-                    <ControlLabel>Required:</ControlLabel>
+                    <Form.Label>Required:</Form.Label>
                     <div>{this.state.required} of {this.state.owners.length}
                         <Slider dots={true} min={0} max={this.state.owners.length} step={1} defaultValue={this.state.required} onChange={this.setRequired.bind(this)} />
                     </div>
-                    <Button bsSize="lg" type="submit" bsStyle="primary" onClick={(e) => this.deployWallet(e)}>Deploy</Button>
-                </FormGroup>
-                {this.state.strError != null && <Alert onDismiss={() => {this.setState({strError: null})}} bsStyle="danger">{this.state.strError}</Alert>}
+                    <Button size="lg" type="submit" variant="primary" onClick={(e) => this.deployWallet(e)}>Deploy</Button>
+                </Form.Group>
+                {this.state.strError != null && <Alert onClose={() => {this.setState({strError: null})}} variant="danger">{this.state.strError}</Alert>}
             </form>);
     }
 }
