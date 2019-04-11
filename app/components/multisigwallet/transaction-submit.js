@@ -1,18 +1,19 @@
 import React from 'react';
-import { Form, Button, Alert, Card, ListGroup, Badge, Col, Row, InputGroup, DropdownButton, Dropdown } from 'react-bootstrap';
+import { Form,  Alert, Card, ListGroup, Badge, Col, Row, InputGroup, DropdownButton, Dropdown } from 'react-bootstrap';
 import ColorAddressInput from '../color-address-input';
 import PropTypes from 'prop-types';
+import TransactionSubmitButton from '../transaction-submit-button';
 function isSuccess(status) {
     return status === "0x1" || status === true;
 }
-function getVariant(receipt, error, txHash) {
+function getVariant(result, error, txHash) {
     if (error) {
         return 'danger';
     }
-    if (!receipt) {
+    if (!result) {
         return txHash ? 'warning' : 'primary';
     }
-    return isSuccess(receipt.status) ? 'success' : 'danger';
+    return isSuccess(result.status) ? 'success' : 'danger';
 }
 
 class MSWSubmitTransaction extends React.Component {
@@ -28,7 +29,7 @@ class MSWSubmitTransaction extends React.Component {
             },
             error: null,
             txHash: null,
-            receipt: null
+            result: null
         };
     }
 
@@ -88,53 +89,31 @@ class MSWSubmitTransaction extends React.Component {
         input[name] = e.target.checked;
         this.setState({ input });
     }
+    
+    handleResult(result) {
+        this.setState({ result });
+    }
 
-    handleClick(e) {
-        e.preventDefault();
-        const target = e.target;
-        const { input } = this.state;
+    handleError(error) {
+        this.setState({ error: error.toString() });
+    }
 
-        if (!input.data) {
-            input.data = "0x";
-        }
-        if (!input.value) {
-            input.value = "0";
-        }
-        this.setState({ output: null, error: null, receipt: null, txHash: null });
-        const toSend = this.props.MultiSigWallet.methods.submitTransaction(input.destination, input.value, input.data);
-        toSend.estimateGas({ from: this.props.account }).then((estimatedGas) => {
-            target.disabled = true;
-            toSend.send({
-                from: this.props.account,
-                gasLimit: estimatedGas
-            })
-                .once('transactionHash', (txHash) => {
-                    this.setState({ txHash });
-                })
-                .on('error', (error) => {
-                    console.error(error);
-                    this.setState({ error: error.toString() });
-                }).then((receipt) => {
-                    this.setState({ receipt });
-                }).finally(() => {
-                    target.disabled = false;
-                });
-        }).catch((err) => {
-            console.error(err);
-            this.setState({ error: err.toString() });
-        });
-
+    handleSubmission(txHash) {
+        this.setState({ txHash });
     }
 
     clearReceipt() {
-        let txId = this.state.receipt.events.Submission.returnValues.transactionId;
-        this.props.onSubmission(txId);
-        this.setState({ receipt: null, txHash: null })
+        this.props.onSubmission(
+            this.state.result.events.Submission.returnValues.transactionId
+        );
+        this.setState({ result: null, txHash: null })
     }
 
     render() {
-        const { input, error, receipt, txHash } = this.state;
-        const variant = getVariant(receipt, error, txHash);
+        const { input, error, result, txHash } = this.state;
+        const { MultiSigWallet, account } = this.props;
+        const variant = getVariant(result, error, txHash);
+        const disabled = txHash!=null;
         var badgeIcon;
         var badgeText;
         switch (variant) {
@@ -179,6 +158,7 @@ class MSWSubmitTransaction extends React.Component {
                             <ColorAddressInput
                                 defaultValue={input.destination}
                                 placeholder="destination (address)"
+                                disabled={disabled}
                                 onChange={(e) => this.handleNewDest(e)}
                             />
                         </ListGroup.Item>
@@ -188,6 +168,7 @@ class MSWSubmitTransaction extends React.Component {
                                     type="text"
                                     value={web3.utils.fromWei(input.value, input.valueType).toString() + (input.dot ? '.' : '')}
                                     placeholder="value (uint256)"
+                                    disabled={disabled}
                                     onChange={(e) => this.setValue(e)
                                     }
                                 />
@@ -210,18 +191,32 @@ class MSWSubmitTransaction extends React.Component {
                                 type="text"
                                 defaultValue={input.data}
                                 placeholder="data (bytes)"
+                                disabled={disabled}
                                 onChange={(e) => this.handleChange(e, 'data')}
                             />
                         </ListGroup.Item>
                     </ListGroup>
-                    {!receipt &&
+                    {!result &&
                         <Card.Body className="text-right">
-                            <Button type="submit" variant="primary" onClick={(e) => this.handleClick(e)}>Send</Button>
+                            <TransactionSubmitButton 
+                                account={account}
+                                sendTransaction={
+                                    MultiSigWallet.methods.submitTransaction(
+                                        input.destination,
+                                        input.value ? input.value : "0",
+                                        input.data ? input.data : "0x"
+                                    )
+                                }
+                                onSubmission={(txHash) => this.handleSubmission(txHash) }
+                                onResult={(result) => this.handleResult(result) }
+                                onError={(error) => this.handleError(error) }
+                                text={('Send')}
+                                />
                         </Card.Body>}
-                    {(error || receipt) &&
+                    {(error || result) &&
                         <Card.Footer>
                             {error != null && <Alert dismissible onClose={() => { this.setState({ error: null }) }} variant="danger">{error}</Alert>}
-                            {receipt && <Alert dismissible onClose={() => { this.clearReceipt() }} variant={variant}>{isSuccess(receipt.status) ? 'Success' : 'Failure / Revert'} - Transaction Hash: {receipt.transactionHash}</Alert>}
+                            {result && <Alert dismissible onClose={() => { this.clearReceipt() }} variant={variant}>{isSuccess(result.status) ? 'Success' : 'Failure / Revert'} - Transaction Hash: {result.transactionHash}</Alert>}
                         </Card.Footer>}
                 </form>
             </Card>

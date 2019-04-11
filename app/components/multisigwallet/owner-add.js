@@ -1,8 +1,8 @@
 import React from 'react';
-import { Form, Button, Alert, InputGroup, Card, } from 'react-bootstrap';
-import Blockies from 'react-blockies';
+import { Alert, Card } from 'react-bootstrap';
 import ColorAddressInput from '../color-address-input';
 import PropTypes from 'prop-types';
+import TransactionSubmitButton from '../transaction-submit-button';
 function isSuccess(status) {
     return status === "0x1" || status === true;
 }
@@ -13,8 +13,10 @@ class MSWAddOwner extends React.Component {
             input: {
                 owner: '0x0000000000000000000000000000000000000000'
             },
-            receipt: null,
-            error: null
+            result: null,
+            error: null,
+            txHash: null,
+            txWaiting: false
         };
     }
     static propTypes = {
@@ -53,48 +55,29 @@ class MSWAddOwner extends React.Component {
     }
 
     clearReceipt() {
-        this.setState({ receipt: null })
+        this.setState({ result: null })
     }
-
-    async handleClick(e) {
-        e.preventDefault();
-        let target = e.target;
-        const { input } = this.state;
-
-        this.setState({ error: null, receipt: null });
-
-        try {
-            target.disabled = true;
-            const toSend = this.props.MultiSigWallet.methods.addOwner(input.owner);
-
-            const MsSend = this.props.MultiSigWallet.methods.submitTransaction(
-                this.props.MultiSigWallet._address, 0, toSend.encodeABI()
-            )
-            const estimatedGas = await MsSend.estimateGas({ from: this.props.account });
-
-            const receipt = await MsSend.send({
-                from: this.props.account,
-                gasLimit: estimatedGas
-            });
-
-            this.setState({ receipt });
-
-            if (receipt.events.OwnerAddition) {
-                this.props.onAddition(receipt.events.OwnerAddition.returnValues.owner)
-            } else {
-                this.props.onConfirmationRequired(receipt.events.Submission.returnValues.transactionId)
-            }
-        } catch (err) {
-            console.error(err);
-            this.setState({ error: err.message });
-        } finally {
-            target.disabled = null;
+    
+    handleResult(result) {
+        this.setState({ result });
+        if (result.events.OwnerAddition) {
+            this.props.onAddition(result.events.OwnerAddition.returnValues.owner)
+        } else {
+            this.props.onConfirmationRequired(result.events.Submission.returnValues.transactionId)
         }
     }
 
-    render() {
-        const { input, error, receipt } = this.state;
+    handleError(error) {
+        this.setState({ error });
+    }
 
+    handleSubmission(txHash) {
+        this.setState({ txHash });
+    }
+
+    render() {
+        const { input, error, result } = this.state;
+        const { MultiSigWallet, account } = this.props;
         return <Card>
             <Card.Header>
                 <ColorAddressInput
@@ -103,26 +86,44 @@ class MSWAddOwner extends React.Component {
                     placeholder="new owner (address)"
                 /></Card.Header>
             <Card.Body className="text-right">
-                {receipt ?
+                {result ?
                     <Alert
                         dismissible={true}
                         onClose={() => { this.clearReceipt() }}
-                        variant={isSuccess(receipt.status) ? 'success' : 'danger'} >
-                        {isSuccess(receipt.status) ? 'Success' : 'Failure / Revert'} - Transaction Hash: {receipt.transactionHash}
+                        variant={isSuccess(result.status) ? 'success' : 'danger'} >
+                        {isSuccess(result.status) ? 'Success' : 'Failure / Revert'} - Transaction Hash: {result.transactionHash}
                     </Alert>
                     :
-                    <Button type="submit" size="sm" variant="primary" onClick={(e) => this.handleClick(e)}>
-                        <svg className="svg-icon" viewBox="0 0 20 20">
-                            <path d="M14.613,10c0,0.23-0.188,0.419-0.419,0.419H10.42v3.774c0,0.23-0.189,0.42-0.42,0.42s-0.419-0.189-0.419-0.42v-3.774H5.806c-0.23,0-0.419-0.189-0.419-0.419s0.189-0.419,0.419-0.419h3.775V5.806c0-0.23,0.189-0.419,0.419-0.419s0.42,0.189,0.42,0.419v3.775h3.774C14.425,9.581,14.613,9.77,14.613,10 M17.969,10c0,4.401-3.567,7.969-7.969,7.969c-4.402,0-7.969-3.567-7.969-7.969c0-4.402,3.567-7.969,7.969-7.969C14.401,2.031,17.969,5.598,17.969,10 M17.13,10c0-3.932-3.198-7.13-7.13-7.13S2.87,6.068,2.87,10c0,3.933,3.198,7.13,7.13,7.13S17.13,13.933,17.13,10"></path>
-                        </svg>
-                        Add
-                        </Button>}
+                    <TransactionSubmitButton 
+                        account={account}
+                        sendTransaction={
+                            MultiSigWallet.methods.submitTransaction(
+                                MultiSigWallet._address, 
+                                0, 
+                                MultiSigWallet.methods.addOwner(input.owner).encodeABI()
+                            )
+                        }
+                        onSubmission={(txHash) => this.handleSubmission(txHash) }
+                        onResult={(result) => this.handleResult(result) }
+                        onError={(error) => this.handleError(error) }
+                        icon={
+                            <svg className="svg-icon" viewBox="0 0 20 20">
+                                <path d="M14.613,10c0,0.23-0.188,0.419-0.419,0.419H10.42v3.774c0,0.23-0.189,0.42-0.42,0.42s-0.419-0.189-0.419-0.42v-3.774H5.806c-0.23,0-0.419-0.189-0.419-0.419s0.189-0.419,0.419-0.419h3.775V5.806c0-0.23,0.189-0.419,0.419-0.419s0.42,0.189,0.42,0.419v3.775h3.774C14.425,9.581,14.613,9.77,14.613,10 M17.969,10c0,4.401-3.567,7.969-7.969,7.969c-4.402,0-7.969-3.567-7.969-7.969c0-4.402,3.567-7.969,7.969-7.969C14.401,2.031,17.969,5.598,17.969,10 M17.13,10c0-3.932-3.198-7.13-7.13-7.13S2.87,6.068,2.87,10c0,3.933,3.198,7.13,7.13,7.13S17.13,13.933,17.13,10"></path>
+                            </svg>
+                        }
+                        text={('Add')}
+                        />}
             </Card.Body>
-
-            {error != null && <Card.Footer><Alert variant="danger">{error}</Alert></Card.Footer>}
+            {error != null && <Card.Footer><Alert variant="danger">{error.message}</Alert></Card.Footer>}
 
         </Card>;
     }
 }
-
+/***
+ * 
+ * <Button type="submit" size="sm" variant="primary" onClick={(e) => this.handleClick(e)}>
+                        
+                        Add
+                        </Button>
+ */
 export default MSWAddOwner;
