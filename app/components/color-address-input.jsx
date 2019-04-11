@@ -41,9 +41,6 @@ class ColorAddressInput extends React.Component {
         this.ref.current.textContent = this.state.address;
     }
 
-    handleChange(e) {
-        console.log("handleChange", e);
-    }
 
     onKeyPress(event) {
         if (event.charCode === 13) {
@@ -98,8 +95,14 @@ class ColorAddressInput extends React.Component {
                             <InputGroup.Text id="blocky"><Blockies size={blockySize} scale={blockyScale} seed={address.toLowerCase()} /></InputGroup.Text>
                         </InputGroup.Prepend>}
                         <div className="address-input">
-                            <div className="form-control" onChange={(e) => this.handleChange(e)} onKeyPress={(event) => this.onKeyPress(event)} onKeyUp={(event) => this.onKeyUp(event)}
-                                ref={this.ref} contentEditable={!disabled} placeholder={placeholder} onPaste={(event) => this.handlePaste(event)} />
+                            <div 
+                                ref={this.ref} 
+                                className="form-control" 
+                                onKeyPress={(event) => this.onKeyPress(event)} 
+                                onKeyUp={(event) => this.onKeyUp(event)}
+                                onPaste={(event) => this.handlePaste(event)}
+                                contentEditable={!disabled} 
+                                placeholder={placeholder} />
                         </div>
                         <div className="address-text">
                             {address ? (
