@@ -1,0 +1,83 @@
+.color-address-control{
+    display: flex;
+}
+
+.address-control{
+    padding: 3px;
+    border-radius: 0.5em;
+    position: relative;
+    display: flex;
+    overflow: hidden;
+}
+
+a.address-control:hover {
+    cursor: pointer;
+}
+
+.address-control .input-group {
+    display:contents;
+} 
+
+.address-control .address-input {
+    display: none;
+    overflow: hidden;
+    border-radius: 0 0.5em 0.5em 0;
+    border: inset 1px rgb(206, 212, 218);
+    background-color: #FFFFFFEF;
+    background-color:none;
+    min-width: 200px;
+    
+}
+
+.address-control .address-input .form-control {
+    background: none;
+    border:none;
+    height: 27px;
+    margin: 3px 0 0 0;
+    padding-bottom: 0px;
+    padding-top: 0px;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    overflow: hidden;
+}
+.address-control .input-group-text {
+    margin:0;
+    padding:0;
+    background: none;
+    border:none;
+    border-radius: 0.5em;
+}
+
+.address-control .identicon {
+    border: outset 1px rgb(206, 212, 218);
+    border-radius: 0.5em 0 0 0.5em;
+}
+
+.address-control .address-text {
+    border-radius: 0 0.5em 0.5em 0;
+    border: inset 1px rgb(206, 212, 218);
+    background-color: #FFFFFFEF;
+    height:32px;
+    overflow: hidden;
+    padding:.2rem .75rem;
+    display: inline-flex;
+    min-width: 200px;
+}
+
+.address-control .address-text small {
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    overflow: hidden;
+    display: flow-root;
+    margin: auto;
+}
+.address-control:focus-within .address-text,
+.address-control:hover .address-text {
+    display: none;
+}
+
+.address-control:focus-within .address-input,
+.address-control:hover .address-input {
+    display: inline-flex;
+}
+
