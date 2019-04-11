@@ -64,6 +64,10 @@ a.address-control:hover {
     min-width: 200px;
 }
 
+.disabled .address-input,
+.disabled .address-text {
+    background-color: #e9ecef;
+}
 .address-control .address-text small {
     text-overflow: ellipsis;
     white-space: nowrap;

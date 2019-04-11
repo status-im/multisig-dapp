@@ -20,6 +20,7 @@ class ColorAddressInput extends React.Component {
     static propTypes = {
         className: PropTypes.string,
         defaultValue: PropTypes.string,
+        disabled: PropTypes.bool,
         placeholder: PropTypes.string,
         colors: PropTypes.bool,
         blocky: PropTypes.bool,
@@ -32,6 +33,7 @@ class ColorAddressInput extends React.Component {
         className: 'text-monospace',
         defaultValue: "0x0000000000000000000000000000000000000000",
         placeholder: "address",
+        disabled: false,
         colors: true,
         blocky: true,
         blockySize: 8,
@@ -85,7 +87,8 @@ class ColorAddressInput extends React.Component {
             blocky,
             blockySize,
             blockyScale,
-            placeholder
+            placeholder,
+            disabled
         } = this.props;
         const { address } = this.state;
         const colorStyle = colors ? {
@@ -93,14 +96,14 @@ class ColorAddressInput extends React.Component {
         } : {}
         return (
             <div className={className + " color-address-control"}>
-                <div style={colorStyle} className="address-control">
+                <div style={colorStyle} className={("address-control" + (disabled ? " disabled" : " enabled"))}>
                     <InputGroup>
                         {blocky && <InputGroup.Prepend>
                             <InputGroup.Text id="blocky"><Blockies size={blockySize} scale={blockyScale} seed={address.toLowerCase()} /></InputGroup.Text>
                         </InputGroup.Prepend>}
                         <div className="address-input">
                             <div className="form-control" onChange={(e) => this.handleChange(e)} onKeyPress={(event) => this.onKeyPress(event)} onKeyUp={(event) => this.onKeyUp(event)}
-                                ref={this.ref} contentEditable placeholder={placeholder} onPaste={(event) => this.handlePaste(event)} />
+                                ref={this.ref} contentEditable={!disabled} placeholder={placeholder} onPaste={(event) => this.handlePaste(event)} />
                         </div>
                         <div className="address-text">
                             {address ? (
