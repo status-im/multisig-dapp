@@ -104,6 +104,7 @@ class MSWDeployer extends React.Component {
                 {this.state.strError != null && 
                 <Card.Footer>
                     <Alert 
+                        dismissible
                         onClose={() => { this.setState({ strError: null }) }} 
                         variant="danger">
                         {this.state.strError}

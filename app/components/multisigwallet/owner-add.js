@@ -114,7 +114,7 @@ class MSWAddOwner extends React.Component {
                         text={('Add')}
                         />}
             </Card.Body>
-            {error != null && <Card.Footer><Alert variant="danger">{error.message}</Alert></Card.Footer>}
+            {error != null && <Card.Footer><Alert dismissible onClose={()=>this.setState({error:null})} variant="danger">{error.message}</Alert></Card.Footer>}
 
         </Card>;
     }
