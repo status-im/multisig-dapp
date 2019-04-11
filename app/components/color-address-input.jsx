@@ -1,12 +1,8 @@
 import React from 'react';
-import { Form, InputGroup } from 'react-bootstrap';
+import { InputGroup } from 'react-bootstrap';
 import PropTypes from 'prop-types';
 import Blockies from 'react-blockies';
 import './color-address-input.css'
-
-function isSuccess(status) {
-    return status === "0x1" || status === true;
-}
 
 class ColorAddressInput extends React.Component {
     constructor(props) {
