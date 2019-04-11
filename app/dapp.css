@@ -51,3 +51,42 @@ input.form-control {
 .alert-result {
   margin-left: 0;
 }
+
+.owner-item {
+  display: flex;
+}
+
+.svg-icon {
+  width: 1em;
+  height: 1em;
+}
+
+.svg-icon path,
+.svg-icon polygon,
+.svg-icon rect {
+  fill: #FFF;
+}
+
+.svg-icon circle {
+  stroke: #FFF;
+  stroke-width: 1;
+}
+
+.nav-link .svg-icon {
+  fill: rgba(0,0,0,.5);
+  stroke: rgba(0,0,0,.5);
+}
+
+.badge .svg-icon {
+  margin: auto 0 1px 1px;
+}
+.badge-warning  .svg-icon {
+  fill: #000;
+  stroke: #000;
+}
+
+.badge-info  .svg-icon {
+  fill: #FFF;
+  stroke: #FFF;
+}
+

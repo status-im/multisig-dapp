@@ -9,6 +9,7 @@ import Slider, { Range } from 'rc-slider';
 // import Slider from 'rc-slider/lib/Slider';
 // import Range from 'rc-slider/lib/Range';
 import 'rc-slider/assets/index.css';
+import PropTypes from 'prop-types';
 
 class MSWDeployer extends React.Component {
 
@@ -17,11 +18,20 @@ class MSWDeployer extends React.Component {
         this.onDeploy = this.onDeploy.bind(this);
         this.state = {
             strError: null,
-            activeKey: 1,
+            test: "0x",
             strError: null,
             owners: props.account ? [props.account] : [],
             required: 1
         };
+    }
+
+    static propTypes = {
+        account: PropTypes.string.isRequired,
+        onDeploy: PropTypes.func
+    }
+
+    static defaultProps = {
+        onReady: () => { }
     }
 
 
@@ -30,7 +40,7 @@ class MSWDeployer extends React.Component {
     }
 
     onOwnersChange(list) {
-        let owners = list.listItems.map((val) => {return val.text }).filter(val => {
+        let owners = list.listItems.map((val) => { return val.text }).filter(val => {
             return val != null;
         })
         this.setState({ owners: owners });
@@ -43,12 +53,12 @@ class MSWDeployer extends React.Component {
 
     deployWallet(e) {
         e.preventDefault();
-        if(this.state.required == 0) {
+        if (this.state.required == 0) {
             return this.setState({ strError: "Required cannot be zero" });
-        } else if (this.state.owners.length < this.state.required){
+        } else if (this.state.owners.length < this.state.required) {
             return this.setState({ strError: "Required cannot be more then owners lenght" })
         } else {
-            if(new Set(this.state.owners).size !== this.state.owners.length){   
+            if (new Set(this.state.owners).size !== this.state.owners.length) {
                 return this.setState({ strError: "Cannot have duplicate owners" })
             }
         }
@@ -57,23 +67,27 @@ class MSWDeployer extends React.Component {
             let deployTx = MultiSigWallet.deploy({ arguments: [this.state.owners, this.state.required] });
             deployTx.estimateGas().then(
                 (gas) => {
-                    deployTx.send({from: this.props.account, gas: gas}).then(this.onDeploy).catch((error) => {
+                    deployTx.send({ from: this.props.account, gas: gas }).then(this.onDeploy).catch((error) => {
                         this.setState({ strError: "Error on deploy. " + error.message })
                     });
                 }
             ).catch((error) => {
                 this.setState({ strError: "Deploy would fail. " + error.message })
             });
-        } catch(error) {
+        } catch (error) {
             this.setState({ strError: "Failed processing parameters: " + error.message })
         }
-        
+
     }
 
+    onAddrChange(other, newAddress) {
+        console.log(newAddress, other);
+        this.setState({ test: newAddress });
+    }
 
     render() {
         return (
-            <form>
+            <Form>
                 <h2>Deploy MultiSigWallet</h2>
                 <Form.Group>
                     <Form.Label>Owners:</Form.Label>
@@ -84,8 +98,8 @@ class MSWDeployer extends React.Component {
                     </div>
                     <Button size="lg" type="submit" variant="primary" onClick={(e) => this.deployWallet(e)}>Deploy</Button>
                 </Form.Group>
-                {this.state.strError != null && <Alert onClose={() => {this.setState({strError: null})}} variant="danger">{this.state.strError}</Alert>}
-            </form>);
+                {this.state.strError != null && <Alert onClose={() => { this.setState({ strError: null }) }} variant="danger">{this.state.strError}</Alert>}
+            </Form>);
     }
 }
 

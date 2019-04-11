@@ -1,5 +1,7 @@
 import React from 'react';
 import { Alert, Form, Button } from 'react-bootstrap';
+import PropTypes from 'prop-types';
+import ColorAddressInput from '../color-address-input';
 
 class ContractLoader extends React.Component {
 
@@ -10,18 +12,25 @@ class ContractLoader extends React.Component {
       contractAddress: props.address,
     };
   }
-
-  componentDidMount(){
-    if(this.state.contractAddress) this.props.onReady(this.state.contractAddress);
+  static propTypes = {
+    account: PropTypes.string,
+    address: PropTypes.string,
+    onChange: PropTypes.func
   }
 
-  handleAddressChange(event) {
-    this.props.onReady(event.target.value);
+  static defaultProps = {
+    account: '',
+    address: '',
+    onChange: () => { }
   }
 
-  handleSumbit(event){
+  componentDidMount() {
+    if (this.state.contractAddress) this.props.onChange(this.state.contractAddress);
+  }
+
+  handleSumbit(event) {
     event.preventDefault();
-    this.props.onReady(this.state.contractAddress);
+    this.props.onChange(this.state.contractAddress);
   }
 
   render() {
@@ -31,11 +40,10 @@ class ContractLoader extends React.Component {
         <form>
           <Form.Group>
             <Form.Label>Contract Address:</Form.Label>
-            <Form.Control
-              type="text"
+            <ColorAddressInput
               defaultValue={this.state.contractAddress}
               placeholder="address"
-              onChange={(e) => this.handleAddressChange(e)}
+              onChange={(address) => this.props.onChange(address)}
             />
           </Form.Group>
           {this.state.strError != null && <Alert variant="danger">{this.state.strError}</Alert>}

@@ -2,20 +2,30 @@ import React from 'react';
 import { CardColumns } from 'react-bootstrap';
 import MSWSubmitTransaction from './transaction-submit';
 import MSWTransactionCard from './transaction-card';
-
+import PropTypes from 'prop-types';
 
 class MSWTransactionTable extends React.Component {
 
     constructor(props) {
         super(props);
         this.state = {
-            transactionCount: 0,
-            loadedCount: 0,
+            filteredCount: "0",
+            transactionCount: "0",
             txIds: [],
-            executedTxs: [],
-            pendingTxs: [],
             strError: null
         }
+    }
+
+    static propTypes = {
+        MultiSigWallet: PropTypes.object.isRequired,
+        account: PropTypes.string.isRequired,
+        isOwner: PropTypes.bool,
+        mode: PropTypes.string
+    }
+
+    static defaultProps = {
+        isOwner: false,
+        string: "all"
     }
 
     componentDidMount(val) {
@@ -39,13 +49,16 @@ class MSWTransactionTable extends React.Component {
                 executed = true
 
         }
-        console.log("this.props.pending, this.props.executed", pending, executed)
-        MultiSigWallet.methods.getTransactionCount(pending, executed).call().then((count) => {
-            console.log("count", count);
-            this.setState({ transactionCount: +count });
-            MultiSigWallet.methods.getTransactionIds("0", count, pending, executed).call().then((txIds) => {
-                console.log(txIds);
-                this.setState({ txIds: txIds });
+        MultiSigWallet.methods.transactionCount().call().then((transactionCount) => {
+            this.setState({ transactionCount });
+            MultiSigWallet.methods.getTransactionCount(pending, executed).call().then((filteredCount) => {
+                this.setState({ filteredCount });
+                MultiSigWallet.methods.getTransactionIds("0", filteredCount, pending, executed).call().then((txIds) => {
+                    this.setState({ txIds });
+                }).catch(error => {
+                    console.error(error);
+                    this.setError(error.message)
+                })
             }).catch(error => {
                 console.error(error);
                 this.setError(error.message)
@@ -53,7 +66,15 @@ class MSWTransactionTable extends React.Component {
         }).catch(error => {
             console.error(error);
             this.setError(error.message)
-        })
+        });
+
+    }
+
+    appendNewTx(txId) {
+        const txIds = this.state.txIds;
+        txIds.push(txId);
+        let transactionCount = (+txId+1).toString();
+        this.setState({ txIds, transactionCount});
     }
 
     componentDidUpdate(prevProps, prevState) {
@@ -70,7 +91,7 @@ class MSWTransactionTable extends React.Component {
         const txIds = this.state.txIds;
         return (
             <CardColumns>
-                {this.props.isOwner && <MSWSubmitTransaction MultiSigWallet={this.props.MultiSigWallet} nextId={this.state.transactionCount}/>}
+                {this.props.isOwner && <MSWSubmitTransaction onSubmission={(txId)=>{this.appendNewTx(txId)}}MultiSigWallet={this.props.MultiSigWallet} account={this.props.account} nextId={this.state.transactionCount} />}
                 {txIds.reverse().map((value, index) => {
                     return <MSWTransactionCard key={index} id={value} MultiSigWallet={this.props.MultiSigWallet} isOwner={this.props.isOwner} account={this.props.account} />
                 })}
