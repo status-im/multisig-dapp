@@ -66,7 +66,6 @@ class MSWSubmitTransaction extends React.Component {
             }
             this.setState({ input });
         } catch (err) {
-            console.error(err);
             this.setState({ error: err.message });
         }
 

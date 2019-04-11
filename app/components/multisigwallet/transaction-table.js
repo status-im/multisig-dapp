@@ -1,5 +1,5 @@
 import React from 'react';
-import { CardColumns } from 'react-bootstrap';
+import { CardColumns, Alert } from 'react-bootstrap';
 import MSWSubmitTransaction from './transaction-submit';
 import MSWTransactionCard from './transaction-card';
 import PropTypes from 'prop-types';
@@ -28,7 +28,7 @@ class MSWTransactionTable extends React.Component {
         string: "all"
     }
 
-    componentDidMount(val) {
+    componentDidMount() {
         this.load();
     }
 
@@ -56,15 +56,12 @@ class MSWTransactionTable extends React.Component {
                 MultiSigWallet.methods.getTransactionIds("0", filteredCount, pending, executed).call().then((txIds) => {
                     this.setState({ txIds });
                 }).catch(error => {
-                    console.error(error);
                     this.setError(error.message)
                 })
             }).catch(error => {
-                console.error(error);
                 this.setError(error.message)
             })
         }).catch(error => {
-            console.error(error);
             this.setError(error.message)
         });
 
@@ -88,12 +85,24 @@ class MSWTransactionTable extends React.Component {
     }
 
     render() {
-        const txIds = this.state.txIds;
+        const { txIds, transactionCount, strError } = this.state;
+        const { MultiSigWallet, isOwner, account } = this.props;
         return (
             <CardColumns>
-                {this.props.isOwner && <MSWSubmitTransaction onSubmission={(txId)=>{this.appendNewTx(txId)}}MultiSigWallet={this.props.MultiSigWallet} account={this.props.account} nextId={this.state.transactionCount} />}
+                {strError != null && <Alert dismissible onClose={() => { this.setState({ strError: null }) }} variant="danger">{strError}</Alert>}
+                {isOwner && 
+                    <MSWSubmitTransaction 
+                        onSubmission={(txId)=>{this.appendNewTx(txId)}}
+                        MultiSigWallet={MultiSigWallet}
+                        account={account} 
+                        nextId={transactionCount} />}
                 {txIds.reverse().map((value, index) => {
-                    return <MSWTransactionCard key={index} id={value} MultiSigWallet={this.props.MultiSigWallet} isOwner={this.props.isOwner} account={this.props.account} />
+                    return (<MSWTransactionCard 
+                        key={index} 
+                        id={value} 
+                        MultiSigWallet={MultiSigWallet} 
+                        isOwner={isOwner} 
+                        account={account} />)
                 })}
             </CardColumns>
         )

@@ -28,7 +28,7 @@ class MSWOwnerTable extends React.Component {
     }
 
     componentDidMount() {
-        this.props.MultiSigWallet && this.props.MultiSigWallet.methods.getOwners().call().then((owners) => {
+        this.props.MultiSigWallet.methods.getOwners().call().then((owners) => {
             this.setState({ owners: owners });
         })
     }
@@ -66,42 +66,41 @@ class MSWOwnerTable extends React.Component {
     }
     render() {
         const { MultiSigWallet, account, isOwner } = this.props;
-        const owners = this.state.owners.map((address, index) => (
-            <Card className="owner-item" key={index}>
-                <Card.Header className="text-right">
-                    <ColorEthAddress address={address} />
-                </Card.Header>
-                {isOwner && (<Card.Body className="text-right">
-                    <TransactionSubmitButton 
-                        account={account}
-                        sendTransaction={
-                            MultiSigWallet.methods.submitTransaction(
-                                MultiSigWallet._address,
-                                0,
-                                MultiSigWallet.methods.removeOwner(address).encodeABI()
-                            )
-                        }
-                        onSubmission={(txHash) => this.handleSubmission(txHash) }
-                        onResult={(result) => this.handleResult(result) }
-                        onError={(error) => this.handleError(error) }
-                        icon={
-                            <svg className="svg-icon" viewBox="0 0 20 20">
-                                <path d="M14.776,10c0,0.239-0.195,0.434-0.435,0.434H5.658c-0.239,0-0.434-0.195-0.434-0.434s0.195-0.434,0.434-0.434h8.684C14.581,9.566,14.776,9.762,14.776,10 M18.25,10c0,4.558-3.693,8.25-8.25,8.25c-4.557,0-8.25-3.691-8.25-8.25c0-4.557,3.693-8.25,8.25-8.25C14.557,1.75,18.25,5.443,18.25,10 M17.382,10c0-4.071-3.312-7.381-7.382-7.381C5.929,2.619,2.619,5.93,2.619,10c0,4.07,3.311,7.382,7.381,7.382C14.07,17.383,17.382,14.07,17.382,10"></path>
-                            </svg>
-                        }
-                        text="Remove"
-                        variant="danger"
-                        />
-                </Card.Body>)}
-            </Card>)
-        )
-
+        const { error, owners } = this.state;
         return (
             <CardColumns>
-                {this.props.isOwner && <MSWAddOwner onAddition={(newOwner) => { this.listOwner(newOwner) }} MultiSigWallet={this.props.MultiSigWallet} account={this.props.account} />}
+                {isOwner && <MSWAddOwner onAddition={(newOwner) => { this.listOwner(newOwner) }} MultiSigWallet={MultiSigWallet} account={account} />}
                 <div className="owners-list">
-                    {this.state.error != null && <Alert dismissible onClose={() => { this.setState({error: null}) }} variant="danger">{this.state.error}</Alert>}
-                    {owners}
+                    {error != null && <Alert dismissible onClose={() => { this.setState({error: null}) }} variant="danger">{error}</Alert>}
+                    { owners.map((address, index) => (
+                        <Card className="owner-item" key={index}>
+                            <Card.Header className="text-right">
+                                <ColorEthAddress address={address} />
+                            </Card.Header>
+                            {isOwner && (<Card.Body className="text-right">
+                                <TransactionSubmitButton 
+                                    account={account}
+                                    sendTransaction={
+                                        MultiSigWallet.methods.submitTransaction(
+                                            MultiSigWallet._address,
+                                            0,
+                                            MultiSigWallet.methods.removeOwner(address).encodeABI()
+                                        )
+                                    }
+                                    onSubmission={(txHash) => this.handleSubmission(txHash) }
+                                    onResult={(result) => this.handleResult(result) }
+                                    onError={(error) => this.handleError(error) }
+                                    icon={
+                                        <svg className="svg-icon" viewBox="0 0 20 20">
+                                            <path d="M14.776,10c0,0.239-0.195,0.434-0.435,0.434H5.658c-0.239,0-0.434-0.195-0.434-0.434s0.195-0.434,0.434-0.434h8.684C14.581,9.566,14.776,9.762,14.776,10 M18.25,10c0,4.558-3.693,8.25-8.25,8.25c-4.557,0-8.25-3.691-8.25-8.25c0-4.557,3.693-8.25,8.25-8.25C14.557,1.75,18.25,5.443,18.25,10 M17.382,10c0-4.071-3.312-7.381-7.382-7.381C5.929,2.619,2.619,5.93,2.619,10c0,4.07,3.311,7.382,7.381,7.382C14.07,17.383,17.382,14.07,17.382,10"></path>
+                                        </svg>
+                                    }
+                                    text="Remove"
+                                    variant="danger"
+                                    />
+                            </Card.Body>)}
+                        </Card>)
+                    )}
                 </div>
             </CardColumns>
         )
