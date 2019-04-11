@@ -1,10 +1,14 @@
 # Multisig Dapp
 
-v0.0.3 features:
-- mutlisig wallet factory
-- ui allows deploy 
+## Changelog
 
-v0.0.2 features: 
+v0.0.3:
+- better routes
+- better look'n feel 
+- responds to tx receipts and errors
+- allows deploy multisig wallet
+
+v0.0.2: 
 - bootstrap ui
 - Identify if account is owner
 - submit transaction
@@ -13,19 +17,19 @@ v0.0.2 features:
 - list owners
 - remove owner
 - add owner
-- routes (/#wallet/0xYourMultiSigWallet)
+- routes
 
-## Release
-[ipfs://QmcCiUCELq2PuUunfVGKin1wLaukX1ZNVN7si9rvr8SXA4](ipfs://QmcCiUCELq2PuUunfVGKin1wLaukX1ZNVN7si9rvr8SXA4) [@infura](https://ipfs.infura.io/ipfs/QmcCiUCELq2PuUunfVGKin1wLaukX1ZNVN7si9rvr8SXA4/) [@ipfs.io](https://gateway.ipfs.io/ipfs/QmcCiUCELq2PuUunfVGKin1wLaukX1ZNVN7si9rvr8SXA4/) [@cloudflare](https://cloudflare-ipfs.com/ipfs/QmcCiUCELq2PuUunfVGKin1wLaukX1ZNVN7si9rvr8SXA4/)
+## Releases
+
+| Version | IPFS Hash | infura | ipfs.io | cloudflare |
+| ------- | --------- | ------ | ------- | ---------- |
+|  0.0.2  | [ipfs://QmcCiUCELq2PuUunfVGKin1wLaukX1ZNVN7si9rvr8SXA4](ipfs://QmcCiUCELq2PuUunfVGKin1wLaukX1ZNVN7si9rvr8SXA4) | [@infura](https://ipfs.infura.io/ipfs/QmcCiUCELq2PuUunfVGKin1wLaukX1ZNVN7si9rvr8SXA4/) | [@ipfs.io](https://gateway.ipfs.io/ipfs/QmcCiUCELq2PuUunfVGKin1wLaukX1ZNVN7si9rvr8SXA4/) | [@cloudflare](https://cloudflare-ipfs.com/ipfs/QmcCiUCELq2PuUunfVGKin1wLaukX1ZNVN7si9rvr8SXA4/) |
+
 
 
 ## Build
-Requires embark 4.0.1. Recommended use of https://github.com/creationix/nvm
 Usage: 
  ```
- nvm install v10.15
- nvm use v10.15
- npm install -g embark
  git clone https://github.com/status-im/multisig-dapp.git
  cd multisig-dapp
  npm install
