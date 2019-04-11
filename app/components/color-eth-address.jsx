@@ -18,6 +18,7 @@ class ColorEthAddress extends React.Component {
 
 	static defaultProps = {
 		className: 'text-monospace',
+		address: "0x0000000000000000000000000000000000000000",
 		colors: true,
 		blocky: true,
 		blockySize: 8,
@@ -65,7 +66,7 @@ class ColorEthAddress extends React.Component {
 						<span className="blocky">
 							<Blockies seed={address.toLowerCase()} size={blockySize} scale={blockyScale} />
 						</span>}
-					<span className="address-text">
+					<span className="address-text" style={clipboardButton? {paddingRight: 0} : {}}>
 						<strong>{address.substr(0, 6)}</strong><small>{address.substr(6, 36)}</small><strong>{address.substr(36, 6)}</strong>
 					</span>
 					{clipboardButton &&
