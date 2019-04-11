@@ -1,5 +1,5 @@
 import React from 'react';
-import { Card, ListGroup, Badge, Spinner, Col, Row } from 'react-bootstrap';
+import { Card, ListGroup, Badge, Spinner, Col, Row, Alert } from 'react-bootstrap';
 import ColorEthAddress from '../color-eth-address';
 import MSWConfirmation from './confirmation';
 import PropTypes from 'prop-types';
@@ -32,8 +32,7 @@ class MSWTransactionCard extends React.Component {
         this.props.MultiSigWallet.methods.transactions(this.props.id).call().then((val) => {
             this.setState({ tx: val });
         }).catch(error => {
-            console.error(error);
-            this.setError(error.message)
+            this.setError(error.toString())
         })
     }
     componentDidUpdate(prevProps, prevState) {
@@ -42,6 +41,15 @@ class MSWTransactionCard extends React.Component {
         }
     }
 
+    setExecuted(executed) {
+        const tx = this.state.tx;
+        tx.executed = executed;
+        if(!executed) {
+            this.setError("The approved transaction failed execution.");
+        }
+        
+        this.setState({ tx });
+    }
 
     setError(strError) {
         this.setState({ strError: strError })
@@ -49,7 +57,7 @@ class MSWTransactionCard extends React.Component {
 
     render() {
         const { id } = this.props;
-        const { tx } = this.state;
+        const { tx, strError } = this.state;
         return (
             !tx ?
                 (<Card>
@@ -96,8 +104,9 @@ class MSWTransactionCard extends React.Component {
                     </ListGroup>
                     {!tx.executed &&
                         <Card.Body className="text-right">
-                            <MSWConfirmation onError={(err) => this.setError(err)} MultiSigWallet={this.props.MultiSigWallet} isOwner={this.props.isOwner} account={this.props.account} id={this.props.id} />
+                            <MSWConfirmation onExecution={(executed) => this.setExecuted(executed)} onError={(err) => this.setError(err.toString())} MultiSigWallet={this.props.MultiSigWallet} isOwner={this.props.isOwner} account={this.props.account} id={this.props.id} />
                         </Card.Body>}
+                    {strError != null && <Card.Footer><Alert dismissible onClose={()=>this.setState({strError:null})} variant="danger">{strError}</Alert></Card.Footer>}
                 </Card>)
         )
 
