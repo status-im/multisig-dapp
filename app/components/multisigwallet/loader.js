@@ -1,5 +1,5 @@
 import React from 'react';
-import { Alert, Form, Button } from 'react-bootstrap';
+import { Alert, Form, Button, Card, ListGroup } from 'react-bootstrap';
 import PropTypes from 'prop-types';
 import ColorAddressInput from '../color-address-input';
 
@@ -8,7 +8,7 @@ class ContractLoader extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      strError: null,
+      error: null,
       contractAddress: props.address,
     };
   }
@@ -25,31 +25,38 @@ class ContractLoader extends React.Component {
   }
 
   componentDidMount() {
-    if (this.state.contractAddress) this.props.onChange(this.state.contractAddress);
+    if (this.state.contractAddress) this.props.onChange(this.state.contractAddress, (error) => this.setState({error}));
   }
 
   handleSumbit(event) {
     event.preventDefault();
-    this.props.onChange(this.state.contractAddress);
+    this.props.onChange(this.state.contractAddress, (error) => this.setState({error}));
   }
 
   render() {
     return (
-      <div>
-        <h2>Existent MultiSigWallet</h2>
-        <form>
-          <Form.Group>
-            <Form.Label>Contract Address:</Form.Label>
-            <ColorAddressInput
-              defaultValue={this.state.contractAddress}
-              placeholder="address"
-              onChange={(address) => this.props.onChange(address)}
-            />
-          </Form.Group>
-          {this.state.strError != null && <Alert variant="danger">{this.state.strError}</Alert>}
-          <Button size="lg" type="submit" variant="primary" onClick={(e) => this.handleSumbit(e)}>Load</Button>
-        </form>
-      </div>);
+      <Card>
+        <Card.Header>
+          Load Existent MultiSigWallet
+        </Card.Header>
+          <ListGroup variant="flush">
+            <ListGroup.Item>
+              <Form.Label>Contract Address:</Form.Label>
+              <ColorAddressInput
+                defaultValue={this.state.contractAddress}
+                placeholder="address"
+                onChange={(address) => {
+                  this.setState({contractAddress: address});
+                  this.props.onChange(address, (error) => this.setState({error}))
+                }}
+              />
+            </ListGroup.Item>
+        </ListGroup>
+        <Card.Body>
+          <Button size="sm" type="submit" variant="primary" onClick={(e) => this.handleSumbit(e)}>Load</Button>
+        </Card.Body>
+        {this.state.error != null && <Card.Footer><Alert dismissible onClose={() => this.setState({error: null})} variant="danger">{this.state.error}</Alert></Card.Footer>}
+      </Card>);
   }
 }
 
