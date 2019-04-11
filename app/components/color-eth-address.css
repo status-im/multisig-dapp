@@ -3,9 +3,9 @@
   border-radius: 8px;
   position: relative;
   display: inline-grid;
-  box-shadow: 1px 1px 1px 1px #0003;
-  border-top: solid 1px #FFFC;
-  border-left: solid 1px #FFFC;
+  box-shadow: 1px 1px 1px 1px #CCC;
+  border-top: solid 1px #FFF;
+  border-left: solid 1px #FFF;
 }
 
 .eth-address:hover {
@@ -14,7 +14,7 @@
 
 .eth-address .address-bg {
   border-radius: 8px;
-  background-color:#FFFFFFDE;
+  background-color:#FFFFFF;
   display: flex;
   overflow: hidden;
 }

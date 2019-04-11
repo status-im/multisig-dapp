@@ -23,7 +23,7 @@ a.address-control:hover {
     overflow: hidden;
     border-radius: 0 0.5em 0.5em 0;
     border: inset 1px rgb(206, 212, 218);
-    background-color: #FFFFFFEF;
+    background-color: #FFFFFF;
     background-color:none;
     min-width: 200px;
     
@@ -56,7 +56,7 @@ a.address-control:hover {
 .address-control .address-text {
     border-radius: 0 0.5em 0.5em 0;
     border: inset 1px rgb(206, 212, 218);
-    background-color: #FFFFFFEF;
+    background-color: #FFFFFF;
     height:32px;
     overflow: hidden;
     padding:.2rem .75rem;
