@@ -7,7 +7,7 @@ import MSWDeployer from './components/multisigwallet/deployer';
 import { HashRouter, Route, Redirect, Link } from "react-router-dom";
 import { LinkContainer } from "react-router-bootstrap";
 import './dapp.css';
-import { Navbar, Nav, Alert, NavDropdown, Container } from 'react-bootstrap';
+import { Navbar, Nav, Alert, NavDropdown, Container, CardColumns } from 'react-bootstrap';
 import ColorEthAddress from './components/color-eth-address';
 import MSWTransactionTable from './components/multisigwallet/transaction-table';
 import MSWOwnerTable from './components/multisigwallet/owner-table';
@@ -42,31 +42,31 @@ class App extends React.Component {
 
     }
 
-    setContractAddress(address) {
+    setContractAddress(address, onError) {
         try {
             let checksumAddress = web3.utils.toChecksumAddress(address);
-            this.checkContractAddress(checksumAddress);
+            this.checkContractAddress(checksumAddress, onError);
         } catch (error) {
-            this.setState({ strError: error.toString() })
+            onError(error.toString())
         }
 
     }
 
-    async checkContractAddress(checksumAddress) {
+    async checkContractAddress(checksumAddress, onError) {
         this.setState({ strError: null });
         try {
             let code = await web3.eth.getCode(checksumAddress);
             if (code.length > 2) {
-                this.setMSWInstance(new EmbarkJS.Blockchain.Contract({ abi: MultiSigWallet._jsonInterface, address: checksumAddress }))
+                this.setMSWInstance(new EmbarkJS.Blockchain.Contract({ abi: MultiSigWallet._jsonInterface, address: checksumAddress }), onError)
             } else {
-                this.setState({ strError: "Address don't have any code. Might be wrong address, wrong network, or unsynced network." })
+                onError("Address don't have any code. Might be wrong address, wrong network, or unsynced network.")
             }
         } catch (error) {
-            this.setState({ strError: error.toString() })
+            onError(error.toString())
         }
     }
 
-    async setMSWInstance(MultiSigWallet) {
+    async setMSWInstance(MultiSigWallet, onError) {
         try {
             let req = await MultiSigWallet.methods.required().call(); //catch not multisig eallrt
             if (req > 0) {
@@ -76,14 +76,14 @@ class App extends React.Component {
                         isOwner = await MultiSigWallet.methods.isOwner(this.state.account).call()
                     }
                 } catch (error) {
-                    this.setState({ strError: error.toString() })
+                    onError(error.toString())
                 }
                 this.setState({ MultiSigWallet: MultiSigWallet, isOwner: isOwner });
             } else {
-                this.setState({ strError: "Invalid MultiSigWallet" })
+                onError("Invalid MultiSigWallet")
             }
         } catch (error) {
-            this.setState({ strError: "Not a Multisig Wallet" })
+            onError("Not a Multisig Wallet")
         }
     }
 
@@ -133,16 +133,18 @@ class App extends React.Component {
                 <HashRouter hashType="noslash">
                     {this.state.strError != null && <Alert variant="danger">{this.state.strError}</Alert>}
                     {this.state.isOwner && this.state.execWarn && <Alert onClose={() => { this.setState({ execWarn: false }) }} variant="warning">Warning: You are legally responsable by what you approve. Only approve when you are sure the execution is desired.</Alert>}
-
                     <Route path="/:address?" render={({ match }) => (
                         <React.Fragment>
                             {this.navBar(match.params.address)}
-                            {this.state.MultiSigWallet ?
-                                <React.Fragment /> :
-                                <React.Fragment>
-                                    <ContractLoader account={this.state.account} address={match.params.address} onChange={this.setContractAddress.bind(this)} />
-                                    {this.state.account && <MSWDeployer account={this.state.account} onDeploy={this.setMSWInstance} />}
-                                </React.Fragment>}
+                            <Container id="select-contract">
+                                {this.state.MultiSigWallet ?
+                                    <React.Fragment /> :
+                                    <CardColumns>
+                                        <ContractLoader account={this.state.account} address={match.params.address} onChange={(address, onError) => this.setContractAddress(address, onError) } />
+                                        {this.state.account && <MSWDeployer account={this.state.account} onDeploy={this.setMSWInstance} />}
+                                    </CardColumns>}
+                            </Container>
+                            
                         </React.Fragment>
                     )} />
                     <Route exact path="/:address?" render={() => (
