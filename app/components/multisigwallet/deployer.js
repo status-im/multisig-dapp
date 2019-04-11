@@ -51,12 +51,13 @@ class MSWDeployer extends React.Component {
     }
 
     handleError(error) {
-        if (this.state.required == 0) {
+        const { owners, required } = this.state;
+        if (required == 0) {
             this.setState({ strError: "Required cannot be zero" });
-        } else if (this.state.owners.length < this.state.required) {
+        } else if (owners.length < required) {
             this.setState({ strError: "Required cannot be more then owners lenght" })
         } else {
-            if (new Set(this.state.owners).size !== this.state.owners.length) {
+            if (new Set(owners).size !== owners.length) {
                 this.setState({ strError: "Cannot have duplicate owners" })
             } else {
                 this.setState({ strError: error.toString() })
@@ -70,7 +71,7 @@ class MSWDeployer extends React.Component {
     
     render() {
         const { account } = this.props;
-        const { owners, required } = this.state;
+        const { owners, required, strError } = this.state;
         return(
             <Card>
                 <Card.Header>
@@ -79,7 +80,7 @@ class MSWDeployer extends React.Component {
                 <ListGroup variant="flush">
                     <ListGroup.Item>
                         <Form.Label>Owners:</Form.Label>
-                        <EditableList onChange={this.onOwnersChange.bind(this)} title="Owners" items={this.state.owners} itemPlaceholder="+" />
+                        <EditableList onChange={this.onOwnersChange.bind(this)} title="Owners" items={owners} itemPlaceholder="+" />
                     </ListGroup.Item>
                     <ListGroup.Item>
                         <Form.Label>Required:</Form.Label>
@@ -101,13 +102,13 @@ class MSWDeployer extends React.Component {
                         size="sm"
                         />
                 </Card.Body>
-                {this.state.strError != null && 
+                {strError != null && 
                 <Card.Footer>
                     <Alert 
                         dismissible
                         onClose={() => { this.setState({ strError: null }) }} 
                         variant="danger">
-                        {this.state.strError}
+                        {strError}
                     </Alert>
                 </Card.Footer>}
             </Card>);

@@ -34,6 +34,8 @@ class ContractLoader extends React.Component {
   }
 
   render() {
+    const { contractAddress, error } = this.state;
+    const { onChange } = this.props;
     return (
       <Card>
         <Card.Header>
@@ -43,11 +45,11 @@ class ContractLoader extends React.Component {
             <ListGroup.Item>
               <Form.Label>Contract Address:</Form.Label>
               <ColorAddressInput
-                defaultValue={this.state.contractAddress}
+                defaultValue={contractAddress}
                 placeholder="address"
                 onChange={(address) => {
                   this.setState({contractAddress: address});
-                  this.props.onChange(address, (error) => this.setState({error}))
+                  onChange(address, (error) => this.setState({error}))
                 }}
               />
             </ListGroup.Item>
@@ -55,7 +57,7 @@ class ContractLoader extends React.Component {
         <Card.Body>
           <Button size="sm" type="submit" variant="primary" onClick={(e) => this.handleSumbit(e)}>Load</Button>
         </Card.Body>
-        {this.state.error != null && <Card.Footer><Alert dismissible onClose={() => this.setState({error: null})} variant="danger">{this.state.error}</Alert></Card.Footer>}
+        {error != null && <Card.Footer><Alert dismissible onClose={() => this.setState({error: null})} variant="danger">{error}</Alert></Card.Footer>}
       </Card>);
   }
 }

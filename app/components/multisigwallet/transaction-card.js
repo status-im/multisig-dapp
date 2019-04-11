@@ -56,7 +56,7 @@ class MSWTransactionCard extends React.Component {
     }
 
     render() {
-        const { id } = this.props;
+        const { MultiSigWallet, account, isOwner, id} = this.props;
         const { tx, strError } = this.state;
         return (
             !tx ?
@@ -104,7 +104,7 @@ class MSWTransactionCard extends React.Component {
                     </ListGroup>
                     {!tx.executed &&
                         <Card.Body className="text-right">
-                            <MSWConfirmation onExecution={(executed) => this.setExecuted(executed)} onError={(err) => this.setError(err.toString())} MultiSigWallet={this.props.MultiSigWallet} isOwner={this.props.isOwner} account={this.props.account} id={this.props.id} />
+                            <MSWConfirmation onExecution={(executed) => this.setExecuted(executed)} onError={(err) => this.setError(err.toString())} MultiSigWallet={MultiSigWallet} isOwner={isOwner} account={account} id={id} />
                         </Card.Body>}
                     {strError != null && <Card.Footer><Alert dismissible onClose={()=>this.setState({strError:null})} variant="danger">{strError}</Alert></Card.Footer>}
                 </Card>)

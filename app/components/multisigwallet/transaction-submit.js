@@ -110,7 +110,7 @@ class MSWSubmitTransaction extends React.Component {
 
     render() {
         const { input, error, result, txHash } = this.state;
-        const { MultiSigWallet, account } = this.props;
+        const { MultiSigWallet, account, nextId} = this.props;
         const variant = getVariant(result, error, txHash);
         const disabled = txHash!=null;
         var badgeIcon;
@@ -138,7 +138,7 @@ class MSWSubmitTransaction extends React.Component {
             <Card border={variant}>
                 <Card.Header className="text-center">
                     <Row>
-                        <Col className="text-left">Tx #{this.props.nextId}</Col>
+                        <Col className="text-left">Tx #{nextId}</Col>
                         <Col className="text-right">
                             <Badge
                                 className="justify-content-end"

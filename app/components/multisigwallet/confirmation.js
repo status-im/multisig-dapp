@@ -119,7 +119,7 @@ class MSWConfirmation extends React.Component {
                     }
                     text={
                         <React.Fragment>
-                            <b>{" #" + this.props.id}</b>
+                            <b>{" #" + id}</b>
                             <small>{" [" + confirmations + "/" + required + "] "}</small>
                         </React.Fragment>
                     }
