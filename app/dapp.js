@@ -52,38 +52,37 @@ class App extends React.Component {
 
     }
 
-    async checkContractAddress(checksumAddress, onError) {
-        this.setState({ strError: null });
+    checkContractAddress(checksumAddress, onError) {
         try {
-            let code = await web3.eth.getCode(checksumAddress);
-            if (code.length > 2) {
-                this.setMSWInstance(new EmbarkJS.Blockchain.Contract({ abi: MultiSigWallet._jsonInterface, address: checksumAddress }), onError)
-            } else {
-                onError("Address don't have any code. Might be wrong address, wrong network, or unsynced network.")
-            }
+            web3.eth.getCode(checksumAddress).then((code) => {
+                if (code.length > 2) {
+                    this.setMSWInstance(new EmbarkJS.Blockchain.Contract({ abi: MultiSigWallet._jsonInterface, address: checksumAddress }), onError)
+                } else {
+                    onError("Address don't have any code. Might be wrong address, wrong network, or unsynced network.")
+                }
+            }).catch((error) => onError(error.toString()));
         } catch (error) {
             onError(error.toString())
         }
     }
 
-    async setMSWInstance(MultiSigWallet, onError) {
+    setMSWInstance(MultiSigWallet, onError) {
         try {
-            let req = await MultiSigWallet.methods.required().call(); //catch not multisig eallrt
-            if (req > 0) {
-                var isOwner = false;
-                try {
+            MultiSigWallet.methods.required().call().then((required) => {
+                if (required > 0) {
                     if (this.state.account) {
-                        isOwner = await MultiSigWallet.methods.isOwner(this.state.account).call()
+                        MultiSigWallet.methods.isOwner(this.state.account).call().then((isOwner) => {
+                            this.setState({ MultiSigWallet: MultiSigWallet, isOwner: isOwner });
+                        }).catch((error) => onError(error.toString()));
+                    } else {
+                        this.setState({ MultiSigWallet: MultiSigWallet, isOwner: false });
                     }
-                } catch (error) {
-                    onError(error.toString())
+                } else {
+                    onError("Invalid MultiSigWallet")
                 }
-                this.setState({ MultiSigWallet: MultiSigWallet, isOwner: isOwner });
-            } else {
-                onError("Invalid MultiSigWallet")
-            }
+            }).catch(() => onError("Not a Multisig Wallet")); 
         } catch (error) {
-            onError("Not a Multisig Wallet")
+            onError("Unhandled error." + error.toString())
         }
     }
 
