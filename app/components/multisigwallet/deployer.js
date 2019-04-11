@@ -1,15 +1,12 @@
 import React from 'react';
-import MultiSigWallet from 'Embark/contracts/MultiSigWallet';
-import { Alert, Form, Button } from 'react-bootstrap';
-
-import EditableList from '../editable-list';
-
-import Slider, { Range } from 'rc-slider';
-// We can just import Slider or Range to reduce bundle size
-// import Slider from 'rc-slider/lib/Slider';
-// import Range from 'rc-slider/lib/Range';
-import 'rc-slider/assets/index.css';
 import PropTypes from 'prop-types';
+import MultiSigWallet from 'Embark/contracts/MultiSigWallet';
+import TransactionSubmitButton from '../transaction-submit-button';
+import { Alert, Form,  Card, ListGroup } from 'react-bootstrap';
+import EditableList from '../editable-list'
+import Slider from 'rc-slider';
+import 'rc-slider/assets/index.css';
+
 
 class MSWDeployer extends React.Component {
 
@@ -17,8 +14,7 @@ class MSWDeployer extends React.Component {
         super(props);
         this.onDeploy = this.onDeploy.bind(this);
         this.state = {
-            strError: null,
-            test: "0x",
+            txHash: null,
             strError: null,
             owners: props.account ? [props.account] : [],
             required: 1
@@ -47,59 +43,73 @@ class MSWDeployer extends React.Component {
     }
 
     setRequired(val) {
-        console.log(val);
         this.setState({ required: val });
     }
 
-    deployWallet(e) {
-        e.preventDefault();
+    handleResult(result) {
+        this.onDeploy(result);
+    }
+
+    handleError(error) {
         if (this.state.required == 0) {
-            return this.setState({ strError: "Required cannot be zero" });
+            this.setState({ strError: "Required cannot be zero" });
         } else if (this.state.owners.length < this.state.required) {
-            return this.setState({ strError: "Required cannot be more then owners lenght" })
+            this.setState({ strError: "Required cannot be more then owners lenght" })
         } else {
             if (new Set(this.state.owners).size !== this.state.owners.length) {
-                return this.setState({ strError: "Cannot have duplicate owners" })
+                this.setState({ strError: "Cannot have duplicate owners" })
+            } else {
+                this.setState({ strError: error.toString() })
             }
         }
-        this.setState({ strError: null })
-        try {
-            let deployTx = MultiSigWallet.deploy({ arguments: [this.state.owners, this.state.required] });
-            deployTx.estimateGas().then(
-                (gas) => {
-                    deployTx.send({ from: this.props.account, gas: gas }).then(this.onDeploy).catch((error) => {
-                        this.setState({ strError: "Error on deploy. " + error.message })
-                    });
-                }
-            ).catch((error) => {
-                this.setState({ strError: "Deploy would fail. " + error.message })
-            });
-        } catch (error) {
-            this.setState({ strError: "Failed processing parameters: " + error.message })
-        }
-
     }
 
-    onAddrChange(other, newAddress) {
-        console.log(newAddress, other);
-        this.setState({ test: newAddress });
+    handleSubmission(txHash) {
+        this.setState({ txHash });
     }
-
+    
     render() {
-        return (
-            <Form>
-                <h2>Deploy MultiSigWallet</h2>
-                <Form.Group>
-                    <Form.Label>Owners:</Form.Label>
-                    <EditableList onChange={this.onOwnersChange.bind(this)} title="Owners" items={this.state.owners} itemPlaceholder="+" />
-                    <Form.Label>Required:</Form.Label>
-                    <div>{this.state.required} of {this.state.owners.length}
-                        <Slider dots={true} min={0} max={this.state.owners.length} step={1} defaultValue={this.state.required} onChange={this.setRequired.bind(this)} />
-                    </div>
-                    <Button size="lg" type="submit" variant="primary" onClick={(e) => this.deployWallet(e)}>Deploy</Button>
-                </Form.Group>
-                {this.state.strError != null && <Alert onClose={() => { this.setState({ strError: null }) }} variant="danger">{this.state.strError}</Alert>}
-            </Form>);
+        const { account } = this.props;
+        const { owners, required } = this.state;
+        return(
+            <Card>
+                <Card.Header>
+                    Deploy New MultiSigWallet
+                </Card.Header>
+                <ListGroup variant="flush">
+                    <ListGroup.Item>
+                        <Form.Label>Owners:</Form.Label>
+                        <EditableList onChange={this.onOwnersChange.bind(this)} title="Owners" items={this.state.owners} itemPlaceholder="+" />
+                    </ListGroup.Item>
+                    <ListGroup.Item>
+                        <Form.Label>Required:</Form.Label>
+                        <div>{required} of {owners.length}
+                            <Slider dots={true} min={0} max={owners.length} step={1} defaultValue={required} onChange={this.setRequired.bind(this)} />
+                        </div>
+                    </ListGroup.Item>
+                </ListGroup>
+                <Card.Body>
+                    <TransactionSubmitButton 
+                        account={account}
+                        sendTransaction={
+                            MultiSigWallet.deploy({ arguments: [owners, required] })
+                        }
+                        onSubmission={(txHash) => this.handleSubmission(txHash) }
+                        onResult={(result) => this.handleResult(result) }
+                        onError={(error) => this.handleError(error) }
+                        text="Deploy"
+                        size="sm"
+                        />
+                </Card.Body>
+                {this.state.strError != null && 
+                <Card.Footer>
+                    <Alert 
+                        onClose={() => { this.setState({ strError: null }) }} 
+                        variant="danger">
+                        {this.state.strError}
+                    </Alert>
+                </Card.Footer>}
+            </Card>);
     }
 }
 
