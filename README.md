@@ -1,5 +1,7 @@
 # Multisig Dapp
 
+Basic Dapp for deploying and using MultisigWallet.
+
 ## Changelog
 
 v0.0.3:
@@ -23,7 +25,8 @@ v0.0.2:
 
 | Version | IPFS Hash | infura | ipfs.io | cloudflare |
 | ------- | --------- | ------ | ------- | ---------- |
-|  0.0.2  | [ipfs://QmcCiUCELq2PuUunfVGKin1wLaukX1ZNVN7si9rvr8SXA4](ipfs://QmcCiUCELq2PuUunfVGKin1wLaukX1ZNVN7si9rvr8SXA4) | [@infura](https://ipfs.infura.io/ipfs/QmcCiUCELq2PuUunfVGKin1wLaukX1ZNVN7si9rvr8SXA4/) | [@ipfs.io](https://gateway.ipfs.io/ipfs/QmcCiUCELq2PuUunfVGKin1wLaukX1ZNVN7si9rvr8SXA4/) | [@cloudflare](https://cloudflare-ipfs.com/ipfs/QmcCiUCELq2PuUunfVGKin1wLaukX1ZNVN7si9rvr8SXA4/) |
+|  0.0.3  | [ipfs://QmXhDfK48Y9F6rcp5dvHQndiPogtXZPqgEggy7c5rdBKYC/](ipfs://QmXhDfK48Y9F6rcp5dvHQndiPogtXZPqgEggy7c5rdBKYC/) | [@infura](https://ipfs.infura.io/ipfs/QmXhDfK48Y9F6rcp5dvHQndiPogtXZPqgEggy7c5rdBKYC/) | [@ipfs.io](https://gateway.ipfs.io/ipfs/QmXhDfK48Y9F6rcp5dvHQndiPogtXZPqgEggy7c5rdBKYC/) | [@cloudflare](https://cloudflare-ipfs.com/ipfs/QmXhDfK48Y9F6rcp5dvHQndiPogtXZPqgEggy7c5rdBKYC/) |
+|  0.0.2  | [ipfs://QmcCiUCELq2PuUunfVGKin1wLaukX1ZNVN7si9rvr8SXA4/](ipfs://QmcCiUCELq2PuUunfVGKin1wLaukX1ZNVN7si9rvr8SXA4/) | [@infura](https://ipfs.infura.io/ipfs/QmcCiUCELq2PuUunfVGKin1wLaukX1ZNVN7si9rvr8SXA4/) | [@ipfs.io](https://gateway.ipfs.io/ipfs/QmcCiUCELq2PuUunfVGKin1wLaukX1ZNVN7si9rvr8SXA4/) | [@cloudflare](https://cloudflare-ipfs.com/ipfs/QmcCiUCELq2PuUunfVGKin1wLaukX1ZNVN7si9rvr8SXA4/) |
 
 
 
