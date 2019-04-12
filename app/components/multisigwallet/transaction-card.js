@@ -95,7 +95,7 @@ class MSWTransactionCard extends React.Component {
                         </Row>
                     </Card.Header>
                     <ListGroup variant="flush">
-                        <ListGroup.Item><small className="text-secondary">Destination:</small><p><ColorEthAddress address={tx.destination} /></p></ListGroup.Item>
+                        <ListGroup.Item><small className="text-secondary">Destination:</small><ColorEthAddress blockyScale={4} address={tx.destination} /></ListGroup.Item>
                         <ListGroup.Item><small className="text-secondary">Value:</small><p>{tx.value} wei</p></ListGroup.Item>
                         {tx.data && <ListGroup.Item>
                             <small className="text-secondary">Data:</small>

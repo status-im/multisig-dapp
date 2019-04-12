@@ -154,14 +154,16 @@ class MSWSubmitTransaction extends React.Component {
                 <form>
                     <ListGroup variant="flush">
                         <ListGroup.Item>
+                            <small className="text-secondary">Destination:</small>
                             <ColorAddressInput
                                 defaultValue={input.destination}
                                 placeholder="destination (address)"
                                 disabled={disabled}
                                 onChange={(e) => this.handleNewDest(e)}
-                            />
+                                />
                         </ListGroup.Item>
                         <ListGroup.Item>
+                        <small className="text-secondary">Value:</small>
                             <InputGroup>
                                 <Form.Control
                                     type="text"
@@ -185,14 +187,15 @@ class MSWSubmitTransaction extends React.Component {
                             </InputGroup>
                         </ListGroup.Item>
                         <ListGroup.Item>
-                            <Form.Control
+                        <small className="text-secondary">Data:</small>
+                            <p><Form.Control
                                 as="textarea"
                                 type="text"
                                 defaultValue={input.data}
                                 placeholder="data (bytes)"
                                 disabled={disabled}
                                 onChange={(e) => this.handleChange(e, 'data')}
-                            />
+                            /></p>
                         </ListGroup.Item>
                     </ListGroup>
                     {!result &&

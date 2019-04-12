@@ -75,7 +75,7 @@ class MSWOwnerTable extends React.Component {
                     { owners.map((address, index) => (
                         <Card className="owner-item" key={index}>
                             <Card.Header className="text-right">
-                                <ColorEthAddress address={address} />
+                                <ColorEthAddress blockyScale={4} address={address} />
                             </Card.Header>
                             {isOwner && (<Card.Body className="text-right">
                                 <TransactionSubmitButton 
