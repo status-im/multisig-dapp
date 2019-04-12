@@ -1,5 +1,6 @@
 .color-address-control{
     display: flex;
+    padding:0;
 }
 
 .address-control{
@@ -25,20 +26,21 @@ a.address-control:hover {
     border: inset 1px rgb(206, 212, 218);
     background-color: #FFFFFF;
     background-color:none;
-    min-width: 200px;
-    
+    padding: 0 1px 0 15px;
 }
 
 .address-control .address-input .form-control {
     background: none;
     border:none;
     height: 27px;
-    margin: 3px 0 0 0;
-    padding-bottom: 0px;
-    padding-top: 0px;
+    margin: 3px 0px 0px -3px;
+    padding: 0px;
     text-overflow: ellipsis;
     white-space: nowrap;
     overflow: hidden;
+}
+.address-control .address-input .form-control::selection{
+    border:none;
 }
 .address-control .input-group-text {
     margin:0;

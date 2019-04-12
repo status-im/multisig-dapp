@@ -88,13 +88,13 @@ class ColorAddressInput extends React.Component {
             backgroundImage: `linear-gradient(90deg, #${address.substr(6, 6)} 0% 15%, #${address.substr(12, 6)} 17% 32%, #${address.substr(18, 6)} 34% 49%, #${address.substr(24, 6)} 51% 66%, #${address.substr(30, 6)} 68% 83%, #${address.substr(36, 6)} 85% 100%)`
         } : {}
         return (
-            <div className={className + " color-address-control"}>
+            <div className={className + " container color-address-control"}>
                 <div style={colorStyle} className={("address-control" + (disabled ? " disabled" : " enabled"))}>
-                    <InputGroup>
+                    <InputGroup className={"container"}>
                         {blocky && <InputGroup.Prepend>
                             <InputGroup.Text id="blocky"><Blockies size={blockySize} scale={blockyScale} seed={address.toLowerCase()} /></InputGroup.Text>
                         </InputGroup.Prepend>}
-                        <div className="address-input">
+                        <div className="container-fluid address-input">
                             <div 
                                 ref={this.ref} 
                                 className="form-control" 
@@ -104,7 +104,7 @@ class ColorAddressInput extends React.Component {
                                 contentEditable={!disabled} 
                                 placeholder={placeholder} />
                         </div>
-                        <div className="address-text">
+                        <div className="container-fluid address-text ">
                             {address ? (
                                 <React.Fragment>
                                     <strong>{address.substr(0, 6)}</strong><small>{address.substr(6, 36)}</small> <strong>{address.substr(36, 6)}</strong>
