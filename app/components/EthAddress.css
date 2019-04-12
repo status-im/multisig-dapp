@@ -75,7 +75,7 @@
   white-space: nowrap;
   overflow: hidden;
   display: flow-root;
-  margin: 4px auto auto auto;
+  margin-top: 0.25em;
 }
 
 
