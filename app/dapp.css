@@ -71,7 +71,9 @@ input.form-control {
   stroke: #FFF;
   stroke-width: 1;
 }
-
+.navbar-brand  svg {
+  margin: -6px 8px 0 0;
+}
 .nav-link .svg-icon {
   fill: rgba(0,0,0,.5);
   stroke: rgba(0,0,0,.5);
@@ -90,3 +92,10 @@ input.form-control {
   stroke: #FFF;
 }
 
+.card {
+  min-width: 280px;
+}
+
+.card-header {
+  padding: .75rem .75rem;
+}
