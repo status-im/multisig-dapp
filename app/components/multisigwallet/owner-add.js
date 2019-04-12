@@ -79,11 +79,10 @@ class MSWAddOwner extends React.Component {
         const { input, error, result } = this.state;
         const { MultiSigWallet, account } = this.props;
         return <Card>
-            <Card.Header>
+            <Card.Header className="text-center">
                 <ColorAddressInput
                     defaultValue={input.owner}
                     onChange={(address) => this.handleNewOwner(address)}
-                    placeholder="new owner (address)"
                 /></Card.Header>
             <Card.Body className="text-right">
                 {result ?

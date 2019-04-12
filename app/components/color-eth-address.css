@@ -9,7 +9,7 @@
   margin: -2px 0 0 0;
 }
 
-.eth-address:hover {
+.eth-address .address-text:hover {
   cursor: pointer;
 }
 
@@ -35,19 +35,47 @@
   margin-right: 10px;
 }
 
+.eth-address .address-indicator,
+.eth-address .address-control,
 .eth-address .address-text {
-  padding: 0 .75rem 0 0;
+  padding-right: 8px;
   overflow: hidden;
   margin: auto;
+}
+
+.eth-address .address-text {
+  padding: 0 .75rem 0 0;
+}
+
+.eth-address .address-indicator,
+.eth-address .address-text {
   display: flex;
 }
 
+.eth-address .address-control {
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  overflow: hidden;
+  display: none;
+}
+
+.eth-address:focus-within .address-control,
+.eth-address:hover .address-control {
+  display: flow-root;
+}
+
+.eth-address:focus-within .address-indicator,
+.eth-address:hover .address-indicator {
+  display: none;
+}
+
+.eth-address .address-indicator small, 
 .eth-address .address-text small {
   text-overflow: ellipsis;
   white-space: nowrap;
   overflow: hidden;
   display: flow-root;
-  margin: auto;
+  margin: 4px auto auto auto;
 }
 
 

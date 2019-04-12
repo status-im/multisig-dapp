@@ -20,12 +20,13 @@ class ContractLoader extends React.Component {
 
   static defaultProps = {
     account: '',
-    address: '',
+    address: '0x0000000000000000000000000000000000000000',
     onChange: () => { }
   }
 
   componentDidMount() {
-    if (this.state.contractAddress) this.props.onChange(this.state.contractAddress, (error) => this.setState({error}));
+    const address = this.state.contractAddress;
+    if (address && address != ContractLoader.defaultProps.address) this.props.onChange(address, (error) => this.setState({error}));
   }
 
   handleSumbit(event) {
@@ -46,7 +47,6 @@ class ContractLoader extends React.Component {
               <Form.Label>Contract Address:</Form.Label>
               <ColorAddressInput
                 defaultValue={contractAddress}
-                placeholder="address"
                 onChange={(address) => {
                   this.setState({contractAddress: address});
                   onChange(address, (error) => this.setState({error}))

@@ -74,7 +74,7 @@ class MSWOwnerTable extends React.Component {
                     {error != null && <Alert dismissible onClose={() => { this.setState({error: null}) }} variant="danger">{error}</Alert>}
                     { owners.map((address, index) => (
                         <Card className="owner-item" key={index}>
-                            <Card.Header className="text-right">
+                            <Card.Header className="text-center">
                                 <ColorEthAddress blockyScale={4} address={address} />
                             </Card.Header>
                             {isOwner && (<Card.Body className="text-right">
