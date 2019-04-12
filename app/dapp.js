@@ -8,7 +8,7 @@ import { HashRouter, Route, Redirect, Link } from "react-router-dom";
 import { LinkContainer } from "react-router-bootstrap";
 import './dapp.css';
 import { Navbar, Nav, Alert, NavDropdown, Container, CardColumns } from 'react-bootstrap';
-import ColorEthAddress from './components/color-eth-address';
+import EthAddressIndicator from './components/EthAddressIndicator';
 import MSWTransactionTable from './components/multisigwallet/transaction-table';
 import MSWOwnerTable from './components/multisigwallet/owner-table';
 
@@ -141,7 +141,7 @@ class App extends React.Component {
                                         <Nav />
                                     }
                                     <Navbar.Text>
-                                        <ColorEthAddress blockyScale={4} address={MultiSigWallet ? MultiSigWallet._address : account} />
+                                        <EthAddressIndicator blockyScale={4} address={MultiSigWallet ? MultiSigWallet._address : account} />
                                     </Navbar.Text>
                                 </Navbar.Collapse>
                             </Navbar>

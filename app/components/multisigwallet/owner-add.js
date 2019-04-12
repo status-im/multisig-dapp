@@ -1,6 +1,6 @@
 import React from 'react';
 import { Alert, Card } from 'react-bootstrap';
-import ColorAddressInput from '../color-address-input';
+import EthAddressControl from '../EthAddressControl';
 import PropTypes from 'prop-types';
 import TransactionSubmitButton from '../transaction-submit-button';
 function isSuccess(status) {
@@ -80,7 +80,7 @@ class MSWAddOwner extends React.Component {
         const { MultiSigWallet, account } = this.props;
         return <Card>
             <Card.Header className="text-center">
-                <ColorAddressInput
+                <EthAddressControl
                     defaultValue={input.owner}
                     onChange={(address) => this.handleNewOwner(address)}
                 /></Card.Header>

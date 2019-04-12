@@ -1,9 +1,9 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import Blockies from 'react-blockies';
-import './color-eth-address.css';
+import './EthAddress.css';
 
-class ColorAddressInput extends React.Component {
+class EthAddressControl extends React.Component {
 	static propTypes = {
 		className: PropTypes.string,
 		defaultValue: PropTypes.string,
@@ -109,4 +109,4 @@ class ColorAddressInput extends React.Component {
 	}
 }
 
-export default ColorAddressInput;
+export default EthAddressControl;

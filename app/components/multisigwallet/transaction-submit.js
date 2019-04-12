@@ -1,6 +1,6 @@
 import React from 'react';
 import { Form,  Alert, Card, ListGroup, Badge, Col, Row, InputGroup, DropdownButton, Dropdown } from 'react-bootstrap';
-import ColorAddressInput from '../color-address-input';
+import EthAddressControl from '../EthAddressControl';
 import PropTypes from 'prop-types';
 import TransactionSubmitButton from '../transaction-submit-button';
 function isSuccess(status) {
@@ -155,7 +155,7 @@ class MSWSubmitTransaction extends React.Component {
                     <ListGroup variant="flush">
                         <ListGroup.Item>
                             <small className="text-secondary">Destination:</small>
-                            <ColorAddressInput
+                            <EthAddressControl
                                 defaultValue={input.destination}
                                 placeholder="destination (address)"
                                 disabled={disabled}

@@ -1,6 +1,6 @@
 import React from 'react';
 import { Card, ListGroup, Badge, Spinner, Col, Row, Alert } from 'react-bootstrap';
-import ColorEthAddress from '../color-eth-address';
+import EthAddressIndicator from '../EthAddressIndicator';
 import MSWConfirmation from './confirmation';
 import PropTypes from 'prop-types';
 
@@ -95,7 +95,7 @@ class MSWTransactionCard extends React.Component {
                         </Row>
                     </Card.Header>
                     <ListGroup variant="flush">
-                        <ListGroup.Item><small className="text-secondary">Destination:</small><ColorEthAddress blockyScale={4} address={tx.destination} /></ListGroup.Item>
+                        <ListGroup.Item><small className="text-secondary">Destination:</small><EthAddressIndicator blockyScale={4} address={tx.destination} /></ListGroup.Item>
                         <ListGroup.Item><small className="text-secondary">Value:</small><p>{tx.value} wei</p></ListGroup.Item>
                         {tx.data && <ListGroup.Item>
                             <small className="text-secondary">Data:</small>
