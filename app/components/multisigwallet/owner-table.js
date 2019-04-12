@@ -3,7 +3,7 @@ import { Alert, Card, CardColumns } from 'react-bootstrap';
 import MSWAddOwner from './owner-add';
 import EthAddressIndicator from '../EthAddressIndicator';
 import PropTypes from 'prop-types';
-import TransactionSubmitButton from '../transaction-submit-button';
+import TransactionSubmitButton from '../TransactionSubmitButton';
 
 class MSWOwnerTable extends React.Component {
 

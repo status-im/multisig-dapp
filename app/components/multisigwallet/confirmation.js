@@ -1,6 +1,6 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import TransactionSubmitButton from '../transaction-submit-button';
+import TransactionSubmitButton from '../TransactionSubmitButton';
 import { ButtonGroup } from 'react-bootstrap';
 class MSWConfirmation extends React.Component {
     constructor(props) {

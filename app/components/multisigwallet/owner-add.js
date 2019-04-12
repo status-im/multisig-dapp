@@ -2,7 +2,7 @@ import React from 'react';
 import { Alert, Card } from 'react-bootstrap';
 import EthAddressControl from '../EthAddressControl';
 import PropTypes from 'prop-types';
-import TransactionSubmitButton from '../transaction-submit-button';
+import TransactionSubmitButton from '../TransactionSubmitButton';
 function isSuccess(status) {
     return status === "0x1" || status === true;
 }
