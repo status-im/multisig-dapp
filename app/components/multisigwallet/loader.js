@@ -1,7 +1,7 @@
 import React from 'react';
 import { Alert, Form, Button, Card, ListGroup } from 'react-bootstrap';
 import PropTypes from 'prop-types';
-import EthAddressControl from '../EthAddressControl';
+import EthAddress from '../EthAddress';
 
 class ContractLoader extends React.Component {
 
@@ -45,8 +45,9 @@ class ContractLoader extends React.Component {
           <ListGroup variant="flush">
             <ListGroup.Item>
               <Form.Label>Contract Address:</Form.Label>
-              <EthAddressControl
-                defaultValue={contractAddress}
+              <EthAddress 
+                control={true}
+                value={contractAddress}
                 onChange={(address) => {
                   this.setState({contractAddress: address});
                   onChange(address, (error) => this.setState({error}))

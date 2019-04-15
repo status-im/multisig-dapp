@@ -1,7 +1,7 @@
 import React from 'react';
 import { Alert, Card, CardColumns } from 'react-bootstrap';
 import MSWAddOwner from './owner-add';
-import EthAddressIndicator from '../EthAddressIndicator';
+import EthAddress from '../EthAddress';
 import PropTypes from 'prop-types';
 import TransactionSubmitButton from '../TransactionSubmitButton';
 
@@ -75,7 +75,7 @@ class MSWOwnerTable extends React.Component {
                     { owners.map((address, index) => (
                         <Card className="owner-item" key={index}>
                             <Card.Header className="text-center">
-                                <EthAddressIndicator blockyScale={4} address={address} />
+                                <EthAddress blockyScale={4} value={address} />
                             </Card.Header>
                             {isOwner && (<Card.Body className="text-right">
                                 <TransactionSubmitButton 
