@@ -160,12 +160,13 @@ class App extends React.Component {
                         <Redirect to={"/" + MultiSigWallet.options.address + "/transactions/pending"} /> :
                         <React.Fragment />
                 )} />
-                <Route path="/:address/transactions/:mode?" render={({ match }) => (
+                <Route path="/:address/transactions/:mode?/:page?" render={({ match }) => (
                     MultiSigWallet &&
                     <Container id="transactions">
                         <h3>Transactions</h3>
                         <MSWTransactionTable
                             mode={match.params.mode}
+                            page={match.params.page}
                             MultiSigWallet={MultiSigWallet}
                             account={account}
                             isOwner={isOwner} />
