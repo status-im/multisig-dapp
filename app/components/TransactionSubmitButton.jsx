@@ -22,6 +22,7 @@ class TransactionSubmitButton extends React.Component {
         size: PropTypes.string,
         animation: PropTypes.string,
         variant: PropTypes.string,
+        disabled: PropTypes.bool
 
     }
 
@@ -36,6 +37,7 @@ class TransactionSubmitButton extends React.Component {
         onResult: () => {},
         onReceipt: () => {},
         onError: () => {},
+        disabled: false
     }
 
     submitTransaction(e) {
@@ -69,13 +71,13 @@ class TransactionSubmitButton extends React.Component {
 
     render() {
         const { txWaiting } = this.state;
-        const { size, variant, account, text, icon, animation } = this.props;
+        const { size, variant, account, text, icon, animation, disabled } = this.props;
         return (
             <Button
                 type='submit' 
                 size={size}
                 variant={variant} 
-                disabled={(txWaiting || !account)}
+                disabled={(disabled || txWaiting || !account)}
                 onClick={(e) => this.submitTransaction(e)}>
                 {text}
                 {txWaiting ? 
