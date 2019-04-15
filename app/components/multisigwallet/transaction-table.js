@@ -1,5 +1,5 @@
 import React from 'react';
-import { CardColumns, Alert } from 'react-bootstrap';
+import { Accordion, Alert, CardColumns } from 'react-bootstrap';
 import MSWSubmitTransaction from './transaction-submit';
 import MSWTransactionCard from './transaction-card';
 import PropTypes from 'prop-types';
@@ -88,23 +88,25 @@ class MSWTransactionTable extends React.Component {
         const { txIds, transactionCount, strError } = this.state;
         const { MultiSigWallet, isOwner, account } = this.props;
         return (
-            <CardColumns>
-                {strError != null && <Alert dismissible onClose={() => { this.setState({ strError: null }) }} variant="danger">{strError}</Alert>}
-                {isOwner && 
-                    <MSWSubmitTransaction 
-                        onSubmission={(txId)=>{this.appendNewTx(txId)}}
-                        MultiSigWallet={MultiSigWallet}
-                        account={account} 
-                        nextId={transactionCount} />}
-                {txIds.reverse().map((value, index) => {
-                    return (<MSWTransactionCard 
-                        key={index} 
-                        id={value} 
-                        MultiSigWallet={MultiSigWallet} 
-                        isOwner={isOwner} 
-                        account={account} />)
-                })}
-            </CardColumns>
+            <Accordion defaultActiveKey={transactionCount}>
+                <CardColumns>
+                    {strError != null && <Alert dismissible onClose={() => { this.setState({ strError: null }) }} variant="danger">{strError}</Alert>}
+                    {isOwner && 
+                        <MSWSubmitTransaction 
+                            onSubmission={(txId)=>{this.appendNewTx(txId)}}
+                            MultiSigWallet={MultiSigWallet}
+                            account={account} 
+                            nextId={transactionCount} />}
+                    {txIds.reverse().map((value, index) => {
+                        return (<MSWTransactionCard 
+                            key={index} 
+                            id={value} 
+                            MultiSigWallet={MultiSigWallet} 
+                            isOwner={isOwner} 
+                            account={account} />)
+                    })}
+                </CardColumns>
+            </Accordion>
         )
 
     }

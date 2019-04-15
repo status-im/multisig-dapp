@@ -1,6 +1,6 @@
 import React from 'react';
-import { Form,  Alert, Card, ListGroup, Badge, Col, Row, InputGroup, DropdownButton, Dropdown } from 'react-bootstrap';
-import EthAddressControl from '../EthAddressControl';
+import { Form, Accordion, Alert, Card, ListGroup, Badge, Col, Row, InputGroup, DropdownButton, Dropdown } from 'react-bootstrap';
+import EthAddress from '../EthAddress';
 import PropTypes from 'prop-types';
 import TransactionSubmitButton from '../TransactionSubmitButton';
 function isSuccess(status) {
@@ -136,7 +136,7 @@ class MSWSubmitTransaction extends React.Component {
         }
         return (
             <Card border={variant}>
-                <Card.Header className="text-center">
+                <Accordion.Toggle as={Card.Header} eventKey={nextId} className="text-center">                
                     <Row>
                         <Col className="text-left">Tx #{nextId}</Col>
                         <Col className="text-right">
@@ -150,82 +150,84 @@ class MSWSubmitTransaction extends React.Component {
                             </Badge>
                         </Col>
                     </Row>
-                </Card.Header>
-                <form>
-                    <ListGroup variant="flush">
-                        <ListGroup.Item>
-                            <small className="text-secondary">Destination:</small>
-                            <EthAddressControl
-                                defaultValue={input.destination}
-                                placeholder="destination (address)"
-                                disabled={disabled}
-                                onChange={(e) => this.handleNewDest(e)}
-                                />
-                        </ListGroup.Item>
-                        <ListGroup.Item>
-                        <small className="text-secondary">Value:</small>
-                            <InputGroup>
-                                <Form.Control
-                                    type="text"
-                                    value={web3.utils.fromWei(input.value, input.valueType).toString() + (input.dot ? '.' : '')}
-                                    placeholder="value (uint256)"
+                </Accordion.Toggle>
+                <Accordion.Collapse eventKey={nextId}>
+                    <React.Fragment>
+                        <ListGroup variant="flush">
+                            <ListGroup.Item>
+                                <small className="text-secondary">Destination:</small>
+                                <EthAddress 
+                                    control={true}
+                                    value={input.destination}
                                     disabled={disabled}
-                                    onChange={(e) => this.setValue(e)
+                                    onChange={(e) => this.handleNewDest(e)}
+                                    />
+                            </ListGroup.Item>
+                            <ListGroup.Item>
+                            <small className="text-secondary">Value:</small>
+                                <InputGroup>
+                                    <Form.Control
+                                        type="text"
+                                        value={web3.utils.fromWei(input.value, input.valueType).toString() + (input.dot ? '.' : '')}
+                                        placeholder="value (uint256)"
+                                        disabled={disabled}
+                                        onChange={(e) => this.setValue(e)
+                                        }
+                                    />
+                                    <DropdownButton
+                                        as={InputGroup.Append}
+                                        variant="outline-secondary"
+                                        title={input.valueType}
+                                    >
+                                        <Dropdown.Item onSelect={(e) => this.setValueType('ether')}>ether</Dropdown.Item>
+                                        <Dropdown.Item onSelect={(e) => this.setValueType('finney')}>finney</Dropdown.Item>
+                                        <Dropdown.Item onSelect={(e) => this.setValueType('szabo')}>szabo</Dropdown.Item>
+                                        <Dropdown.Item onSelect={(e) => this.setValueType('gwei')}>gwei</Dropdown.Item>
+                                        <Dropdown.Item onSelect={(e) => this.setValueType('wei')}>wei</Dropdown.Item>
+                                    </DropdownButton>
+                                </InputGroup>
+                            </ListGroup.Item>
+                            <ListGroup.Item>
+                            <small className="text-secondary">Data:</small>
+                                <p><Form.Control
+                                    as="textarea"
+                                    type="text"
+                                    defaultValue={input.data}
+                                    placeholder="data (bytes)"
+                                    disabled={disabled}
+                                    onChange={(e) => this.handleChange(e, 'data')}
+                                /></p>
+                            </ListGroup.Item>
+                        </ListGroup>
+                        {!result &&
+                            <Card.Body className="text-right">
+                                <TransactionSubmitButton 
+                                    account={account}
+                                    sendTransaction={
+                                        MultiSigWallet.methods.submitTransaction(
+                                            input.destination,
+                                            input.value ? input.value : "0",
+                                            input.data ? input.data : "0x"
+                                        )
                                     }
-                                />
-                                <DropdownButton
-                                    as={InputGroup.Append}
-                                    variant="outline-secondary"
-                                    title={input.valueType}
-                                >
-                                    <Dropdown.Item onSelect={(e) => this.setValueType('ether')}>ether</Dropdown.Item>
-                                    <Dropdown.Item onSelect={(e) => this.setValueType('finney')}>finney</Dropdown.Item>
-                                    <Dropdown.Item onSelect={(e) => this.setValueType('szabo')}>szabo</Dropdown.Item>
-                                    <Dropdown.Item onSelect={(e) => this.setValueType('gwei')}>gwei</Dropdown.Item>
-                                    <Dropdown.Item onSelect={(e) => this.setValueType('wei')}>wei</Dropdown.Item>
-                                </DropdownButton>
-                            </InputGroup>
-                        </ListGroup.Item>
-                        <ListGroup.Item>
-                        <small className="text-secondary">Data:</small>
-                            <p><Form.Control
-                                as="textarea"
-                                type="text"
-                                defaultValue={input.data}
-                                placeholder="data (bytes)"
-                                disabled={disabled}
-                                onChange={(e) => this.handleChange(e, 'data')}
-                            /></p>
-                        </ListGroup.Item>
-                    </ListGroup>
-                    {!result &&
-                        <Card.Body className="text-right">
-                            <TransactionSubmitButton 
-                                account={account}
-                                sendTransaction={
-                                    MultiSigWallet.methods.submitTransaction(
-                                        input.destination,
-                                        input.value ? input.value : "0",
-                                        input.data ? input.data : "0x"
-                                    )
-                                }
-                                onSubmission={(txHash) => this.handleSubmission(txHash) }
-                                onResult={(result) => this.handleResult(result) }
-                                onError={(error) => this.handleError(error) }
-                                icon={
-                                    <svg className="svg-icon" viewBox="0 0 20 20">
-                                        <path d="M17.218,2.268L2.477,8.388C2.13,8.535,2.164,9.05,2.542,9.134L9.33,10.67l1.535,6.787c0.083,0.377,0.602,0.415,0.745,0.065l6.123-14.74C17.866,2.46,17.539,2.134,17.218,2.268 M3.92,8.641l11.772-4.89L9.535,9.909L3.92,8.641z M11.358,16.078l-1.268-5.613l6.157-6.157L11.358,16.078z"></path>
-                                    </svg>
-                                }
-                                text={('Send')}
-                                />
-                        </Card.Body>}
-                    {(error || result) &&
-                        <Card.Footer>
-                            {error != null && <Alert dismissible onClose={() => { this.setState({ error: null }) }} variant="danger">{error}</Alert>}
-                            {result && <Alert dismissible onClose={() => { this.clearReceipt() }} variant={variant}>{isSuccess(result.status) ? 'Success' : 'Failure / Revert'} - Transaction Hash: {result.transactionHash}</Alert>}
-                        </Card.Footer>}
-                </form>
+                                    onSubmission={(txHash) => this.handleSubmission(txHash) }
+                                    onResult={(result) => this.handleResult(result) }
+                                    onError={(error) => this.handleError(error) }
+                                    icon={
+                                        <svg className="svg-icon" viewBox="0 0 20 20">
+                                            <path d="M17.218,2.268L2.477,8.388C2.13,8.535,2.164,9.05,2.542,9.134L9.33,10.67l1.535,6.787c0.083,0.377,0.602,0.415,0.745,0.065l6.123-14.74C17.866,2.46,17.539,2.134,17.218,2.268 M3.92,8.641l11.772-4.89L9.535,9.909L3.92,8.641z M11.358,16.078l-1.268-5.613l6.157-6.157L11.358,16.078z"></path>
+                                        </svg>
+                                    }
+                                    text={('Send')}
+                                    />
+                            </Card.Body>}
+                        {(error || result) &&
+                            <Card.Footer>
+                                {error != null && <Alert dismissible onClose={() => { this.setState({ error: null }) }} variant="danger">{error}</Alert>}
+                                {result && <Alert dismissible onClose={() => { this.clearReceipt() }} variant={variant}>{isSuccess(result.status) ? 'Success' : 'Failure / Revert'} - Transaction Hash: {result.transactionHash}</Alert>}
+                            </Card.Footer>}
+                    </React.Fragment>
+                </Accordion.Collapse>
             </Card>
         );
     }

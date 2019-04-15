@@ -1,6 +1,6 @@
 import React from 'react';
-import { Card, ListGroup, Badge, Spinner, Col, Row, Alert } from 'react-bootstrap';
-import EthAddressIndicator from '../EthAddressIndicator';
+import { Card, Accordion, ListGroup, Badge, Spinner, Col, Row, Alert } from 'react-bootstrap';
+import EthAddress from '../EthAddress';
 import MSWConfirmation from './confirmation';
 import PropTypes from 'prop-types';
 
@@ -61,18 +61,20 @@ class MSWTransactionCard extends React.Component {
         return (
             !tx ?
                 (<Card>
-                    <Card.Header className="text-center">
+                    <Accordion.Toggle as={Card.Header} eventKey={id} className="text-center">
                         <Row>
                             <Col className="text-left"> Tx #{id} </Col>
                             <Col className="text-right"><Badge variant="info">Loading</Badge></Col>
                         </Row>
-                    </Card.Header>
-                    <Card.Body>
-                        <Spinner animation="border" variant="info" />
-                    </Card.Body>
+                    </Accordion.Toggle>
+                    <Accordion.Collapse eventKey={id}>
+                        <Card.Body>
+                            <Spinner animation="border" variant="info" />
+                        </Card.Body>
+                    </Accordion.Collapse>
                 </Card>) :
                 (<Card>
-                    <Card.Header className="text-center">
+                    <Accordion.Toggle as={Card.Header} eventKey={id} className="text-center">
                         <Row>
                             <Col className="text-left"> Tx #{id} </Col>
                             <Col className="text-right">
@@ -93,20 +95,24 @@ class MSWTransactionCard extends React.Component {
                                 </Badge>
                             </Col>
                         </Row>
-                    </Card.Header>
-                    <ListGroup variant="flush">
-                        <ListGroup.Item><small className="text-secondary">Destination:</small><EthAddressIndicator blockyScale={4} address={tx.destination} /></ListGroup.Item>
-                        <ListGroup.Item><small className="text-secondary">Value:</small><p>{tx.value} wei</p></ListGroup.Item>
-                        {tx.data && <ListGroup.Item>
-                            <small className="text-secondary">Data:</small>
-                            <p><strong>{tx.data.substr(0, 10)}</strong>{tx.data.substr(10)}</p>
-                        </ListGroup.Item>}
-                    </ListGroup>
-                    {!tx.executed &&
-                        <Card.Body className="text-right">
-                            <MSWConfirmation onExecution={(executed) => this.setExecuted(executed)} onError={(err) => this.setError(err.toString())} MultiSigWallet={MultiSigWallet} isOwner={isOwner} account={account} id={id} />
-                        </Card.Body>}
-                    {strError != null && <Card.Footer><Alert dismissible onClose={()=>this.setState({strError:null})} variant="danger">{strError}</Alert></Card.Footer>}
+                    </Accordion.Toggle>
+                    <Accordion.Collapse eventKey={id}>
+                        <React.Fragment>
+                            <ListGroup variant="flush">
+                                <ListGroup.Item><small className="text-secondary">Destination:</small><EthAddress blockyScale={4} value={tx.destination} /></ListGroup.Item>
+                                <ListGroup.Item><small className="text-secondary">Value:</small><p>{tx.value} wei</p></ListGroup.Item>
+                                {tx.data && <ListGroup.Item>
+                                    <small className="text-secondary">Data:</small>
+                                    <p><strong>{tx.data.substr(0, 10)}</strong>{tx.data.substr(10)}</p>
+                                </ListGroup.Item>}
+                            </ListGroup>
+                            {!tx.executed &&
+                                <Card.Body className="text-right">
+                                    <MSWConfirmation onExecution={(executed) => this.setExecuted(executed)} onError={(err) => this.setError(err.toString())} MultiSigWallet={MultiSigWallet} isOwner={isOwner} account={account} id={id} />
+                                </Card.Body>}
+                            {strError != null && <Card.Footer><Alert dismissible onClose={()=>this.setState({strError:null})} variant="danger">{strError}</Alert></Card.Footer>}
+                        </React.Fragment>
+                    </Accordion.Collapse>
                 </Card>)
         )
 
