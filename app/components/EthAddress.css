@@ -9,42 +9,46 @@
   margin: -2px 0 0 0;
 }
 
-.eth-address .address-text:hover {
-  cursor: pointer;
-}
-
-.eth-address .address-bg {
-  border-radius: 8px;
-  background-color:#FFFFFF;
-  display: flex;
-  overflow: hidden;
-}
-
-.eth-address .clip-icon {
-  visibility: hidden;
-  margin: auto 3px;
-}
-
-.eth-address:hover .clip-icon {
-  visibility: visible;
-  display: inline-block;
-}
-
 .eth-address .blocky .identicon {
   border-radius: 0 8px 8px 0;
   margin-right: 10px;
 }
 
-.eth-address .address-indicator,
-.eth-address .address-control,
-.eth-address .address-text {
-  padding-right: 8px;
+.eth-address .address-text:hover {
+  cursor: pointer;
+}
+
+.eth-address .address-err, 
+.eth-address .address-bg {
+  border-radius: 8px;
+  display: flex;
   overflow: hidden;
-  margin: auto;
+}
+
+.eth-address .address-bg {
+  background-color:#FFF;
+}
+
+.eth-address .address-err {
+  background-color:#f8d7da;
 }
 
 .eth-address .address-text {
-  padding: 0 .75rem 0 0;
+  color: #808080;
+}
+
+.eth-address .address-indicator,
+.eth-address .address-control
+{
+  color: #000;
+  padding-right: 8px;
+}
+
+.eth-address .address-indicator,
+.eth-address .address-control,
+.eth-address .address-text {
+  overflow: hidden;
+  margin: auto;
 }
 
 .eth-address .address-indicator,
@@ -78,5 +82,12 @@
   margin-top: 0.25em;
 }
 
+.eth-address .clip-icon {
+  visibility: hidden;
+  margin: auto 3px;
+}
 
-
+.eth-address:hover .clip-icon {
+  visibility: visible;
+  display: inline-block;
+}
