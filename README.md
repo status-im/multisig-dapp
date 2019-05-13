@@ -4,6 +4,11 @@ Basic Dapp for deploying and using MultisigWallet.
 
 ## Changelog
 
+v0.0.4:
+- collapsable txs
+- pagination
+- bug fixes
+
 v0.0.3:
 - better routes
 - better look'n feel 
