@@ -2,7 +2,8 @@
   "contracts": ["contracts/**"],
   "app": {
     "js/dapp.js": ["app/dapp.js"],
-    "index.html": "app/index.html"
+    "index.html": "app/index.html",
+    "css/bootstrap.min.css": "node_modules/bootstrap/dist/css/bootstrap.min.css"
   },
   "buildDir": "dist/",
   "config": "config/",
