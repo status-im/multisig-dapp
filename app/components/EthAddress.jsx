@@ -9,6 +9,7 @@ class EthAddress extends React.Component {
 	static propTypes = {
 		className: PropTypes.string,
 		value: PropTypes.string,
+		defaultValue: PropTypes.string,
 		colors: PropTypes.bool,
 		blocky: PropTypes.bool,
 		blockySize: PropTypes.number,
@@ -19,8 +20,8 @@ class EthAddress extends React.Component {
 	};
 
 	static defaultProps = {
-		className: 'text-monospace',
-		value: "0x0000000000000000000000000000000000000000",
+		className: 'eth-address',
+		defaultValue: "0x0000000000000000000000000000000000000000",
 		colors: true,
 		control: false,
 		blocky: true,
@@ -35,7 +36,7 @@ class EthAddress extends React.Component {
 		this.controlRef = React.createRef();
 		this.attachRef = containerRef => this.setState({ containerRef });
 		this.state = {
-			address: props.value, 
+			value: props.value != undefined ? props.value : props.defaultValue,
 			tooltipVisible: false 
 		};
 	}
@@ -43,13 +44,13 @@ class EthAddress extends React.Component {
 
 	componentDidMount() {
 		if(this.props.control)
-        	this.controlRef.current.textContent = this.props.value;
+        	this.controlRef.current.textContent = this.state.value;
     }
 
 	componentDidUpdate(prevProps, prevState) {
-        if (prevProps.value != this.props.value && this.props.value != this.state.address) {
-            this.setState({address: this.props.value});
-        }
+        if (prevProps.value != this.props.value && this.props.value != this.state.value) {
+            this.setState({value: this.props.value});
+		}
     }
 
 
@@ -61,7 +62,7 @@ class EthAddress extends React.Component {
 			this.timeout = setTimeout(() => { this.setState({ tooltipVisible: false }) }, 1000)
 		}
 	}
-
+	
     onKeyPress(event) {
         if (event.charCode === 13) {
             event.preventDefault();
@@ -73,7 +74,7 @@ class EthAddress extends React.Component {
 		if(text.length == 0){
 			text = "0x0000000000000000000000000000000000000000";
 		}
-		this.setState({ address: text });
+		this.setState({ value: text });
 		this.notifyListeners(text);
 	}
 	
@@ -93,9 +94,9 @@ class EthAddress extends React.Component {
             event.stopPropagation();
             event.preventDefault();
             this.controlRef.current.textContent = pastedData;
-            this.setState({ address: pastedData });
+            this.setState({ value: pastedData });
 		} else {
-			this.setState({ address: this.controlRef.current.textContent });
+			this.setState({ value: this.controlRef.current.textContent });
 		}
 		this.notifyListeners(this.controlRef.current.textContent);
     }
@@ -103,7 +104,7 @@ class EthAddress extends React.Component {
     focus() {
         this.controlRef.current.focus();
 	}
-
+	
 	render() {
 		const {
 			disabled,
@@ -112,27 +113,27 @@ class EthAddress extends React.Component {
 			blocky,
 			blockySize,
 			blockyScale,
-			value,
 			control
 		} = this.props;
-		const { containerRef, tooltipVisible, address, tooltipText } = this.state;
-		let valid = /^(0x)?[0-9a-f]{40}$/i.test(address);
-		const colorStyle = colors && valid ? {
-			backgroundImage: `linear-gradient(90deg, #${address.substr(6, 6)} 0% 15%, #${address.substr(12, 6)} 17% 32%, #${address.substr(18, 6)} 34% 49%, #${address.substr(24, 6)} 51% 66%, #${address.substr(30, 6)} 68% 83%, #${address.substr(36, 6)} 85% 100%)`
+		const value = this.state.value ? this.state.value : "0x0000000000000000000000000000000000000000";
+		const { containerRef, tooltipVisible, tooltipText } = this.state;
+		let valid = /^(0x)?[0-9a-f]{40}$/i.test(value);
+		const colorStyle = colors ? {
+			backgroundImage: `linear-gradient(90deg, #${value.substr(6, 6)} 0% 15%, #${value.substr(12, 6)} 17% 32%, #${value.substr(18, 6)} 34% 49%, #${value.substr(24, 6)} 51% 66%, #${value.substr(30, 6)} 68% 83%, #${value.substr(36, 6)} 85% 100%)`
 		} : {}
 		return (
-			<span ref={this.attachRef} onClick={this.onClick} style={colorStyle} className={`${className} eth-address`} >
-				<span className={valid ? "address-bg" : "address-err"}>
-					{blocky && 
+			<span ref={this.attachRef} style={colorStyle} onClick={this.onClick} className={`${className} ${valid ? '': 'err' }`} >
+				<span className={valid ? "bg" : "err"}>
+					{blocky && valid &&	 
 						<span className="blocky">
-							<Blockies seed={address.toLowerCase()} size={blockySize} scale={blockyScale} />
+							<Blockies seed={value.toLowerCase()} size={blockySize} scale={blockyScale} />
 						</span>}
-					<span className={control ? "address-indicator" : "address-text" } >
-						<strong>{address.substr(0, 6)}</strong><small>{address.substr(6, 36)}</small><strong>{address.substr(36, 6)}</strong>
+					<span className={control ? "indicator" : "text" } >
+						<strong>{value.substr(0, 6)}</strong><small>{value.substr(6, 36)}</small><strong>{value.substr(36, 6)}</strong>
 					</span>
 					{ control ? 
 					<span 
-						className="address-control"
+						className="control"
 						ref={this.controlRef} 
 						placeholder="0x0000000000000000000000000000000000000000"
 						onKeyPress={(event) => this.onKeyPress(event)} 
@@ -156,13 +157,12 @@ class EthAddress extends React.Component {
 						}}
 					</Overlay>
 				</span>
-			</span>
+			</span>		
 		)
 	}
-	
+
 	componentWillUnmount() {
 		clearTimeout(this.timeout);
-	}
-}
+	}}
 
 export default EthAddress;

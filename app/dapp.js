@@ -148,11 +148,13 @@ class App extends React.Component {
                             <React.Fragment /> 
                             :
                             <Container id="select-contract">
+                                <h2>Open Multisig Wallet</h2> 
                                 <CardColumns>
                                     <ContractLoader account={account} address={match.params.address} onChange={(address, onError) => this.setContractAddress(address, onError) } />
                                     {account && <MSWDeployer account={account} onDeploy={this.setMSWInstance} />}
                                 </CardColumns>
-                            </Container>}
+                            </Container>
+                        }
                     </React.Fragment>
                 )} />
                 <Route exact path="/:address?" render={() => (
@@ -163,7 +165,7 @@ class App extends React.Component {
                 <Route path="/:address/transactions/:mode?/:page?" render={({ match }) => (
                     MultiSigWallet &&
                     <Container id="transactions">
-                        <h3>Transactions</h3>
+                        <h2>Transactions {match.params.mode}</h2>
                         <MSWTransactionTable
                             mode={match.params.mode}
                             page={match.params.page}
@@ -175,7 +177,7 @@ class App extends React.Component {
                 <Route path="/:address/owners" render={() => (
                     MultiSigWallet &&
                     <Container id="owners">
-                        <h3>Owners</h3>
+                        <h2>Owners</h2>
                         <MSWOwnerTable
                             MultiSigWallet={MultiSigWallet}
                             account={account}

@@ -2,7 +2,7 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import MultiSigWallet from 'Embark/contracts/MultiSigWallet';
 import TransactionSubmitButton from '../TransactionSubmitButton';
-import { Alert, Form,  Card, ListGroup } from 'react-bootstrap';
+import { Alert, Form,  Card, ListGroup,  Badge, Col, Row } from 'react-bootstrap';
 import EditableList from '../editable-list'
 import Slider from 'rc-slider';
 import 'rc-slider/assets/index.css';
@@ -75,7 +75,10 @@ class MSWDeployer extends React.Component {
         return(
             <Card>
                 <Card.Header>
-                    Deploy MultiSigWallet
+                    <Row>
+                        <Col className="text-left"> Deploy </Col>
+                        <Col className="text-right"><Badge variant="primary">New</Badge></Col>
+                    </Row>
                 </Card.Header>
                 <ListGroup variant="flush">
                     <ListGroup.Item>
@@ -85,7 +88,7 @@ class MSWDeployer extends React.Component {
                     <ListGroup.Item>
                         <Form.Label>Required:</Form.Label>
                         <div>{required} of {owners.length}
-                            <Slider dots={true} min={0} max={owners.length} step={1} defaultValue={required} onChange={this.setRequired.bind(this)} />
+                        <Slider dots={true} min={0} max={owners.length} step={1} defaultValue={required} onChange={this.setRequired.bind(this)} />
                         </div>
                     </ListGroup.Item>
                 </ListGroup>

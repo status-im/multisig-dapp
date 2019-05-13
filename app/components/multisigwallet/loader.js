@@ -1,5 +1,5 @@
 import React from 'react';
-import { Alert, Form, Button, Card, ListGroup } from 'react-bootstrap';
+import { Alert, Form, Button, Card, ListGroup,  Badge, Col, Row  } from 'react-bootstrap';
 import PropTypes from 'prop-types';
 import EthAddress from '../EthAddress';
 
@@ -40,7 +40,10 @@ class ContractLoader extends React.Component {
     return (
       <Card>
         <Card.Header>
-          Load MultiSigWallet
+          <Row>
+              <Col className="text-left"> Existent </Col>
+              <Col className="text-right"><Badge variant="primary">Load</Badge></Col>
+          </Row>
         </Card.Header>
           <ListGroup variant="flush">
             <ListGroup.Item>
