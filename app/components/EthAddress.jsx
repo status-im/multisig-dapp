@@ -5,6 +5,7 @@ import { Overlay, Tooltip } from 'react-bootstrap';
 import copy from 'copy-to-clipboard';
 import './EthAddress.css';
 
+const nullAddress = "0x0000000000000000000000000000000000000000"
 class EthAddress extends React.Component {
 	static propTypes = {
 		className: PropTypes.string,
@@ -21,7 +22,7 @@ class EthAddress extends React.Component {
 
 	static defaultProps = {
 		className: 'eth-address',
-		defaultValue: "0x0000000000000000000000000000000000000000",
+		defaultValue: nullAddress,
 		colors: true,
 		control: false,
 		allowZero: true,
@@ -44,8 +45,7 @@ class EthAddress extends React.Component {
 
 
 	componentDidMount() {
-		if(this.props.control)
-        	this.controlRef.current.textContent = this.state.value;
+
     }
 
 	componentDidUpdate(prevProps, prevState) {
@@ -56,44 +56,49 @@ class EthAddress extends React.Component {
 			this.checkValue(this.state.value);	
 		}
 		if(prevState.address != this.state.address) {
+			this.checkAddress(this.state.address);
 			this.props.onChange(this.state.address);
 		}
     }
 
+	checkAddress(address) {
+		if(address != nullAddress){
+			EmbarkJS.Names.lookup(address, (err, name) => {
+				if(err){
+					console.log("lookup ERR ", address, err, name);
+				} else {
+					console.log("the domain of "+address+" is: " + name);
+				}
+				this.setState({ensReverse: name});
+			})
+		} else {
+			this.setState({ensReverse: null});
+		}
+
+	}
+
 	checkValue(value) {
-		this.controlRef.current.textContent = value;
+		console.log("value is" + value)
 		if(value == null){
-			this.setState({address: null, valid: false});
+			this.setState({address: nullAddress, valid: this.props.allowZero});
 		}else if(value.startsWith("0x")) {
 			const valid = /^(0x)?[0-9a-f]{40}$/i.test(value);
 			if (valid) {
 				this.setState({address: value, valid});
-				EmbarkJS.Names.lookup(value, (err, name) => {
-					if(err){
-						console.log("lookup ERR ", value, err, name);
-					} else {
-						console.log("the domain of "+value+" is: " + name);
-						this.setState({ensReverse: name});
-					}
-				})
 			} else {
-				this.setState({address: null, valid});
+				this.setState({address: nullAddress, valid});
 			}
 		} else {
 			EmbarkJS.Names.resolve(value, (err, result) => {
 				if(err){
 					console.log('ENS err', value, err, result)
-					this.setState({address: null, valid: false});
+					this.setState({address: nullAddress, valid: false});
 				} else {
 					console.log("ENS address of "+value+" is " + result)
-					const valid = !err && result != "0x0000000000000000000000000000000000000000";
-					if(valid){
-						this.setState({address: result, valid});
-					} else {
-						this.setState({address: null, valid});
-					}	
+					const valid = !err && result != nullAddress;
+					this.setState({address: result, valid});	
 				}
-			  });
+			});
 		}
 	}
 	onClick = () => {
@@ -113,23 +118,12 @@ class EthAddress extends React.Component {
 
     onKeyUp(event) {
 		let text = this.controlRef.current.textContent;
-		if(text.length == 0){
-			text = "0x0000000000000000000000000000000000000000";
-		}
 		this.setState({ value: text });
 	}
 
     handlePaste(event) {
-        var clipboardData, pastedData;
-        clipboardData = event.clipboardData || window.clipboardData;
-        pastedData = clipboardData.getData('Text');
-        if (/^(0x)?[0-9a-f]{40}$/i.test(pastedData)) {
-            event.stopPropagation();
-            event.preventDefault();
-            this.setState({ address: pastedData, valid: true, value: pastedData });
-		} else {
-			this.setState({ value: pastedData, valid: false, address: null });
-		}
+        let text = this.controlRef.current.textContent;
+		this.setState({ value: text });
     }
 
     focus() {
@@ -146,8 +140,7 @@ class EthAddress extends React.Component {
 			blockyScale,
 			control
 		} = this.props;
-		const address = this.state.address ? this.state.address : "";
-		const { ensReverse, value, valid } = this.state;
+		const { ensReverse, value, valid, address } = this.state;
 		const { containerRef, tooltipVisible, tooltipText } = this.state;
 		const colorStyle = colors ? {
 			backgroundImage: `linear-gradient(90deg, #${address.substr(6, 6)} 0% 15%, #${address.substr(12, 6)} 17% 32%, #${address.substr(18, 6)} 34% 49%, #${address.substr(24, 6)} 51% 66%, #${address.substr(30, 6)} 68% 83%, #${address.substr(36, 6)} 85% 100%)`
@@ -172,7 +165,7 @@ class EthAddress extends React.Component {
 					<span 
 						className="control"
 						ref={this.controlRef} 
-						placeholder="0x0000000000000000000000000000000000000000"
+						placeholder={nullAddress}
 						onKeyPress={(event) => this.onKeyPress(event)} 
 						onKeyUp={(event) => this.onKeyUp(event)}
 						onPaste={(event) => this.handlePaste(event)}
