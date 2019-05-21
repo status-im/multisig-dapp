@@ -5,10 +5,11 @@ import { Overlay, Tooltip } from 'react-bootstrap';
 import copy from 'copy-to-clipboard';
 import './EthAddress.css';
 
+const nullAddress = "0x0000000000000000000000000000000000000000"
 class EthAddress extends React.Component {
 	static propTypes = {
 		className: PropTypes.string,
-		value: PropTypes.string,
+		address: PropTypes.string,
 		defaultValue: PropTypes.string,
 		colors: PropTypes.bool,
 		blocky: PropTypes.bool,
@@ -21,9 +22,10 @@ class EthAddress extends React.Component {
 
 	static defaultProps = {
 		className: 'eth-address',
-		defaultValue: "0x0000000000000000000000000000000000000000",
+		defaultValue: nullAddress,
 		colors: true,
 		control: false,
+		allowZero: true,
 		blocky: true,
 		blockySize: 8,
 		blockyScale: 4,
@@ -36,27 +38,72 @@ class EthAddress extends React.Component {
 		this.controlRef = React.createRef();
 		this.attachRef = containerRef => this.setState({ containerRef });
 		this.state = {
-			value: props.value != undefined ? props.value : props.defaultValue,
+			address: props.address != undefined ? props.address : props.defaultValue,
 			tooltipVisible: false 
 		};
 	}
 
 
 	componentDidMount() {
-		if(this.props.control)
-        	this.controlRef.current.textContent = this.state.value;
+
     }
 
 	componentDidUpdate(prevProps, prevState) {
         if (prevProps.value != this.props.value && this.props.value != this.state.value) {
             this.setState({value: this.props.value});
 		}
+		if(prevState.value != this.state.value) {
+			this.checkValue(this.state.value);	
+		}
+		if(prevState.address != this.state.address) {
+			this.checkAddress(this.state.address);
+			this.props.onChange(this.state.address);
+		}
     }
 
+	checkAddress(address) {
+		if(address != nullAddress){
+			EmbarkJS.Names.lookup(address, (err, name) => {
+				if(err){
+					console.log("lookup ERR ", address, err, name);
+				} else {
+					console.log("the domain of "+address+" is: " + name);
+				}
+				this.setState({ensReverse: name});
+			})
+		} else {
+			this.setState({ensReverse: null});
+		}
 
+	}
+
+	checkValue(value) {
+		console.log("value is" + value)
+		if(value == null){
+			this.setState({address: nullAddress, valid: this.props.allowZero});
+		}else if(value.startsWith("0x")) {
+			const valid = /^(0x)?[0-9a-f]{40}$/i.test(value);
+			if (valid) {
+				this.setState({address: value, valid});
+			} else {
+				this.setState({address: nullAddress, valid});
+			}
+		} else {
+			EmbarkJS.Names.resolve(value, (err, result) => {
+				if(err){
+					console.log('ENS err', value, err, result)
+					this.setState({address: nullAddress, valid: false});
+				} else {
+					console.log("ENS address of "+value+" is " + result)
+					const valid = !err && result != nullAddress;
+					this.setState({address: result, valid});	
+				}
+			});
+		}
+	}
 	onClick = () => {
 		if (!this.props.control) {
-			copy(this.props.value);
+			copy(this.state.address);
 			this.setState({ tooltipText: "Copied", tooltipVisible: true });
 			clearTimeout(this.timeout);
 			this.timeout = setTimeout(() => { this.setState({ tooltipVisible: false }) }, 1000)
@@ -71,34 +118,12 @@ class EthAddress extends React.Component {
 
     onKeyUp(event) {
 		let text = this.controlRef.current.textContent;
-		if(text.length == 0){
-			text = "0x0000000000000000000000000000000000000000";
-		}
 		this.setState({ value: text });
-		this.notifyListeners(text);
-	}
-	
-	notifyListeners(text) {
-		if (/^(0x)?[0-9a-f]{40}$/i.test(text)) {
-			this.props.onChange(text);
-		} else {
-			this.props.onChange(null);
-		}
 	}
 
     handlePaste(event) {
-        var clipboardData, pastedData;
-        clipboardData = event.clipboardData || window.clipboardData;
-        pastedData = clipboardData.getData('Text');
-        if (/^(0x)?[0-9a-f]{40}$/i.test(pastedData)) {
-            event.stopPropagation();
-            event.preventDefault();
-            this.controlRef.current.textContent = pastedData;
-            this.setState({ value: pastedData });
-		} else {
-			this.setState({ value: this.controlRef.current.textContent });
-		}
-		this.notifyListeners(this.controlRef.current.textContent);
+        let text = this.controlRef.current.textContent;
+		this.setState({ value: text });
     }
 
     focus() {
@@ -115,27 +140,32 @@ class EthAddress extends React.Component {
 			blockyScale,
 			control
 		} = this.props;
-		const value = this.state.value ? this.state.value : "0x0000000000000000000000000000000000000000";
+		const { ensReverse, value, valid, address } = this.state;
 		const { containerRef, tooltipVisible, tooltipText } = this.state;
-		let valid = /^(0x)?[0-9a-f]{40}$/i.test(value);
 		const colorStyle = colors ? {
-			backgroundImage: `linear-gradient(90deg, #${value.substr(6, 6)} 0% 15%, #${value.substr(12, 6)} 17% 32%, #${value.substr(18, 6)} 34% 49%, #${value.substr(24, 6)} 51% 66%, #${value.substr(30, 6)} 68% 83%, #${value.substr(36, 6)} 85% 100%)`
+			backgroundImage: `linear-gradient(90deg, #${address.substr(6, 6)} 0% 15%, #${address.substr(12, 6)} 17% 32%, #${address.substr(18, 6)} 34% 49%, #${address.substr(24, 6)} 51% 66%, #${address.substr(30, 6)} 68% 83%, #${address.substr(36, 6)} 85% 100%)`
 		} : {}
 		return (
 			<span ref={this.attachRef} style={colorStyle} onClick={this.onClick} className={`${className} ${valid ? '': 'err' }`} >
 				<span className={valid ? "bg" : "err"}>
 					{blocky && valid &&	 
 						<span className="blocky">
-							<Blockies seed={value.toLowerCase()} size={blockySize} scale={blockyScale} />
+							<Blockies seed={address.toLowerCase()} size={blockySize} scale={blockyScale} />
 						</span>}
 					<span className={control ? "indicator" : "text" } >
-						<strong>{value.substr(0, 6)}</strong><small>{value.substr(6, 36)}</small><strong>{value.substr(36, 6)}</strong>
+						{ensReverse && 
+						<span className="ens-reverse">
+							<small>{ensReverse}</small>
+						</span>}
+						<span> 
+							<strong>{address.substr(0, 6)}</strong><small>{address.substr(6, 36)}</small><strong>{address.substr(36, 6)}</strong>
+						</span>
 					</span>
 					{ control ? 
 					<span 
 						className="control"
 						ref={this.controlRef} 
-						placeholder="0x0000000000000000000000000000000000000000"
+						placeholder={nullAddress}
 						onKeyPress={(event) => this.onKeyPress(event)} 
 						onKeyUp={(event) => this.onKeyUp(event)}
 						onPaste={(event) => this.handlePaste(event)}

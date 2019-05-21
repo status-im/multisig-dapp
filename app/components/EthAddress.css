@@ -1,7 +1,8 @@
 .eth-address {
   padding: 3px;
   display: inline-grid;
-  min-width: 170px;
+  width: 100%;
+  max-width: 420px;
   border-radius: 8px;
   box-shadow: 1px 1px 1px 1px #CCC;
   border-top: solid 1px #FFF;
@@ -52,6 +53,10 @@
 .eth-address .indicator,
 .eth-address .text {
   cursor: pointer;
+}
+
+.eth-address .indicator span,
+.eth-address .text span {
   display: flex;
 }
 
@@ -59,12 +64,13 @@
   text-overflow: ellipsis;
   white-space: nowrap;
   overflow: hidden;
+  width:100%;
   display: none;
 }
 
 .eth-address:focus-within .control,
 .eth-address:hover .control {
-  display: flow-root;
+  display: block;
 }
 
 .eth-address:focus-within .indicator,
@@ -88,4 +94,8 @@
 
 .eth-address:hover .clip-icon {
   display: inline-block;
+}
+
+.eth-address .ens-reverse {
+  margin:-3px auto;
 }
