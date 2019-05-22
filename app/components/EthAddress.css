@@ -3,7 +3,7 @@
   display: inline-grid;
   width: 100%;
   max-width: 420px;
-  border-radius: 8px;
+  border-radius: 2em;
   box-shadow: 1px 1px 1px 1px #CCC;
   border-top: solid 1px #FFF;
   border-left: solid 1px #FFF;
@@ -12,13 +12,13 @@
 }
 
 .eth-address .blocky .identicon {
-  border-radius: 0 8px 8px 0;
+  border-radius: 2em;
 }
 
 .eth-address .err, 
 .eth-address .bg {
   min-height: 32px;
-  border-radius: 8px;
+  border-radius: 8em;
   display: flex;
   overflow: hidden;
 }
@@ -87,6 +87,9 @@
   margin-top: 0.25em;
 }
 
+.eth-address .clip-icon .svg-icon path {
+  fill:#000;
+}
 .eth-address .clip-icon {
   margin: auto 4px auto -4px;
   display: none;
