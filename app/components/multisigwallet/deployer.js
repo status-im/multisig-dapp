@@ -2,12 +2,13 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import MultiSigWallet from 'Embark/contracts/MultiSigWallet';
 import TransactionSubmitButton from '../TransactionSubmitButton';
-import { Alert, Form,  Card, ListGroup,  Badge, Col, Row } from 'react-bootstrap';
+import { Alert, Form,  Card, ListGroup,  Badge, Col, Row, Button } from 'react-bootstrap';
 import Slider from 'rc-slider';
 import 'rc-slider/assets/index.css';
 import EthAddress from '../EthAddress';
 import EthAddressList from '../EthAddressList';
 import IconDeploy from '../icon/Deploy'
+import IconAdd from '../icon/Add'
 
 class MSWDeployer extends React.Component {
 
@@ -17,6 +18,7 @@ class MSWDeployer extends React.Component {
         this.state = {
             txHash: null,
             strError: null,
+            values: props.account ? [props.account] : [],
             owners: props.account ? [props.account] : [],
             required: 1
         };
@@ -36,15 +38,12 @@ class MSWDeployer extends React.Component {
         this.props.onDeploy(MultiSigWallet);
     }
 
-    onOwnersChange(list) {
-        let owners = list.listItems.map((val) => { return val.text }).filter(val => {
-            return val != null;
-        })
-        this.setState({ owners: owners });
-    }
-
     setRequired(val) {
         this.setState({ required: val });
+    }
+
+    setValues(owners, values) {
+        this.setState({owners,values});
     }
 
     handleResult(result) {
@@ -69,39 +68,21 @@ class MSWDeployer extends React.Component {
     handleSubmission(txHash) {
         this.setState({ txHash });
     }
-    
-    setAddress(address, index) {
-        console.log(address,index)
-        var owners = this.state.owners;
-        if(index == owners.length){
-            owners.push(address);
-        } else{
-            owners[index] = address;
-        }
+
         
-        this.setState({owners});
+    addAddress() {
+        const values = this.state.values.slice(0);
+        const owners = this.state.owners.slice(0);
+        values.push("0x0000000000000000000000000000000000000000");
+        owners.push("0x0000000000000000000000000000000000000000");
+
+        this.setState({values, owners});
     }
 
     render() {
         const { account } = this.props;
-        const { owners, required, strError } = this.state;
+        const { values, owners, required, strError } = this.state;
 
-        const list = owners.map((value, index) => {
-            return <div key={index}><EthAddress 
-                control={true}
-                value={value}
-                onChange={(address) => {
-                    this.setAddress(address, index);
-                }}
-              /></div>
-        })
-
-        list.push(<div key={list.length}><EthAddress 
-            control={true}
-            onChange={(address) => {
-                this.setAddress(address, list.length);
-            }}
-          /></div>)
         return(
             <Card>
                 <Card.Header>
@@ -113,12 +94,17 @@ class MSWDeployer extends React.Component {
                 <ListGroup variant="flush">
                     <ListGroup.Item>
                         <Form.Label>Owners:</Form.Label>
-                        <EthAddressList addresses={owners} onChange={(owners) => this.setState({owners})} />
+                        <EthAddressList values={values} onChange={(owners,values)=>this.setState({owners,values})} />
+                        <Button 
+                            size="sm" 
+                            variant="primary" 
+                            onClick={() => this.addAddress()} 
+                            className="btn-circle" >Add Item <IconAdd/></Button>
                     </ListGroup.Item>
                     <ListGroup.Item>
                         <Form.Label>Required:</Form.Label>
-                        <div>{required} of {owners.length}
-                        <Slider dots={true} min={0} max={owners.length} step={1} defaultValue={required} onChange={this.setRequired.bind(this)} />
+                        <div>{required} of {values.length}
+                        <Slider dots={true} min={1} max={values.length} step={1} defaultValue={required} onChange={this.setRequired.bind(this)} />
                         </div>
                     </ListGroup.Item>
                 </ListGroup>

@@ -5,7 +5,7 @@ export default ({
   fill = "#000",
   width = "1em",
   className = "",
-  viewBox = "0 0 20 20"
+  viewBox = "-3 0 20 20"
 }) => (
   <svg
     width={width}
