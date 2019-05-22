@@ -43,9 +43,13 @@ class App extends React.Component {
                 // you can use this to ask the user to enable metamask for e.g
                 return this.setState({ strError: err.message || err });
             }
-            this.setState({ account: web3.eth.defaultAccount, blockchainEnabled: true })
+            this.timeout = setTimeout(() => { this.setState({ account: web3.eth.defaultAccount, blockchainEnabled: true }) }, 100)
         });
 
+    }
+
+    componentWillUnmount() {
+        clearTimeout(this.timeout);
     }
 
     setContractAddress(address, onError) {
