@@ -76,6 +76,9 @@ class EthAddress extends React.Component {
 		const { value, address } = this.state;
 		if(address != nullAddress){
 			EmbarkJS.Names.lookup(address, (err, name) => {
+				if(err){
+					console.log(address, err)
+				}
 				this.setState({ensReverse: name});
 				this.props.onChange(address, value, name);
 			})
@@ -128,8 +131,13 @@ class EthAddress extends React.Component {
 	}
 
     handlePaste(event) {
-        let text = this.controlRef.current.textContent;
-		this.setState({ value: text });
+		event.stopPropagation();
+		event.preventDefault();
+		var clipboardData, pastedData;
+        clipboardData = event.clipboardData || window.clipboardData;
+		pastedData = clipboardData.getData('Text');
+		this.controlRef.current.textContent = pastedData;
+		this.setState({ value: pastedData });
     }
 
     focus() {
