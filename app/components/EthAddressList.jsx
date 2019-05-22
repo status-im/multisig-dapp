@@ -11,7 +11,7 @@ class EthAddressList extends React.Component {
 
     static propTypes = {
 		className: PropTypes.string,
-		value: PropTypes.array,
+		values: PropTypes.array,
 		defaultValue: PropTypes.array,
 		colors: PropTypes.bool,
 		blocky: PropTypes.bool,
@@ -25,7 +25,7 @@ class EthAddressList extends React.Component {
 
 	static defaultProps = {
 		className: 'eth-address-list',
-        addresses: [],
+        values: [],
 		colors: true,
 		control: false,
 		allowZero: false,
@@ -39,53 +39,58 @@ class EthAddressList extends React.Component {
     constructor(props) {
         super(props);
         this.state = { 
-            addresses: [  { address:null, value:null, id: uuidv4() } ] 
+            values: [] ,
+            addresses: []
         };
     }
 
     componentDidMount() {
-        let addresses = [];
-        if (this.props.addresses) {
-            addresses = this.props.addresses.map(function (address) {
-                return {
-                    value: address,
-                    address,
-                    id: uuidv4() 
-                }
-            });
+        if (this.props.values) {
+            this.setValues(this.props.values);
         }
-        console.log(this.state.addresses);
-        addresses = [...addresses, ...this.state.addresses];
+    }
 
-        this.setState({ addresses });
+	componentDidUpdate(prevProps, prevState) {
+        if (prevProps.values != this.props.values && this.props.values != this.state.values) {
+            this.setValues(this.props.values);
+        }
+        if(prevState.addresses != this.state.addresses || prevState.values != this.state.values) {
+			this.props.onChange(this.state.addresses,this.state.values);
+		}
+    }
+
+    setValues(values) {
+        const addresses = [...this.state.addresses, ...Array(values.length-this.state.addresses.length).fill(nullAddress)];
+        this.setState({values, addresses});
     }
     
-    setAddress(address, value, index) {
-        const {addresses} = this.state;
-        if(value && index == addresses.length-1){  
-            addresses.push({ address:null, value:null, id: uuidv4() });
-        }
-        addresses[index] = { address, value };
-
-        this.setState({ addresses });
+    setAddress(address, value, i) {
+        const values = this.state.values.slice(0);
+        const addresses = this.state.addresses.slice(0);
+        values[i]=value;
+        addresses[i]=address;
+        this.setState({values,addresses});
     }
 
-    removeAddress(index) {
-        const {addresses} = this.state;
-        addresses.splice(index,1)
-        this.setState({ addresses });
+    removeAddress(i) {
+        const values = this.state.values.filter((item, j) => i !== j);
+        const addresses = this.state.addresses.filter((item, j) => i !== j);
+        this.setState({values,addresses});
     }
 
 
     render() {
-        var list = this.state.addresses.map(
-            (element, index, array) => {
+        const {values} = this.state;
+        var list = values.map(
+            (value, index, array) => {
                 return(
                     <div className="d-flex" key={index}>
                         <EthAddress
                             control={true}
-                            value={element.value}
-                            allowZero={this.props.allowZero}    
+                            value={value}
+                            allowZero={this.props.allowZero}
+                            blocky={this.props.blocky}
+                            colors={this.props.colors}  
                             onChange={(address, value) => {
                                 this.setAddress(address, value, index);
                             }} />
@@ -95,7 +100,7 @@ class EthAddressList extends React.Component {
                             variant="danger" 
                             onClick={(event) => {
                                 this.removeAddress(index)
-                            }} className="btn-circle" ><TrashIcon width={15} /></Button>
+                            }} className="btn-circle" ><TrashIcon/></Button>
                     </div>
                 );
                 }

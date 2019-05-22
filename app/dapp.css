@@ -95,5 +95,7 @@ input.form-control {
 
 
 .btn-circle {
-    border-radius: 15px;
+    border-radius: 1.5em;
+    margin: auto;
+    padding: 6px 8px;
 }

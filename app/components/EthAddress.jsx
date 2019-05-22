@@ -90,7 +90,7 @@ class EthAddress extends React.Component {
 		if(value == null){
 			this.setState({address: nullAddress, valid: this.props.allowZero});
 		}else if(value.startsWith("0x")) {
-			const valid = /^(0x)?[0-9a-f]{40}$/i.test(value);
+			const valid = (this.props.allowZero || value != nullAddress) && /^(0x)?[0-9a-f]{40}$/i.test(value);
 			if (valid) {
 				this.setState({address: value, valid});
 			} else {
@@ -123,8 +123,8 @@ class EthAddress extends React.Component {
     }
 
     onKeyUp(event) {
-		let text = this.controlRef.current.textContent;
-		this.setState({ value: text });
+		clearTimeout(this.keyWait);
+		this.keyWait = setTimeout(() => {this.setState({ value: this.controlRef.current.textContent })}, 200);
 	}
 
     handlePaste(event) {
@@ -155,9 +155,8 @@ class EthAddress extends React.Component {
 			<span ref={this.attachRef} style={colorStyle} onClick={this.onClick} className={`${className} ${valid ? '': 'err' }`} >
 				<span className={valid ? "bg" : "err"}>
 					{blocky && valid &&	 
-						<span className="blocky">
-							<Blockies seed={address.toLowerCase()} size={blockySize} scale={blockyScale} />
-						</span>}
+						<Blockies className="blocky" seed={address.toLowerCase()} size={blockySize} scale={blockyScale} />
+					}
 					<span className={control ? "indicator" : "text" } >
 						{ensReverse && 
 						<span className="ens-reverse">
