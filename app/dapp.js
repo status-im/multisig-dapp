@@ -28,7 +28,7 @@ class App extends React.Component {
             activeKey: 1,
             blockchainEnabled: false,
             MultiSigWallet: null,
-            account: null,
+            account: "0x0000000000000000000000000000000000000000",
             isOwner: false,
         };
         this.setContractAddress = this.setContractAddress.bind(this);
