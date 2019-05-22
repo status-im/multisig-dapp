@@ -60,10 +60,7 @@ input.form-control {
   display: flex;
 }
 
-.svg-icon {
-  width: 1em;
-  height: 1em;
-}
+
 
 .svg-icon path,
 .svg-icon polygon,
@@ -97,5 +94,6 @@ input.form-control {
 }
 
 
-
-
+.btn-circle {
+    border-radius: 15px;
+}
