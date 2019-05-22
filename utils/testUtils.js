@@ -216,7 +216,7 @@ exports.increaseTime = async (amount) => {
         },
         async (error) => {
           if (error) {
-            console.log(error);
+            console.error(error);
             return reject(err);
           }
           await web3.currentProvider.sendAsync(
@@ -227,7 +227,7 @@ exports.increaseTime = async (amount) => {
               id: new Date().getSeconds()
             }, (error) => {
               if (error) {
-                console.log(error);
+                console.error(error);
                 return reject(err);
               }
               resolve();

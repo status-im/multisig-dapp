@@ -94,14 +94,12 @@ class MSWTransactionTable extends React.Component {
         }
         var start = +filteredCount - (pageSize * page);
         var end = +start+pageSize;
-        console.log(end);
         if(start < 0) {
             start = 0;
         }
         if(end < start) {
             end = start;
         }
-        console.log(start,end,filteredCount);
         MultiSigWallet.methods.getTransactionIds(start, end, pending, executed).call().then((txIds) => {
             this.setState({ txIds });
         }).catch(error => {
@@ -117,10 +115,8 @@ class MSWTransactionTable extends React.Component {
 
     componentDidUpdate(prevProps, prevState) {
         if (this.props.mode != prevProps.mode) {
-            console.log("loading")
             this.load();
         } else if(prevProps.page != this.props.page) {
-            console.log("loading page")
             this.loadPage();
         }
     }
