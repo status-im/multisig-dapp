@@ -35,10 +35,6 @@
   color: #808080;
 }
 
-.eth-address .indicator {
-  margin: -5px auto;
-}
-
 .eth-address .indicator,
 .eth-address .control
 {
@@ -102,11 +98,12 @@
 .eth-address:hover .clip-icon {
   display: inline-block;
 }
-
+.eth-address .text span,
 .eth-address .indicator span {
-  margin: -5px auto;
+  margin: -4px auto;
 }
 
 .eth-address .ens-reverse small {
-  margin-top: 0.05em;
+  margin-top: 0;
+  margin-bottom: -0.25em;
 }
