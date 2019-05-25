@@ -1,30 +1,23 @@
 module.exports = {
   default: {
     enabled: true,
-    ipfs_bin: "ipfs",
-    available_providers: ["ipfs"],
+    available_providers: ["swarm"],
     upload: {
-      provider: "ipfs",
+      provider: "swarm",
       host: "localhost",
-      port: 5001
+      port: 8500
     },
     dappConnection: [
+      "$BZZ",
       {
-        provider:"ipfs",
+        provider:"swarm",
         host: "localhost",
-        port: 5001,
-        getUrl: "http://localhost:8080/ipfs/"
+        port: 8500,
+        getUrl: "http://localhost:8500/bzzr:/"
       }
     ]
   },
   development: {
-    enabled: true,
-    upload: {
-      provider: "ipfs",
-      host: "localhost",
-      port: 5001,
-      getUrl: "http://localhost:8080/ipfs/"
-    }
   },
 
   testnet: {
