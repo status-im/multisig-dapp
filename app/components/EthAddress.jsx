@@ -144,6 +144,11 @@ class EthAddress extends React.Component {
         this.controlRef.current.focus();
 	}
 	
+
+	getBackgroundGradient(address) {
+		return `linear-gradient(90deg, #${address.substr(2, 6)} 0% 14%, #${address.substr(8, 6)} 14% 28%, #${address.substr(14, 6)} 28% 42%, #${address.substr(19, 6)} 43% 57%, #${address.substr(24, 6)} 58% 72%, #${address.substr(30, 6)} 72% 86%, #${address.substr(36, 6)} 86% 100%)`
+	}
+
 	render() {
 		const {
 			disabled,
@@ -157,7 +162,7 @@ class EthAddress extends React.Component {
 		const { ensReverse, value, valid, address } = this.state;
 		const { containerRef, tooltipVisible, tooltipText } = this.state;
 		const colorStyle = colors ? {
-			backgroundImage: `linear-gradient(90deg, #${address.substr(6, 6)} 0% 15%, #${address.substr(12, 6)} 17% 32%, #${address.substr(18, 6)} 34% 49%, #${address.substr(24, 6)} 51% 66%, #${address.substr(30, 6)} 68% 83%, #${address.substr(36, 6)} 85% 100%)`
+			backgroundImage: this.getBackgroundGradient(address)
 		} : {}
 		return (
 			<span ref={this.attachRef} style={colorStyle} onClick={this.onClick} className={`${className} ${valid ? '': 'err' }`} >
