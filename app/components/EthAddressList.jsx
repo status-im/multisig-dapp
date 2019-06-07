@@ -3,7 +3,7 @@ import PropTypes from 'prop-types';
 import { Button } from 'react-bootstrap';
 import EthAddress from './EthAddress';
 import uuidv4 from 'uuid/v4';
-import TrashIcon from "./Icon/Trash";
+import TrashIcon from "./icon/Trash";
 
 const nullAddress = "0x0000000000000000000000000000000000000000"
 

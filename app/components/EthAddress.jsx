@@ -4,7 +4,7 @@ import Blockies from 'react-blockies';
 import { Overlay, Tooltip } from 'react-bootstrap';
 import copy from 'copy-to-clipboard';
 import './EthAddress.css';
-import ClipIcon from "./Icon/Clip";
+import ClipIcon from "./icon/Clip";
 
 const nullAddress = "0x0000000000000000000000000000000000000000"
 class EthAddress extends React.Component {
