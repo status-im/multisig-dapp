@@ -14,6 +14,9 @@ config/production/password
 dist
 embarkArtifacts
 
+# crytic
+crytic-export/
+
 
 # egg-related
 viper.egg-info/
