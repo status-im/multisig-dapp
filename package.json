@@ -22,17 +22,18 @@
   },
   "homepage": "https://github.com/status-im/multisig-dapp#readme",
   "devDependencies": {
+    "@trailofbits/embark-contract-info": "^1.1.0",
+    "copy-to-clipboard": "^3.0.8",
     "embark": "^4.0.2",
     "embarkjs-connector-web3": "^4.0.0",
+    "prop-types": "^15.6.2",
+    "rc-slider": "^8.6.9",
     "react": "^16.7.0",
-    "react-dom": "^16.7.0",
     "react-blockies": "^1.4.1",
     "react-bootstrap": "^1.0.0-beta.8",
+    "react-dom": "^16.7.0",
     "react-router-bootstrap": "^0.25.0",
-    "react-router-dom": "^5.0.0",
-    "copy-to-clipboard": "^3.0.8",
-    "prop-types": "^15.6.2",
-    "rc-slider": "^8.6.9"
+    "react-router-dom": "^5.0.0"
   },
   "dependencies": {
     "bootstrap": "^4.3.1",
