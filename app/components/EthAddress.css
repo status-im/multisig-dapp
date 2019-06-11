@@ -1,24 +1,25 @@
 .eth-address {
   padding: 3px;
+  position: relative;
   display: inline-grid;
   width: 100%;
   max-width: 420px;
-  border-radius: 2em;
-  box-shadow: 1px 1px 1px 1px #CCC;
-  border-top: solid 1px #FFF;
-  border-left: solid 1px #FFF;
+  border-radius: 1em;
   margin: auto;
+}
+
+.hex {
   font-family: monospace;
 }
 
 .eth-address .blocky  {
-  border-radius: 2em;
+
 }
 
 .eth-address .err, 
 .eth-address .bg {
   min-height: 32px;
-  border-radius: 8em;
+  border-radius: 1em;
   display: flex;
   overflow: hidden;
 }
@@ -38,16 +39,15 @@
 .eth-address .indicator,
 .eth-address .control
 {
-  color: #000;
+  color: #000;  
 }
 
 .eth-address .indicator,
 .eth-address .control,
 .eth-address .text {
-  padding-right: 8px;
-  padding-left: 8px;
+  margin: auto 8px;
   overflow: hidden;
-  margin: auto;
+  
 }
 
 .eth-address .indicator,
@@ -68,13 +68,13 @@
   display: none;
 }
 
-.eth-address:focus-within .control,
-.eth-address:hover .control {
+.eth-address .bg:focus-within .control,
+.eth-address .bg:hover .control {
   display: block;
 }
 
-.eth-address:focus-within .indicator,
-.eth-address:hover .indicator {
+.eth-address .bg:focus-within .indicator,
+.eth-address .bg:hover .indicator {
   display: none;
 }
 
@@ -106,4 +106,29 @@
 .eth-address .ens-reverse small {
   margin-top: 0;
   margin-bottom: -0.25em;
+}
+
+.eth-address .menu {
+  background-color: #FFF;
+  position: absolute;
+  display: grid;
+
+  border: solid 1px #999;
+  z-index: 999;
+  top: 35px;
+  right: 3px;
+  border-radius: 0.25em;
+}
+.eth-address .menu a {
+  padding: 2px 15px;
+}
+.eth-address .menu a:hover {
+  cursor: pointer;
+  background-color: #CCC;
+}
+.eth-address .more-icon {
+  margin: 0.1em 0.5em 0 0;
+}
+.eth-address .loading {
+  margin: 8px;
 }

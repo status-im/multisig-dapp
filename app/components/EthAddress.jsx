@@ -5,6 +5,8 @@ import { Overlay, Tooltip } from 'react-bootstrap';
 import copy from 'copy-to-clipboard';
 import './EthAddress.css';
 import ClipIcon from "./icon/Clip";
+import MoreIcon from "./icon/More";
+import { HashLoader } from 'react-spinners';
 
 const nullAddress = "0x0000000000000000000000000000000000000000"
 class EthAddress extends React.Component {
@@ -38,96 +40,167 @@ class EthAddress extends React.Component {
 	constructor(props) {
 		super(props);
 		this.controlRef = React.createRef();
-		this.attachRef = containerRef => this.setState({ containerRef });
+		this.ref = React.createRef();
 		this.state = {
 			value: null,
+			loaded: false,
+			validAddress: false,
 			address: nullAddress,
+			acceptedOutput: false,
 			ensReverse: null,
-			valid: false,
-			tooltipVisible: false 
+			menuVisible: false 
 		};
 	}
 
 
 	componentDidMount() {
 		this.setValue(this.props.value || this.props.defaultValue);
-    }
+		document.addEventListener("mousedown", this.handleClickOutside);
+	}
+	componentWillUnmount() {
+		document.removeEventListener("mousedown", this.handleClickOutside);
+	}
+
+	handleClickOutside = event => {
+		if (this.ref.current && !this.ref.current.contains(event.target)) {
+		  	this.setState({
+				menuVisible: false,
+		  	});
+		}
+	};
+
 
 	componentDidUpdate(prevProps, prevState) {
         if (prevProps.value != this.props.value && this.props.value != this.state.value) {
             this.setValue(this.props.value);
 		}
 		if(prevState.value != this.state.value) {
-			this.checkValue();	
+			this.loadAddressFromENS();	
 		}
 		if(prevState.address != this.state.address) {
-			this.checkAddress();
+			this.lookupENSReverseName();
+		}
+		if(prevState.loaded == false && this.state.loaded == true) {
+			this.onChange();
 		}
     }
 
+
 	setValue(value){
-		if(this.props.control) {
+		if(this.state.value == value) { 
+			return;
+		}
+		value = value ? value : nullAddress;
+		if(this.props.control && this.controlRef.current.textContent != value) {
 			this.controlRef.current.textContent = value;
 		}
-		this.setState({value, address: nullAddress, ensReverse: null});
+		this.setState(
+			{
+				value, 
+				address: nullAddress, 
+				validAddress: false, 
+				acceptedOutput: false,
+				loaded: false, 
+				ensReverse: null, 
+				ensResolve: false 
+			}
+		);
+		/*const validAddress = this.isValid(value);
+		const address = validAddress ? value : nullAddress; 
+		const acceptedOutput = validAddress && (this.props.allowZero || address != nullAddress);*/
 	}
 
-	checkAddress() {
-		const { value, address } = this.state;
+	isValid(value) {
+		return /^(0x)?[0-9a-f]{40}$/i.test(value);
+	}
+	
+	loadAddressFromENS() {
+		const { value } = this.state;
+		if(this.isValid(value)) {
+			this.setState(
+				{
+					address: value, 
+					validAddress: true, 
+					acceptedOutput: (this.props.allowZero || value != nullAddress),
+					loaded: false, 
+					ensReverse: null, 
+					ensResolve: false 
+				}
+			);
+			return;
+		}
+		EmbarkJS.Names.resolve(value, (err, address) => {
+			this.setState(err ? {
+				address: nullAddress,
+				ensResolve: false, 
+				validAddress: false, 
+				ensReverse: null,
+				loaded: true,
+				acceptedOutput: false
+			} :	{
+				address, 
+				ensResolve: true, 
+				validAddress: true,
+				ensReverse: null,
+				loaded: false,
+				acceptedOutput:	address != nullAddress
+			});
+		});
+	
+	}
+
+	lookupENSReverseName() {
+		const { address } = this.state;
 		if(address != nullAddress){
 			EmbarkJS.Names.lookup(address, (err, name) => {
 				if(err){
-					console.log(address, err)
+					console.error(err);
 				}
-				this.setState({ensReverse: name});
-				this.props.onChange(address, value, name);
+				this.setState({ensReverse: name, loaded: true});
 			})
-		} else {
-			this.setState({ensReverse: null});
-			this.props.onChange(address, value, null);
 		}
 	}	
 	
-	checkValue() {
-		const { value } = this.state;
-		if(value == null){
-			this.setState({address: nullAddress, valid: this.props.allowZero});
-		}else if(value.startsWith("0x")) {
-			const valid = (this.props.allowZero || value != nullAddress) && /^(0x)?[0-9a-f]{40}$/i.test(value);
-			if (valid) {
-				this.setState({address: value, valid});
-			} else {
-				this.setState({address: nullAddress, valid});
-			}
-		} else {
-			EmbarkJS.Names.resolve(value, (err, result) => {
-				if(err){
-					this.setState({address: nullAddress, valid: false});
-				} else {
-					const valid = !err && result != nullAddress;
-					this.setState({address: result, valid});	
-				}
-			});
-		}
+	onChange() {
+		const { address, value, ensReverse } = this.state;
+		this.props.onChange(address, value, ensReverse);
 	}
+
 	onClick = () => {
-		if (!this.props.control) {
-			copy(this.state.address);
-			this.setState({ tooltipText: "Copied", tooltipVisible: true });
-			clearTimeout(this.timeout);
-			this.timeout = setTimeout(() => { this.setState({ tooltipVisible: false }) }, 1000)
-		}
+		const { menuVisible, } = this.state
+		this.setState({ menuVisible: !menuVisible });
 	}
 	
+	copyAddress = () => {
+		copy(this.state.address);
+		this.setState({ menuVisible: false })	
+	}
+	copyValue = () => {
+		copy(this.state.value);
+		this.setState({ menuVisible: false })	
+	}
+	copyLookup = () => {
+		copy(this.state.ensReverse);
+		this.setState({ menuVisible: false })	
+	}
+
+
+
+	onBlur(event) {
+		this.setValue(this.controlRef.current.textContent);
+	}
     onKeyPress(event) {
         if (event.charCode === 13) {
-            event.preventDefault();
+			event.preventDefault();
+			this.setValue(this.controlRef.current.textContent);
         }
     }
 
     onKeyUp(event) {
 		clearTimeout(this.keyWait);
-		this.keyWait = setTimeout(() => {this.setState({ value: this.controlRef.current.textContent })}, 200);
+		if(this.controlRef.current.textContent){
+			this.keyWait = setTimeout(() => { this.setValue(this.controlRef.current.textContent)}, 1000);
+		}
 	}
 
     handlePaste(event) {
@@ -137,7 +210,7 @@ class EthAddress extends React.Component {
         clipboardData = event.clipboardData || window.clipboardData;
 		pastedData = clipboardData.getData('Text');
 		this.controlRef.current.textContent = pastedData;
-		this.setState({ value: pastedData });
+		this.setValue(pastedData);
     }
 
     focus() {
@@ -159,15 +232,15 @@ class EthAddress extends React.Component {
 			blockyScale,
 			control
 		} = this.props;
-		const { ensReverse, value, valid, address } = this.state;
-		const { containerRef, tooltipVisible, tooltipText } = this.state;
+		const { ensReverse, value, validAddress, loaded, acceptedOutput, address, ensResolve} = this.state;
+		const { containerRef, menuVisible, tooltipText } = this.state;
 		const colorStyle = colors ? {
 			backgroundImage: this.getBackgroundGradient(address)
 		} : {}
 		return (
-			<span ref={this.attachRef} style={colorStyle} onClick={this.onClick} className={`${className} ${valid ? '': 'err' }`} >
-				<span className={valid ? "bg" : "err"}>
-					{blocky && valid &&	 
+			<span ref={this.ref} style={colorStyle} className={`${className}`} >
+				<span className={(acceptedOutput || !loaded) ? "bg" : "err"}>
+					{blocky &&	 
 						<Blockies className="blocky" seed={address.toLowerCase()} size={blockySize} scale={blockyScale} />
 					}
 					<span className={control ? "indicator" : "text" } >
@@ -175,35 +248,36 @@ class EthAddress extends React.Component {
 						<span className="ens-reverse">
 							<small>{ensReverse}</small>
 						</span>}
-						<span> 
+						<span className="hex"> 
 							<strong>{address.substr(0, 6)}</strong><small>{address.substr(6, 36)}</small><strong>{address.substr(36, 6)}</strong>
 						</span>
 					</span>
-					{ control ? 
+					{ control && 
 					<span 
-						className="control"
+						className="control hex"
 						ref={this.controlRef} 
 						placeholder={nullAddress}
 						onKeyPress={(event) => this.onKeyPress(event)} 
 						onKeyUp={(event) => this.onKeyUp(event)}
 						onPaste={(event) => this.handlePaste(event)}
+						onBlur={(event) => this.onBlur(event)}
 						contentEditable={!disabled} 
 						/>
-					: 
-					<span className="clip-icon">
-						<ClipIcon width={15} fill="#CCC"/>
-					</span> 
 					}
-					<Overlay target={containerRef} show={tooltipVisible} placement="bottom">
-						{(props) => {
-							delete props['show'];
-							return (
-								<Tooltip id="address-tooltip" {...props} >{tooltipText}</Tooltip>
-							)
-						}}
-					</Overlay>
+					{loaded ? 
+					<span className="more-icon" onClick={this.onClick}>
+						<MoreIcon fill="#000" width={15} /> 
+					</span> : 
+					<span className="loading" onClick={this.onClick}>
+						<HashLoader loading={!loaded} sizeUnit={"px"} size={15}/> 
+					</span> }
 				</span>
-			</span>		
+				{ menuVisible && <nav className="menu">
+						{ validAddress && <a onClick={this.copyAddress}> Copy address </a> }
+						{ ensReverse && <a onClick={this.copyLookup}>  Copy ENS name </a> }
+						{ address != value && ensReverse != value && <a onClick={this.copyValue}> Copy input value </a> }
+					</nav> }			
+			</span>
 		)
 	}
 
