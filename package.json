@@ -23,7 +23,6 @@
   "homepage": "https://github.com/status-im/multisig-dapp#readme",
   "devDependencies": {
     "copy-to-clipboard": "^3.0.8",
-    "embarkjs-connector-web3": "^4.0.0",
     "prop-types": "^15.6.2",
     "rc-slider": "^8.6.9",
     "react": "^16.7.0",
@@ -36,7 +35,10 @@
   "dependencies": {
     "@trailofbits/embark-contract-info": "^1.1.0",
     "bootstrap": "^4.3.1",
-    "embark": "^4.0.2",
+    "embark": "^4.1.0-beta.3",
+    "embarkjs-connector-web3": "^4.1.0-beta.3",
+    "react-spinkit": "^3.0.0",
+    "react-spinners": "^0.5.4",
     "uuid": "^3.3.2"
   }
 }
