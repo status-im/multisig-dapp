@@ -5,10 +5,10 @@ import TransactionSubmitButton from '../TransactionSubmitButton';
 import { Alert, Form,  Card, ListGroup,  Badge, Col, Row, Button } from 'react-bootstrap';
 import Slider from 'rc-slider';
 import 'rc-slider/assets/index.css';
-import EthAddress from '../EthAddress';
 import EthAddressList from '../EthAddressList';
 import IconDeploy from '../icon/Deploy'
 import IconAdd from '../icon/Add'
+import IconMore from '../icon/More'
 
 class MSWDeployer extends React.Component {
 
@@ -118,7 +118,7 @@ class MSWDeployer extends React.Component {
                         onResult={(result) => this.handleResult(result) }
                         onError={(error) => this.handleError(error) }
                         icon={
-                            <IconDeploy/>
+                            <IconMore/>
                         }
                         text="Deploy"
                         size="sm"

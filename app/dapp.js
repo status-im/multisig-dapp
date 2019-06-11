@@ -1,7 +1,7 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
 import EmbarkJS from '../embarkArtifacts/embarkjs';
-import MultiSigWallet from 'Embark/contracts/MultiSigWallet';
+import MultiSigWallet from '../embarkArtifacts/contracts/MultiSigWallet';
 import ContractLoader from './components/multisigwallet/loader';
 import MSWDeployer from './components/multisigwallet/deployer';
 import { HashRouter, Route, Redirect, Link } from "react-router-dom";
