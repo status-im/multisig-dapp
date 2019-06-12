@@ -53,6 +53,7 @@ class ContractLoader extends React.Component {
               <EthAddress 
                 control={true}
                 value={value}
+                allowZero={false}
                 onChange={(address, value) => {
                   this.setState({address, value});
                   this.props.onChange(address, (error) => this.setState({error}))
