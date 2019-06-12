@@ -43,9 +43,9 @@ class EthAddress extends React.Component {
 		this.ref = React.createRef();
 		this.state = {
 			value: null,
-			loaded: false,
+			loaded: true,
 			validAddress: false,
-			address: nullAddress,
+			address: null,
 			acceptedOutput: false,
 			ensReverse: null,
 			menuVisible: false 
@@ -158,6 +158,8 @@ class EthAddress extends React.Component {
 				}
 				this.setState({ensReverse: name, loaded: true});
 			})
+		} else {
+			this.setState({ensReverse: null, loaded: true});
 		}
 	}	
 	
@@ -232,7 +234,8 @@ class EthAddress extends React.Component {
 			blockyScale,
 			control
 		} = this.props;
-		const { ensReverse, value, validAddress, loaded, acceptedOutput, address, ensResolve} = this.state;
+		const { ensReverse, value, validAddress, loaded, acceptedOutput, ensResolve} = this.state;
+		const address = this.state.address ? this.state.address : nullAddress; 
 		const { containerRef, menuVisible, tooltipText } = this.state;
 		const colorStyle = colors ? {
 			backgroundImage: this.getBackgroundGradient(address)
