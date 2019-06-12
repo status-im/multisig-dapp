@@ -28,6 +28,7 @@ class MSWSubmitTransaction extends React.Component {
         this.state = {
             input: {
                 destination: '0x0000000000000000000000000000000000000000',
+                dValue: '0x0000000000000000000000000000000000000000',
                 value: '',
                 data: '',
                 valueType: 'ether',
@@ -83,9 +84,10 @@ class MSWSubmitTransaction extends React.Component {
         this.setState({ input });
     }
 
-    handleNewDest(address) {
+    handleNewDest(address, dValue) {
         const { input } = this.state;
         input.destination = address;
+        input.dValue = dValue;
         this.setState({ input });
     }
 
@@ -163,9 +165,9 @@ class MSWSubmitTransaction extends React.Component {
                                 <EthAddress 
                                     control={true}
                                     allowZero={true}
-                                    value={input.destination}
+                                    value={input.dValue}
                                     disabled={disabled}
-                                    onChange={(e) => this.handleNewDest(e)}
+                                    onChange={(address,dValue) => this.handleNewDest(address,dValue)}
                                     />
                             </ListGroup.Item>
                             <ListGroup.Item>

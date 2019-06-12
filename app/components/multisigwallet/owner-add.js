@@ -13,6 +13,7 @@ class MSWAddOwner extends React.Component {
         super(props);
         this.state = {
             input: {
+                value: '0x0000000000000000000000000000000000000000',
                 owner: '0x0000000000000000000000000000000000000000'
             },
             result: null,
@@ -44,12 +45,13 @@ class MSWAddOwner extends React.Component {
         this.setState({ input });
     }
 
-    handleNewOwner(address) {
+    handleNewOwner(address, value) {
         const { input } = this.state;
         if(!address) {
             address = "0x0000000000000000000000000000000000000000";
         }
         input.owner = address;
+        input.value = value;
         this.setState({ input });
     }
 
@@ -87,9 +89,9 @@ class MSWAddOwner extends React.Component {
             <Card.Header className="text-center">
                 <EthAddress
                     control={true}
-                    value={input.owner}
+                    value={input.value}
                     allowZero={false}
-                    onChange={(address) => this.handleNewOwner(address)}
+                    onChange={(address,value) => this.handleNewOwner(address,value)}
                 /></Card.Header>
             <Card.Body className="text-right">
                 {result ?
