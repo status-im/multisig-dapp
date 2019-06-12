@@ -68,11 +68,15 @@
   display: none;
 }
 
+.eth-address .err:hover .control,
+.eth-address .err:focus-within .control,
 .eth-address .bg:focus-within .control,
 .eth-address .bg:hover .control {
   display: block;
 }
 
+.eth-address .err:hover .indicator,
+.eth-address .err:focus-within .indicator,
 .eth-address .bg:focus-within .indicator,
 .eth-address .bg:hover .indicator {
   display: none;
