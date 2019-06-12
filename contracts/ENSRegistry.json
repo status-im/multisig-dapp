@@ -259,13 +259,13 @@
     }
   ],
   "filename": "C:/dev/embark/lib/modules/ens/contracts/ENSRegistry.sol",
-  "gas": 529704,
+  "gas": 566813,
   "type": "file",
   "_gasLimit": false,
   "error": false,
-  "deploymentAccount": "0x6e03867273C3b92dc3d6dC014e23405cb0055672",
+  "deploymentAccount": "0xa58c1884fde4F6A96fF93650989c6177A136719F",
   "realArgs": [],
   "gasPrice": "1",
-  "deployedAddress": "0xf99424aC1beD8cb8ad3e782A8002F6e95B80cbf4",
-  "transactionHash": "0xee05344fb5355b7b72c266eece38c1200ef53beb7bf4c9f0a35e09994a8eb607"
+  "deployedAddress": "0x2ebE1357d24c35719Ee039abd86F02466e3E3E72",
+  "transactionHash": "0x099d90ad85362e6f7e65facc86ce6ac61352de2872b6c7a350b38a3c247487f4"
 }

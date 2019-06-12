@@ -57,20 +57,20 @@
     }
   ],
   "filename": "C:/dev/embark/lib/modules/ens/contracts/FIFSRegistrar.sol",
-  "gas": 296523,
+  "gas": 280793,
   "type": "file",
   "_gasLimit": false,
   "args": [
-    "0xf99424aC1beD8cb8ad3e782A8002F6e95B80cbf4",
+    "0x2ebE1357d24c35719Ee039abd86F02466e3E3E72",
     "0x93cdeb708b7545dc668eb9280176169d1c33cfd8ed6f04690a0bcc88a93fc4ae"
   ],
   "error": false,
-  "deploymentAccount": "0x6e03867273C3b92dc3d6dC014e23405cb0055672",
+  "deploymentAccount": "0xa58c1884fde4F6A96fF93650989c6177A136719F",
   "realArgs": [
-    "0xf99424aC1beD8cb8ad3e782A8002F6e95B80cbf4",
+    "0x2ebE1357d24c35719Ee039abd86F02466e3E3E72",
     "0x93cdeb708b7545dc668eb9280176169d1c33cfd8ed6f04690a0bcc88a93fc4ae"
   ],
   "gasPrice": "1",
-  "deployedAddress": "0x41032967680146333357cd68f41cEebbC040be94",
-  "transactionHash": "0xe6802d08f350c33a9eb27d11eb25fad6b0eca8111b7834628d4380d96ded592a"
+  "deployedAddress": "0x918b602a12168fac420e37d78aFf8C69c30B4346",
+  "transactionHash": "0xc28d1a96d2d86c4feedea44afadf0c8703290ae1792327793110ff83bda189cf"
 }
