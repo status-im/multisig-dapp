@@ -17,7 +17,7 @@ import IconEye from './components/icon/Eye';
 import IconTransaction from './components/icon/Transaction';
 import IconAccepted from './components/icon/Accepted';
 import IconUser from './components/icon/User';
-
+const nullAddress = "0x0000000000000000000000000000000000000000"
 
 class App extends React.Component {
 
@@ -28,7 +28,7 @@ class App extends React.Component {
             activeKey: 1,
             blockchainEnabled: false,
             MultiSigWallet: null,
-            account: "0x0000000000000000000000000000000000000000",
+            account: nullAddress,
             isOwner: false,
         };
         this.setContractAddress = this.setContractAddress.bind(this);
@@ -53,6 +53,7 @@ class App extends React.Component {
     }
 
     setContractAddress(address, onError) {
+
         try {
             let checksumAddress = web3.utils.toChecksumAddress(address);
             this.checkContractAddress(checksumAddress, onError);
@@ -63,16 +64,20 @@ class App extends React.Component {
     }
 
     checkContractAddress(checksumAddress, onError) {
-        try {
-            web3.eth.getCode(checksumAddress).then((code) => {
-                if (code.length > 2) {
-                    this.setMSWInstance(new EmbarkJS.Blockchain.Contract({ abi: MultiSigWallet._jsonInterface, address: checksumAddress }), onError)
-                } else {
-                    onError("Address don't have any code. Might be wrong address, wrong network, or unsynced network.")
-                }
-            }).catch((error) => onError(error.toString()));
-        } catch (error) {
-            onError(error.toString())
+        if(checksumAddress != nullAddress){
+            try {
+                web3.eth.getCode(checksumAddress).then((code) => {
+                    if (code.length > 2) {
+                        this.setMSWInstance(new EmbarkJS.Blockchain.Contract({ abi: MultiSigWallet._jsonInterface, address: checksumAddress }), onError)
+                    } else {
+                        onError("Address don't have any code. Might be wrong address, wrong network, or unsynced network.")
+                    }
+                }).catch((error) => onError(error.toString()));
+            } catch (error) {
+                onError(error.toString())
+            }
+        } else {
+            onError("Enter a contract address")
         }
     }
 
