@@ -133,6 +133,11 @@
 .eth-address .more-icon {
   margin: 0.1em 0.5em 0 0;
 }
+
+.eth-address .more-icon path{
+  fill: #000;
+}
+
 .eth-address .loading {
   margin: 8px;
 }
