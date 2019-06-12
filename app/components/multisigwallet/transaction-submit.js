@@ -162,6 +162,7 @@ class MSWSubmitTransaction extends React.Component {
                                 <small className="text-secondary">Destination:</small>
                                 <EthAddress 
                                     control={true}
+                                    allowZero={true}
                                     value={input.destination}
                                     disabled={disabled}
                                     onChange={(e) => this.handleNewDest(e)}

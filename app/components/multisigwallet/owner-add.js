@@ -88,6 +88,7 @@ class MSWAddOwner extends React.Component {
                 <EthAddress
                     control={true}
                     value={input.owner}
+                    allowZero={false}
                     onChange={(address) => this.handleNewOwner(address)}
                 /></Card.Header>
             <Card.Body className="text-right">
