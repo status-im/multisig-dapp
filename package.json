@@ -1,9 +1,10 @@
 {
   "name": "multisig-dapp",
-  "version": "0.0.3",
+  "version": "0.0.5",
   "description": "Simple multisig-dapp UI",
   "scripts": {
-    "start": "npx embark run",
+    "start": "npx embark run --nodashboard",
+    "build": "npx embark build",
     "ci": "npm run qa",
     "clean": "npm run reset",
     "package": "npm pack",
@@ -21,24 +22,22 @@
     "url": "https://github.com/status-im/multisig-dapp/issues"
   },
   "homepage": "https://github.com/status-im/multisig-dapp#readme",
-  "devDependencies": {
-    "copy-to-clipboard": "^3.0.8",
+  "dependencies": {
+    "embark": "^4.1.0-beta.3",
+    "embarkjs-connector-web3": "^4.1.0-beta.3",
+    "@trailofbits/embark-contract-info": "^1.1.0",
     "prop-types": "^15.6.2",
-    "rc-slider": "^8.6.9",
     "react": "^16.7.0",
     "react-blockies": "^1.4.1",
     "react-bootstrap": "^1.0.0-beta.8",
     "react-dom": "^16.7.0",
     "react-router-bootstrap": "^0.25.0",
-    "react-router-dom": "^5.0.0"
-  },
-  "dependencies": {
-    "@trailofbits/embark-contract-info": "^1.1.0",
-    "bootstrap": "^4.3.1",
-    "embark": "^4.1.0-beta.3",
-    "embarkjs-connector-web3": "^4.1.0-beta.3",
+    "react-router-dom": "^5.0.0",
     "react-spinkit": "^3.0.0",
     "react-spinners": "^0.5.4",
+    "bootstrap": "^4.3.1",
+    "copy-to-clipboard": "^3.0.8",
+    "rc-slider": "^8.6.9",
     "uuid": "^3.3.2"
   }
 }
