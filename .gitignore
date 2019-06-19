@@ -1,6 +1,0 @@
-.embark
-crytic-export
-embarkArtifacts
-node_modules
-package-lock.json
-dist
