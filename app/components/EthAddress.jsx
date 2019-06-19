@@ -20,7 +20,8 @@ class EthAddress extends React.Component {
 		blockyScale: PropTypes.number,
 		control: PropTypes.bool,
 		disabled: PropTypes.bool,
-		onChange: PropTypes.func
+		onChange: PropTypes.func,
+		toolBarActions: PropTypes.arrayOf(PropTypes.object)
 	};
 
 	static defaultProps = {
@@ -34,7 +35,8 @@ class EthAddress extends React.Component {
 		blockySize: 8,
 		blockyScale: 4,
 		disabled: false,
-		onChange: () => { }
+		onChange: () => { },
+		toolBarActions: []
 	};
 
 	constructor(props) {
@@ -232,7 +234,8 @@ class EthAddress extends React.Component {
 			blocky,
 			blockySize,
 			blockyScale,
-			control
+			control,
+			toolBarActions
 		} = this.props;
 		const { ensReverse, value, validAddress, loaded, acceptedOutput, ensResolve} = this.state;
 		const address = this.state.address ? this.state.address : nullAddress; 
@@ -275,10 +278,13 @@ class EthAddress extends React.Component {
 						<HashLoader loading={!loaded} sizeUnit={"px"} size={15}/> 
 					</span> }
 				</span>
-				{ menuVisible && <nav className="menu">
-						{ validAddress && <a onClick={this.copyAddress}> Copy address </a> }
-						{ ensReverse && <a onClick={this.copyLookup}>  Copy ENS name </a> }
-						{ address != value && ensReverse != value && <a onClick={this.copyValue}> Copy input value </a> }
+				{ menuVisible && <nav className="menu text-left">
+						{ toolBarActions.map((value, index) => {
+							return (<a key={index} onClick={value.action}> {value.text} </a>) 
+						})}
+						{ validAddress && <a onClick={this.copyAddress}><ClipIcon /> Copy address </a> }
+						{ ensReverse && <a onClick={this.copyLookup}><ClipIcon /> Copy ENS name </a> }
+						{ address != value && ensReverse != value && <a onClick={this.copyValue}><ClipIcon /> Copy input value </a> }
 					</nav> }			
 			</span>
 		)
