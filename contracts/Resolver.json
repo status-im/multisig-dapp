@@ -436,18 +436,18 @@
     }
   ],
   "filename": "C:/dev/embark/lib/modules/ens/contracts/Resolver.sol",
-  "gas": 951102,
+  "gas": 971507,
   "type": "file",
   "_gasLimit": false,
   "args": [
-    "0xC6DDd8b26FFa7d0026f2b05A2c182eb88eF94EF6"
+    "0x813C3d0aa71E041B53ab20D085Ea13CD235B8e26"
   ],
   "error": false,
-  "deploymentAccount": "0xA03829B5a02E1ff194617F0b2eA631Bf497b021e",
+  "deploymentAccount": "0xC35b912acf08b319dA745a7594d95D176FD2f01c",
   "realArgs": [
-    "0xC6DDd8b26FFa7d0026f2b05A2c182eb88eF94EF6"
+    "0x813C3d0aa71E041B53ab20D085Ea13CD235B8e26"
   ],
   "gasPrice": "1",
-  "deployedAddress": "0x23228908A413a3637dDdbEffDFb0cA167cc5C0a8",
-  "transactionHash": "0xe3f74f4f300a9468b67d514228e00836ff7ad220fb35edda222b443d9c8b4c08"
+  "deployedAddress": "0x2fa48f649367987f44d00B7b7fd95Ae9289902d9",
+  "transactionHash": "0x93e3bc33adddba746de9acf6e722c571eb8be1f6ac84c335f966aef71e2b6d2b"
 }
