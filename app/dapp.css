@@ -60,17 +60,8 @@ input.form-control {
   display: flex;
 }
 
-
-
-.svg-icon path,
-.svg-icon polygon,
-.svg-icon rect {
+.btn .svg-icon path {
   fill: #FFF;
-}
-
-.svg-icon circle {
-  stroke: #FFF;
-  stroke-width: 1;
 }
 .navbar-brand  svg {
   margin: -4px 8px 0 0;
@@ -82,15 +73,6 @@ input.form-control {
 
 .badge .svg-icon {
   margin: auto 0 1px 1px;
-}
-.badge-warning  .svg-icon {
-  fill: #000;
-  stroke: #000;
-}
-
-.badge-info  .svg-icon {
-  fill: #FFF;
-  stroke: #FFF;
 }
 
 
