@@ -4,7 +4,7 @@
   display: inline-grid;
   width: 100%;
   max-width: 420px;
-  border-radius: 1em;
+  border-radius: 5px;
   margin: auto;
 }
 
@@ -19,7 +19,7 @@
 .eth-address .err, 
 .eth-address .bg {
   min-height: 32px;
-  border-radius: 1em;
+  border-radius: 5px;
   display: flex;
   overflow: hidden;
 }
@@ -131,7 +131,7 @@
   background-color: #CCC;
 }
 .eth-address .more-icon {
-  margin: 0.1em 0.5em 0 0;
+  margin: 0.1em 05px 0 0;
 }
 
 .eth-address .more-icon path{
