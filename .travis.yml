@@ -18,11 +18,10 @@ before_install:
 cache: 
   directories:
   - .embark  
-  - /home/travis/.ipfs
 script:
   - npm test
 before_deploy:  
-  - npm run build
+  - npm run build 
 deploy:
   provider: pages
   skip_cleanup: true
