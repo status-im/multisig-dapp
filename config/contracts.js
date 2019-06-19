@@ -14,11 +14,5 @@ module.exports = {
     strategy: "explicit",
     contracts: {  
     }
-  },
-  livenet: {
-  },
-  testnet: {
-  },
-  rinkeby: {
   }
 }

@@ -44,8 +44,6 @@ module.exports = {
   livenet: {
     networkType: "livenet",
     syncMode: "light",
-    rpcCorsDomain: "http://localhost:8000",
-    wsOrigins: "http://localhost:8000",
     accounts: [
       {
         nodeAccounts: true,
@@ -60,7 +58,6 @@ module.exports = {
     syncMode: "light",
     rpcHost: "localhost",
     rpcPort: 8745,
-    rpcCorsDomain: "http://localhost:8000",
     accounts: [
       {
         nodeAccounts: true,
