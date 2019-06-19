@@ -5,6 +5,7 @@
   "scripts": {
     "start": "npx embark run --nodashboard",
     "build": "npx embark build",
+    "deploy": "npx embark deploy",
     "ci": "npm run qa",
     "clean": "npm run reset",
     "package": "npm pack",
