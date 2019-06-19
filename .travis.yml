@@ -19,7 +19,7 @@ before_install:
 script:
   - npm test
 before_deploy:  
-  - npm run build travis
+  - npm run travis
 deploy:
   provider: pages
   skip_cleanup: true
