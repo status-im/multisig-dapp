@@ -3,27 +3,26 @@ dist: xenial
 language: node_js
 node_js:
   - "10"
-before_install:
-  - sudo apt-get update -qq
-  - sudo apt-get install software-properties-common -y -qq
-  - sudo add-apt-repository -y ppa:ethereum/ethereum
-  - sudo apt-get update -qq
-  - sudo apt-get install geth -y -qq
 addons:
   snaps:
     - ipfs
 env:
   - PATH=/snap/bin:$PATH
-before_cache:
+before_install:
   - ipfs init
-script:
-  - npm test
-before_deploy:  
-  - npm run build
+  - sudo apt-get update -qq
+  - sudo apt-get install software-properties-common -y -qq
+  - sudo add-apt-repository -y ppa:ethereum/ethereum
+  - sudo apt-get update -qq
+  - sudo apt-get install geth -y -qq
 cache: 
   directories:
   - .embark  
   - /home/travis/.ipfs
+script:
+  - npm test
+before_deploy:  
+  - npm run build
 deploy:
   provider: pages
   skip_cleanup: true
