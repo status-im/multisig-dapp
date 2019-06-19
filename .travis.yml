@@ -16,6 +16,9 @@ before_install:
   - sudo apt-get update -qq
   - sudo apt-get install geth -y -qq
   - < /dev/urandom tr -dc _A-Z-a-z-0-9 | head -c${1:-32} > .password
+cache: 
+  directories:
+  - .embark  
 script:
   - npm test
 before_deploy:  
