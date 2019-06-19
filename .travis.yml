@@ -19,6 +19,8 @@ before_script:
 script:
   - npm test
   - npm run build
+cache: 
+  - .embark  
 deploy:
   provider: pages
   skip_cleanup: true
