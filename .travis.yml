@@ -10,6 +10,8 @@ addons:
 cache:
   directories:
   - node_modules
+before_script:
+  - ipfs init
 script:
   - npm test
   - npm run build
