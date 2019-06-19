@@ -177,8 +177,7 @@
       "inputs": [],
       "payable": false,
       "stateMutability": "nonpayable",
-      "type": "constructor",
-      "signature": "constructor"
+      "type": "constructor"
     },
     {
       "anonymous": false,
@@ -259,13 +258,12 @@
     }
   ],
   "filename": "C:/dev/embark/lib/modules/ens/contracts/ENSRegistry.sol",
-  "gas": 554730,
+  "gas": "auto",
   "type": "file",
   "_gasLimit": false,
   "error": false,
   "deploymentAccount": "0xC35b912acf08b319dA745a7594d95D176FD2f01c",
   "realArgs": [],
-  "gasPrice": "1",
-  "deployedAddress": "0x813C3d0aa71E041B53ab20D085Ea13CD235B8e26",
-  "transactionHash": "0x126b2158ba6551c2adba33441ffe9d25735fae13e37e2bf3cbed9bca36b391fa"
+  "address": "0x813C3d0aa71E041B53ab20D085Ea13CD235B8e26",
+  "deployedAddress": "0x813C3d0aa71E041B53ab20D085Ea13CD235B8e26"
 }

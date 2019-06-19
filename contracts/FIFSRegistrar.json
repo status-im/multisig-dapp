@@ -52,12 +52,11 @@
       ],
       "payable": false,
       "stateMutability": "nonpayable",
-      "type": "constructor",
-      "signature": "constructor"
+      "type": "constructor"
     }
   ],
   "filename": "C:/dev/embark/lib/modules/ens/contracts/FIFSRegistrar.sol",
-  "gas": 295717,
+  "gas": "auto",
   "type": "file",
   "_gasLimit": false,
   "args": [
@@ -70,7 +69,6 @@
     "0x813C3d0aa71E041B53ab20D085Ea13CD235B8e26",
     "0x93cdeb708b7545dc668eb9280176169d1c33cfd8ed6f04690a0bcc88a93fc4ae"
   ],
-  "gasPrice": "1",
-  "deployedAddress": "0xcAEcb97fcFA85C2d5bd2510024733Fb1Bf00eC2A",
-  "transactionHash": "0x87b44d3c0f158edf3cfec9e1a89f83694211b76a183563eba5d1df28c916c5b1"
+  "address": "0xcAEcb97fcFA85C2d5bd2510024733Fb1Bf00eC2A",
+  "deployedAddress": "0xcAEcb97fcFA85C2d5bd2510024733Fb1Bf00eC2A"
 }

@@ -313,8 +313,7 @@
       ],
       "payable": false,
       "stateMutability": "nonpayable",
-      "type": "constructor",
-      "signature": "constructor"
+      "type": "constructor"
     },
     {
       "anonymous": false,
@@ -436,7 +435,7 @@
     }
   ],
   "filename": "C:/dev/embark/lib/modules/ens/contracts/Resolver.sol",
-  "gas": 971507,
+  "gas": "auto",
   "type": "file",
   "_gasLimit": false,
   "args": [
@@ -447,7 +446,6 @@
   "realArgs": [
     "0x813C3d0aa71E041B53ab20D085Ea13CD235B8e26"
   ],
-  "gasPrice": "1",
-  "deployedAddress": "0x2fa48f649367987f44d00B7b7fd95Ae9289902d9",
-  "transactionHash": "0x93e3bc33adddba746de9acf6e722c571eb8be1f6ac84c335f966aef71e2b6d2b"
+  "address": "0x2fa48f649367987f44d00B7b7fd95Ae9289902d9",
+  "deployedAddress": "0x2fa48f649367987f44d00B7b7fd95Ae9289902d9"
 }
