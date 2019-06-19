@@ -14,14 +14,16 @@ addons:
     - ipfs
 env:
   - PATH=/snap/bin:$PATH
-before_script:
+before_cache:
   - ipfs init
 script:
   - npm test
+before_deploy:  
   - npm run build
 cache: 
   directories:
   - .embark  
+  - /home/travis/.ipfs
 deploy:
   provider: pages
   skip_cleanup: true
