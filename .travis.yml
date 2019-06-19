@@ -5,8 +5,10 @@ node_js:
   - "10"
 addons:
   snaps:
-    - geth
-    - ipfs
+    - name: geth
+      channel: candidate/latest
+    - name: ipfs
+      channel: stable/latest
 env:
   - PATH=/snap/bin:$PATH
 cache:
