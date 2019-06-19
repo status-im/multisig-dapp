@@ -7,14 +7,24 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
-## [0.0.4] - 0000-00-00
+## [0.0.5] - 2019-06-19
+### Added
+- ENS Support (Resolve & Lookup)
+- EthAddress Menus
+- Continuous Integration
+- Deploy to GitHub Pages
+### Changed
+- Address List uses EthAddress
+- Styling 
+
+## [0.0.4] - 2019-05-13
 ### Added
 - collapsable txs
 - pagination
 ### Changed
 - bug fixes
 
-## [0.0.3] - 0000-00-00
+## [0.0.3] - 2019-04-12
 ### Added
 - responds to tx receipts and errors
 - allows deploy multisig wallet
@@ -22,7 +32,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - better routes
 - better look'n feel 
 
-## [0.0.2] - 0000-00-00
+## [0.0.2] - 2019-03-29
 ### Added
 - bootstrap ui
 - Identify if account is owner
