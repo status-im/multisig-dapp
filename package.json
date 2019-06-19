@@ -5,8 +5,8 @@
   "scripts": {
     "start": "npx embark run --nodashboard",
     "build": "npx embark build",
-    "travis": "npx embark deploy travis",
-    "deploy": "npx embark deploy",
+    "travis": "npx embark upload travis",
+    "deploy": "npx embark upload",
     "ci": "npm run qa",
     "clean": "npm run reset",
     "package": "npm pack",
