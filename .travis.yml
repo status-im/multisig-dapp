@@ -14,9 +14,6 @@ addons:
     - ipfs
 env:
   - PATH=/snap/bin:$PATH
-cache:
-  directories:
-  - node_modules
 before_script:
   - ipfs init
 script:
