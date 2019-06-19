@@ -91,16 +91,12 @@ class EthAddressList extends React.Component {
                             allowZero={this.props.allowZero}
                             blocky={this.props.blocky}
                             colors={this.props.colors}  
+                            toolBarActions={[{action: (event) => {
+                                this.removeAddress(index)
+                            }, text: (<><TrashIcon/> Remove</> ) }]}
                             onChange={(address, value) => {
                                 this.setAddress(address, value, index);
                             }} />
-
-                        <Button 
-                            size="sm" 
-                            variant="danger" 
-                            onClick={(event) => {
-                                this.removeAddress(index)
-                            }} className="btn-circle" ><TrashIcon/></Button>
                     </div>
                 );
                 }
