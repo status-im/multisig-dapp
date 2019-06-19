@@ -70,9 +70,6 @@ module.exports = {
     syncMode: "light",
     accounts: [
       {
-        mnemonic: process.env.DAPP_MNEMONIC 
-      },
-      {
         nodeAccounts: true,
         password: ".password"
       }

@@ -14,5 +14,14 @@ module.exports = {
     strategy: "explicit",
     contracts: {  
     }
+  },
+  travis: {
+    deployment: {
+      accounts: [
+        {
+          mnemonic: process.env.DAPP_MNEMONIC 
+        }
+      ]
+    }
   }
 }
