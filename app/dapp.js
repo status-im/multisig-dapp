@@ -96,7 +96,7 @@ class App extends React.Component {
                 } else {
                     onError("Invalid MultiSigWallet")
                 }
-            }).catch(() => onError("Not a Multisig Wallet")); 
+            }).catch(() => onError("Not a MultiSigWallet")); 
         } catch (error) {
             onError("Unhandled error." + error.toString())
         }
@@ -148,7 +148,7 @@ class App extends React.Component {
                             <React.Fragment /> 
                             :
                             <Container id="select-contract">
-                                <h2>Open Multisig Wallet</h2> 
+                                <h2>Open MultiSigWallet</h2> 
                                 <CardColumns>
                                     <ContractLoader account={account} address={match.params.address} onChange={(address, onError) => this.setContractAddress(address, onError) } />
                                     {account && <MSWDeployer account={account} onDeploy={this.setMSWInstance} />}
