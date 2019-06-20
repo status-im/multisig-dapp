@@ -1,7 +1,6 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import Blockies from 'react-blockies';
-import { Overlay, Tooltip } from 'react-bootstrap';
 import copy from 'copy-to-clipboard';
 import './EthAddress.css';
 import ClipIcon from "./icon/Clip";
