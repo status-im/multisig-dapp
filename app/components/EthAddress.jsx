@@ -36,6 +36,7 @@ class EthAddress extends React.Component {
 		blockyScale: 4,
 		disabled: false,
 		onChange: () => { },
+		enableToolBar: true,
 		toolBarActions: []
 	};
 
@@ -226,6 +227,7 @@ class EthAddress extends React.Component {
 		return `linear-gradient(90deg, #${address.substr(2, 6)} 0% 14%, #${address.substr(8, 6)} 14% 28%, #${address.substr(14, 6)} 28% 42%, #${address.substr(19, 6)} 43% 57%, #${address.substr(24, 6)} 58% 72%, #${address.substr(30, 6)} 72% 86%, #${address.substr(36, 6)} 86% 100%)`
 	}
 
+	
 	render() {
 		const {
 			disabled,
@@ -235,6 +237,7 @@ class EthAddress extends React.Component {
 			blockySize,
 			blockyScale,
 			control,
+			enableToolBar,
 			toolBarActions
 		} = this.props;
 		const { ensReverse, value, validAddress, loaded, acceptedOutput, ensResolve} = this.state;
@@ -270,21 +273,22 @@ class EthAddress extends React.Component {
 						contentEditable={!disabled} 
 						/>
 					}
-					{loaded ? 
+					{((enableToolBar) || (toolBarActions && toolBarActions.length > 0)) && (loaded ? 
 					<span className="more-icon" onClick={this.onClick}>
 						<MoreIcon fill="#000" width={15} /> 
 					</span> : 
 					<span className="loading" onClick={this.onClick}>
 						<HashLoader loading={!loaded} sizeUnit={"px"} size={15}/> 
-					</span> }
+					</span>)}
 				</span>
 				{ menuVisible && <nav className="menu text-left">
 						{ toolBarActions.map((value, index) => {
 							return (<a key={index} onClick={value.action}> {value.text} </a>) 
 						})}
-						{ validAddress && <a onClick={this.copyAddress}><ClipIcon /> Copy address </a> }
-						{ ensReverse && <a onClick={this.copyLookup}><ClipIcon /> Copy ENS name </a> }
-						{ address != value && ensReverse != value && <a onClick={this.copyValue}><ClipIcon /> Copy input value </a> }
+						
+						{ enableToolBar && acceptedOutput && <a onClick={this.copyAddress}><ClipIcon /> Copy address </a> }
+						{ enableToolBar && ensReverse && <a onClick={this.copyLookup}><ClipIcon /> Copy ENS name </a> }
+						{ enableToolBar && (!acceptedOutput || (address != value && ensReverse != value)) && <a onClick={this.copyValue}><ClipIcon /> Copy input value </a> }
 					</nav> }			
 			</span>
 		)
