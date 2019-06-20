@@ -1,10 +1,8 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import { Button } from 'react-bootstrap';
 import EthAddress from './EthAddress';
-import uuidv4 from 'uuid/v4';
+import './EthAddressList.css';
 import TrashIcon from "./icon/Trash";
-
 const nullAddress = "0x0000000000000000000000000000000000000000"
 
 class EthAddressList extends React.Component {
@@ -19,7 +17,9 @@ class EthAddressList extends React.Component {
 		blockySize: PropTypes.number,
 		blockyScale: PropTypes.number,
 		control: PropTypes.bool,
-		disabled: PropTypes.bool,
+        disabled: PropTypes.bool,
+        allowAdd: PropTypes.bool,
+        allowRemove: PropTypes.bool,
 		onChange: PropTypes.func
 	};
 
@@ -32,7 +32,9 @@ class EthAddressList extends React.Component {
 		blocky: true,
 		blockySize: 8,
 		blockyScale: 4,
-		disabled: false,
+        disabled: false,
+        allowAdd: true,
+        allowRemove: true,
 		onChange: () => { }
 	};
 
@@ -40,6 +42,7 @@ class EthAddressList extends React.Component {
         super(props);
         this.state = { 
             values: [] ,
+            newItem: "",
             addresses: []
         };
     }
@@ -72,6 +75,14 @@ class EthAddressList extends React.Component {
         this.setState({values,addresses});
     }
 
+    addAddress(address, value) {
+        const values = this.state.values.slice(0);
+        const addresses = this.state.addresses.slice(0);
+        values.push(value);
+        addresses.push(address);
+        this.setState({values,addresses});
+    }
+
     removeAddress(i) {
         const values = this.state.values.filter((item, j) => i !== j);
         const addresses = this.state.addresses.filter((item, j) => i !== j);
@@ -80,20 +91,25 @@ class EthAddressList extends React.Component {
 
 
     render() {
-        const {values} = this.state;
+        const {values, newItem} = this.state;
+        const {control, allowZero, blocky, colors, allowAdd, allowRemove} = this.props;
         var list = values.map(
             (value, index, array) => {
                 return(
                     <div className="d-flex" key={index}>
                         <EthAddress
-                            control={true}
+                            control={control}
                             value={value}
-                            allowZero={this.props.allowZero}
-                            blocky={this.props.blocky}
-                            colors={this.props.colors}  
-                            toolBarActions={[{action: (event) => {
-                                this.removeAddress(index)
-                            }, text: (<><TrashIcon/> Remove</> ) }]}
+                            allowZero={allowZero}
+                            blocky={blocky}
+                            colors={colors}  
+                            toolBarActions={
+                                (control && allowRemove) ? [
+                                    {
+                                        action: (event) => { this.removeAddress(index)},
+                                        text: (<><TrashIcon/> Remove</>) 
+                                    }
+                                ] : [] }
                             onChange={(address, value) => {
                                 this.setAddress(address, value, index);
                             }} />
@@ -102,8 +118,25 @@ class EthAddressList extends React.Component {
                 }
         );
         return (
-            <div>
+            <div className="eth-address-list">
                 {list}
+                {control && allowAdd && <div className="d-flex new-item">
+                    <EthAddress
+                        control={true}
+                        enableToolBar={false}
+                        value={newItem}
+                        allowZero={this.props.allowZero}
+                        blocky={this.props.blocky}
+                        colors={this.props.colors}  
+                        onChange={(address, value) => {
+                            if(address != nullAddress){
+                                this.addAddress(address, value);
+                                this.setState({newItem: ""});
+                            } else {
+                                this.setState({newItem: value});
+                            }
+                        }} />
+                    </div>}
             </div>
         );
     }
