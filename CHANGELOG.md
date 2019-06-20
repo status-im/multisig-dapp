@@ -7,6 +7,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Changed
+- Enhanced EthAddressList Item Add
+
 ## [0.0.5] - 2019-06-19
 ### Added
 - ENS Support (Resolve & Lookup)
