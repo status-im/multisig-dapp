@@ -83,14 +83,12 @@ class MSWDeployer extends React.Component {
                 </Card.Header>
                 <ListGroup variant="flush">
                     <ListGroup.Item>
-                        <Form.Label>Owners:</Form.Label>
+                        <Form.Label>Owners list:</Form.Label>
                         <EthAddressList control={true} values={values} onChange={(owners,values)=>this.setState({owners,values})} />
                     </ListGroup.Item>
                     <ListGroup.Item>
-                        <Form.Label>Required:</Form.Label>
-                        <div>{required} of {values.length}
-                        <Slider dots={true} min={1} max={values.length} step={1} defaultValue={required} onChange={this.setRequired.bind(this)} />
-                        </div>
+                        <Form.Label>Will require {required} signature{required>1 && "s"} of {values.length} owner{values.length>1 && "s"} to execute from this MultiSigWallet.</Form.Label>
+                        <Slider dots={true} min={1} max={values.length} step={1} value={required} onChange={this.setRequired.bind(this)} />
                     </ListGroup.Item>
                 </ListGroup>
                 <Card.Body className="text-right">
