@@ -7,8 +7,7 @@ import Slider from 'rc-slider';
 import 'rc-slider/assets/index.css';
 import EthAddressList from '../EthAddressList';
 import IconDeploy from '../icon/Deploy'
-import IconAdd from '../icon/Add'
-import IconMore from '../icon/More'
+
 
 class MSWDeployer extends React.Component {
 
@@ -101,7 +100,7 @@ class MSWDeployer extends React.Component {
                         onResult={(result) => this.handleResult(result) }
                         onError={(error) => this.handleError(error) }
                         icon={
-                            <IconMore/>
+                            <IconDeploy/>
                         }
                         text="Deploy"
                         size="sm"
