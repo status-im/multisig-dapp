@@ -69,16 +69,6 @@ class MSWDeployer extends React.Component {
         this.setState({ txHash });
     }
 
-        
-    addAddress() {
-        const values = this.state.values.slice(0);
-        const owners = this.state.owners.slice(0);
-        values.push("0x0000000000000000000000000000000000000000");
-        owners.push("0x0000000000000000000000000000000000000000");
-
-        this.setState({values, owners});
-    }
-
     render() {
         const { account } = this.props;
         const { values, owners, required, strError } = this.state;
@@ -94,12 +84,7 @@ class MSWDeployer extends React.Component {
                 <ListGroup variant="flush">
                     <ListGroup.Item>
                         <Form.Label>Owners:</Form.Label>
-                        <EthAddressList values={values} onChange={(owners,values)=>this.setState({owners,values})} />
-                        <Button 
-                            size="sm" 
-                            variant="primary" 
-                            onClick={() => this.addAddress()} 
-                            className="btn-circle" >Add Item <IconAdd/></Button>
+                        <EthAddressList control={true} values={values} onChange={(owners,values)=>this.setState({owners,values})} />
                     </ListGroup.Item>
                     <ListGroup.Item>
                         <Form.Label>Required:</Form.Label>
