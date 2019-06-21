@@ -75,12 +75,12 @@ class EthAddressList extends React.Component {
         this.setState({values,addresses});
     }
 
-    addAddress(address, value) {
+    newItem(address, value) {
         const values = this.state.values.slice(0);
         const addresses = this.state.addresses.slice(0);
         values.push(value);
         addresses.push(address);
-        this.setState({values,addresses});
+        this.setState({values, addresses, newItem: ''});
     }
 
     removeAddress(i) {
@@ -124,16 +124,15 @@ class EthAddressList extends React.Component {
                     <EthAddress
                         control={true}
                         enableToolBar={false}
+                        ENSReverseLookup={false}
                         value={newItem}
                         allowZero={this.props.allowZero}
                         blocky={this.props.blocky}
                         colors={this.props.colors}  
-                        onChange={(address, value) => {
+                        onChange={async (address, value) => {
+                            await this.setState({newItem: value});
                             if(address != nullAddress){
-                                this.addAddress(address, value);
-                                this.setState({newItem: ""});
-                            } else {
-                                this.setState({newItem: value});
+                                this.newItem(address, value);
                             }
                         }} />
                     </div>}
