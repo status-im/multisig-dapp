@@ -10,7 +10,8 @@ class ContractLoader extends React.Component {
     super(props);
     this.state = {
       error: null,
-      value: ''
+      value: '',
+      address: ''
     };
   }
   static propTypes = {
@@ -24,7 +25,11 @@ class ContractLoader extends React.Component {
   }
 
   componentDidMount() {
-    const address = this.state.contractAddress;
+    this.setValue(null, this.props.value || this.props.defaultValue);
+  }
+
+  setValue(address, value) {
+    this.setState({address, value});
     if (address && address != nullAddress) this.props.onChange(address, (error) => this.setState({error}));
   }
 
@@ -32,7 +37,6 @@ class ContractLoader extends React.Component {
     event.preventDefault();
     this.props.onChange(this.state.address, (error) => this.setState({error}));
   }
-
   render() {
     const { value, error } = this.state;
     return (
@@ -51,8 +55,7 @@ class ContractLoader extends React.Component {
                 value={value}
                 allowZero={false}
                 onChange={(address, value) => {
-                  this.setState({address, value});
-                  this.props.onChange(address, (error) => this.setState({error}))
+                  this.setValue(address, value);
                 }}
               />
             </ListGroup.Item>

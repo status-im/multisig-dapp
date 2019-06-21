@@ -45,7 +45,7 @@ class EthAddress extends React.Component {
 		this.controlRef = React.createRef();
 		this.ref = React.createRef();
 		this.state = {
-			value: null,
+			value: "",
 			loaded: true,
 			validAddress: false,
 			address: null,
