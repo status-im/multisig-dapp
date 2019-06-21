@@ -150,7 +150,7 @@ class App extends React.Component {
                             <Container id="select-contract">
                                 <h2>Open MultiSigWallet</h2> 
                                 <CardColumns>
-                                    <ContractLoader account={account} address={match.params.address} onChange={(address, onError) => this.setContractAddress(address, onError) } />
+                                    <ContractLoader address={match.params.address} onChange={(address, onError) => this.setContractAddress(address, onError) } />
                                     {account && <MSWDeployer account={account} onDeploy={this.setMSWInstance} />}
                                 </CardColumns>
                             </Container>
