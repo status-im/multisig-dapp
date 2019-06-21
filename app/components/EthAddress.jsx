@@ -25,8 +25,8 @@ class EthAddress extends React.Component {
 
 	static defaultProps = {
 		className: 'eth-address',
-		value: null,
-		defaultValue: nullAddress,
+		value: "",
+		defaultValue: "",
 		colors: true,
 		control: false,
 		allowZero: true,
@@ -36,6 +36,7 @@ class EthAddress extends React.Component {
 		disabled: false,
 		onChange: () => { },
 		enableToolBar: true,
+		ENSReverseLookup: true,
 		toolBarActions: []
 	};
 
@@ -73,7 +74,7 @@ class EthAddress extends React.Component {
 
 
 	componentDidUpdate(prevProps, prevState) {
-        if (prevProps.value != this.props.value && this.props.value != this.state.value) {
+        if (prevProps.value != this.props.value) {
             this.setValue(this.props.value);
 		}
 		if(prevState.value != this.state.value) {
@@ -92,7 +93,7 @@ class EthAddress extends React.Component {
 		if(this.state.value == value) { 
 			return;
 		}
-		value = value ? value : nullAddress;
+		value = value ? value : "";
 		if(this.props.control && this.controlRef.current.textContent != value) {
 			this.controlRef.current.textContent = value;
 		}
@@ -152,12 +153,9 @@ class EthAddress extends React.Component {
 	}
 
 	lookupENSReverseName() {
-		const { address } = this.state;
-		if(address != nullAddress){
+		const { address, validAddress } = this.state;
+		if(this.props.ENSReverseLookup && validAddress){
 			EmbarkJS.Names.lookup(address, (err, name) => {
-				if(err){
-					console.error(err);
-				}
 				this.setState({ensReverse: name, loaded: true});
 			})
 		} else {
@@ -239,15 +237,14 @@ class EthAddress extends React.Component {
 			enableToolBar,
 			toolBarActions
 		} = this.props;
-		const { ensReverse, value, validAddress, loaded, acceptedOutput, ensResolve} = this.state;
-		const address = this.state.address ? this.state.address : nullAddress; 
-		const { containerRef, menuVisible, tooltipText } = this.state;
+		const { menuVisible,  ensReverse, value, validAddress, loaded, acceptedOutput, ensResolve} = this.state;
+		const address = validAddress ? this.state.address : nullAddress; 
 		const colorStyle = colors ? {
 			backgroundImage: this.getBackgroundGradient(address)
 		} : {}
-		return (
+		return (	
 			<span ref={this.ref} style={colorStyle} className={`${className}`} >
-				<span className={(acceptedOutput || !loaded) ? "bg" : "err"}>
+				<span className={(acceptedOutput) ? "bg" : "err"}>
 					{blocky &&	 
 						<Blockies className="blocky" seed={address.toLowerCase()} size={blockySize} scale={blockyScale} />
 					}
