@@ -3,42 +3,42 @@ import { Alert, Form, Button, Card, ListGroup,  Badge, Col, Row  } from 'react-b
 import PropTypes from 'prop-types';
 import EthAddress from '../EthAddress';
 import IconSearch from '../icon/Search';
-
+const nullAddress = "0x0000000000000000000000000000000000000000"
 class ContractLoader extends React.Component {
 
   constructor(props) {
     super(props);
     this.state = {
       error: null,
-      address: props.address,
-      value: props.address
+      value: '',
+      address: ''
     };
   }
   static propTypes = {
-    account: PropTypes.string,
-    address: PropTypes.string,
+    value: PropTypes.string,
     onChange: PropTypes.func
   }
 
   static defaultProps = {
-    account: '',
-    address: '0x0000000000000000000000000000000000000000',
+    value: '',
     onChange: () => { }
   }
 
   componentDidMount() {
-    const address = this.state.contractAddress;
-    if (address && address != ContractLoader.defaultProps.address) this.props.onChange(address, (error) => this.setState({error}));
+    this.setValue(null, this.props.value || this.props.defaultValue);
+  }
+
+  setValue(address, value) {
+    this.setState({address, value});
+    if (address && address != nullAddress) this.props.onChange(address, (error) => this.setState({error}));
   }
 
   handleSumbit(event) {
     event.preventDefault();
     this.props.onChange(this.state.address, (error) => this.setState({error}));
   }
-
   render() {
-    const { address, value, error } = this.state;
-    const { onChange } = this.props;
+    const { value, error } = this.state;
     return (
       <Card>
         <Card.Header>
@@ -55,8 +55,7 @@ class ContractLoader extends React.Component {
                 value={value}
                 allowZero={false}
                 onChange={(address, value) => {
-                  this.setState({address, value});
-                  this.props.onChange(address, (error) => this.setState({error}))
+                  this.setValue(address, value);
                 }}
               />
             </ListGroup.Item>

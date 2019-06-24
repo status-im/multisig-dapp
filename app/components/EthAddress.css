@@ -1,3 +1,9 @@
+[contenteditable=true]:empty:before {
+  content: attr(placeholder);
+  display: block; /* For Firefox */
+  color: #888;
+}
+
 .eth-address {
   padding: 3px;
   position: relative;

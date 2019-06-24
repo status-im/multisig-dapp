@@ -7,8 +7,7 @@ import Slider from 'rc-slider';
 import 'rc-slider/assets/index.css';
 import EthAddressList from '../EthAddressList';
 import IconDeploy from '../icon/Deploy'
-import IconAdd from '../icon/Add'
-import IconMore from '../icon/More'
+
 
 class MSWDeployer extends React.Component {
 
@@ -69,16 +68,6 @@ class MSWDeployer extends React.Component {
         this.setState({ txHash });
     }
 
-        
-    addAddress() {
-        const values = this.state.values.slice(0);
-        const owners = this.state.owners.slice(0);
-        values.push("0x0000000000000000000000000000000000000000");
-        owners.push("0x0000000000000000000000000000000000000000");
-
-        this.setState({values, owners});
-    }
-
     render() {
         const { account } = this.props;
         const { values, owners, required, strError } = this.state;
@@ -93,19 +82,12 @@ class MSWDeployer extends React.Component {
                 </Card.Header>
                 <ListGroup variant="flush">
                     <ListGroup.Item>
-                        <Form.Label>Owners:</Form.Label>
-                        <EthAddressList values={values} onChange={(owners,values)=>this.setState({owners,values})} />
-                        <Button 
-                            size="sm" 
-                            variant="primary" 
-                            onClick={() => this.addAddress()} 
-                            className="btn-circle" >Add Item <IconAdd/></Button>
+                        <Form.Label>Owners list:</Form.Label>
+                        <EthAddressList control={true} values={values} onChange={(owners,values)=>this.setState({owners,values})} />
                     </ListGroup.Item>
                     <ListGroup.Item>
-                        <Form.Label>Required:</Form.Label>
-                        <div>{required} of {values.length}
-                        <Slider dots={true} min={1} max={values.length} step={1} defaultValue={required} onChange={this.setRequired.bind(this)} />
-                        </div>
+                        <Form.Label>Will require {required} signature{required>1 && "s"} of {values.length} owner{values.length>1 && "s"} to execute from this MultiSigWallet.</Form.Label>
+                        <Slider dots={true} min={1} max={values.length} step={1} value={required} onChange={this.setRequired.bind(this)} />
                     </ListGroup.Item>
                 </ListGroup>
                 <Card.Body className="text-right">
@@ -118,7 +100,7 @@ class MSWDeployer extends React.Component {
                         onResult={(result) => this.handleResult(result) }
                         onError={(error) => this.handleError(error) }
                         icon={
-                            <IconMore/>
+                            <IconDeploy/>
                         }
                         text="Deploy"
                         size="sm"

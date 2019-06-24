@@ -1,7 +1,6 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import Blockies from 'react-blockies';
-import { Overlay, Tooltip } from 'react-bootstrap';
 import copy from 'copy-to-clipboard';
 import './EthAddress.css';
 import ClipIcon from "./icon/Clip";
@@ -26,8 +25,8 @@ class EthAddress extends React.Component {
 
 	static defaultProps = {
 		className: 'eth-address',
-		value: null,
-		defaultValue: nullAddress,
+		value: "",
+		defaultValue: "",
 		colors: true,
 		control: false,
 		allowZero: true,
@@ -36,6 +35,8 @@ class EthAddress extends React.Component {
 		blockyScale: 4,
 		disabled: false,
 		onChange: () => { },
+		enableToolBar: true,
+		ENSReverseLookup: true,
 		toolBarActions: []
 	};
 
@@ -44,7 +45,7 @@ class EthAddress extends React.Component {
 		this.controlRef = React.createRef();
 		this.ref = React.createRef();
 		this.state = {
-			value: null,
+			value: "",
 			loaded: true,
 			validAddress: false,
 			address: null,
@@ -73,7 +74,7 @@ class EthAddress extends React.Component {
 
 
 	componentDidUpdate(prevProps, prevState) {
-        if (prevProps.value != this.props.value && this.props.value != this.state.value) {
+        if (prevProps.value != this.props.value) {
             this.setValue(this.props.value);
 		}
 		if(prevState.value != this.state.value) {
@@ -92,7 +93,7 @@ class EthAddress extends React.Component {
 		if(this.state.value == value) { 
 			return;
 		}
-		value = value ? value : nullAddress;
+		value = value ? value : "";
 		if(this.props.control && this.controlRef.current.textContent != value) {
 			this.controlRef.current.textContent = value;
 		}
@@ -152,12 +153,9 @@ class EthAddress extends React.Component {
 	}
 
 	lookupENSReverseName() {
-		const { address } = this.state;
-		if(address != nullAddress){
+		const { address, validAddress } = this.state;
+		if(this.props.ENSReverseLookup && validAddress){
 			EmbarkJS.Names.lookup(address, (err, name) => {
-				if(err){
-					console.error(err);
-				}
 				this.setState({ensReverse: name, loaded: true});
 			})
 		} else {
@@ -226,6 +224,7 @@ class EthAddress extends React.Component {
 		return `linear-gradient(90deg, #${address.substr(2, 6)} 0% 14%, #${address.substr(8, 6)} 14% 28%, #${address.substr(14, 6)} 28% 42%, #${address.substr(19, 6)} 43% 57%, #${address.substr(24, 6)} 58% 72%, #${address.substr(30, 6)} 72% 86%, #${address.substr(36, 6)} 86% 100%)`
 	}
 
+	
 	render() {
 		const {
 			disabled,
@@ -235,17 +234,17 @@ class EthAddress extends React.Component {
 			blockySize,
 			blockyScale,
 			control,
+			enableToolBar,
 			toolBarActions
 		} = this.props;
-		const { ensReverse, value, validAddress, loaded, acceptedOutput, ensResolve} = this.state;
-		const address = this.state.address ? this.state.address : nullAddress; 
-		const { containerRef, menuVisible, tooltipText } = this.state;
+		const { menuVisible,  ensReverse, value, validAddress, loaded, acceptedOutput, ensResolve} = this.state;
+		const address = validAddress ? this.state.address : nullAddress; 
 		const colorStyle = colors ? {
 			backgroundImage: this.getBackgroundGradient(address)
 		} : {}
-		return (
+		return (	
 			<span ref={this.ref} style={colorStyle} className={`${className}`} >
-				<span className={(acceptedOutput || !loaded) ? "bg" : "err"}>
+				<span className={(acceptedOutput) ? "bg" : "err"}>
 					{blocky &&	 
 						<Blockies className="blocky" seed={address.toLowerCase()} size={blockySize} scale={blockyScale} />
 					}
@@ -270,21 +269,22 @@ class EthAddress extends React.Component {
 						contentEditable={!disabled} 
 						/>
 					}
-					{loaded ? 
+					{((enableToolBar) || (toolBarActions && toolBarActions.length > 0)) && (loaded ? 
 					<span className="more-icon" onClick={this.onClick}>
 						<MoreIcon fill="#000" width={15} /> 
 					</span> : 
 					<span className="loading" onClick={this.onClick}>
 						<HashLoader loading={!loaded} sizeUnit={"px"} size={15}/> 
-					</span> }
+					</span>)}
 				</span>
 				{ menuVisible && <nav className="menu text-left">
 						{ toolBarActions.map((value, index) => {
 							return (<a key={index} onClick={value.action}> {value.text} </a>) 
 						})}
-						{ validAddress && <a onClick={this.copyAddress}><ClipIcon /> Copy address </a> }
-						{ ensReverse && <a onClick={this.copyLookup}><ClipIcon /> Copy ENS name </a> }
-						{ address != value && ensReverse != value && <a onClick={this.copyValue}><ClipIcon /> Copy input value </a> }
+						
+						{ enableToolBar && acceptedOutput && <a onClick={this.copyAddress}><ClipIcon /> Copy address </a> }
+						{ enableToolBar && ensReverse && <a onClick={this.copyLookup}><ClipIcon /> Copy ENS name </a> }
+						{ enableToolBar && (!acceptedOutput || (address != value && ensReverse != value)) && <a onClick={this.copyValue}><ClipIcon /> Copy input value </a> }
 					</nav> }			
 			</span>
 		)
