@@ -12,7 +12,11 @@
     "package": "npm pack",
     "qa": "npm-run-all test package",
     "reset": "npx embark-reset && npx rimraf embark-*.tgz package",
-    "test": "npx embark test"
+    "test": "npx embark test",
+    "storybook": "start-storybook -p 6006",
+    "storybook:css": "npm run build:css && start-storybook -p 6006 -c .storybook-css",
+    "storybook:uninstall": "npm uninstall --no-save @storybook/react && rimraf node_modules/@storybook node_modules/react-modal node_modules/react-dom-factories",
+    "build-storybook": "build-storybook"
   },
   "repository": {
     "type": "git",
@@ -24,22 +28,35 @@
     "url": "https://github.com/status-im/multisig-dapp/issues"
   },
   "homepage": "https://github.com/status-im/multisig-dapp#readme",
+  "devDependencies": {
+    "@babel/core": "^7.5.5",
+    "@storybook/addon-actions": "^5.1.10",
+    "@storybook/addon-info": "^5.1.1",
+    "@storybook/addon-links": "^5.1.10",
+    "@storybook/addon-options": "^5.1.1",
+    "@storybook/addons": "^5.1.10",
+    "@storybook/react": "^5.1.10",
+    "babel-loader": "^8.0.6"
+  },
   "dependencies": {
+    "@trailofbits/embark-contract-info": "^1.1.0",
+    "abi-decoder": "^1.2.0",
+    "bootstrap": "^4.3.1",
+    "copy-to-clipboard": "^3.0.8",
     "embark": "^4.1.0-beta.3",
     "embarkjs-connector-web3": "^4.1.0-beta.3",
-    "@trailofbits/embark-contract-info": "^1.1.0",
     "prop-types": "^15.6.2",
+    "rc-slider": "^8.6.9",
     "react": "^16.7.0",
     "react-blockies": "^1.4.1",
     "react-bootstrap": "^1.0.0-beta.8",
     "react-dom": "^16.7.0",
+    "react-dropdown": "^1.6.4",
     "react-router-bootstrap": "^0.25.0",
     "react-router-dom": "^5.0.0",
     "react-spinkit": "^3.0.0",
     "react-spinners": "^0.5.4",
-    "bootstrap": "^4.3.1",
-    "copy-to-clipboard": "^3.0.8",
-    "rc-slider": "^8.6.9",
+    "react-tabs": "^3.0.0",
     "uuid": "^3.3.2"
   }
 }

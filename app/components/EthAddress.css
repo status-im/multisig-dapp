@@ -9,7 +9,7 @@
   position: relative;
   display: inline-grid;
   width: 100%;
-  max-width: 420px;
+  max-width: 368px;
   border-radius: 5px;
   margin: auto;
 }
@@ -94,7 +94,7 @@
   white-space: nowrap;
   overflow: hidden;
   display: flow-root;
-  margin-top: 0.25em;
+  margin-top: 2px;
 }
 
 .eth-address .clip-icon .svg-icon path {
@@ -110,7 +110,7 @@
 }
 .eth-address .text span,
 .eth-address .indicator span {
-  margin: -4px auto;
+  margin: -2px auto;
 }
 
 .eth-address .ens-reverse small {
@@ -137,7 +137,7 @@
   background-color: #CCC;
 }
 .eth-address .more-icon {
-  margin: 0.1em 05px 0 0;
+  margin: 6px 5px 0 0;
 }
 
 .eth-address .more-icon path{
