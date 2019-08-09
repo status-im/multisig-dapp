@@ -92,7 +92,7 @@ class EthAddressList extends React.Component {
 
     render() {
         const {values, newItem} = this.state;
-        const {control, allowZero, blocky, colors, allowAdd, allowRemove} = this.props;
+        const {control, disabled, allowZero, blocky, blockySize, blockyScale, colors, allowAdd, allowRemove} = this.props;
         var list = values.map(
             (value, index, array) => {
                 return(
@@ -101,7 +101,10 @@ class EthAddressList extends React.Component {
                             control={control}
                             value={value}
                             allowZero={allowZero}
+                            disabled={disabled}
                             blocky={blocky}
+                            blockySize={blockySize}
+                            blockyScale={blockyScale}
                             colors={colors}  
                             toolBarActions={
                                 (control && allowRemove) ? [
@@ -120,15 +123,17 @@ class EthAddressList extends React.Component {
         return (
             <div className="eth-address-list">
                 {list}
-                {control && allowAdd && <div className="d-flex new-item">
+                {control && !disabled && allowAdd && <div className="d-flex new-item">
                     <EthAddress
                         control={true}
                         enableToolBar={false}
                         ENSReverseLookup={false}
                         value={newItem}
-                        allowZero={this.props.allowZero}
-                        blocky={this.props.blocky}
-                        colors={this.props.colors}  
+                        allowZero={allowZero}
+                        blocky={blocky}
+                        blockySize={blockySize}
+                        blockyScale={blockyScale}
+                        colors={colors}  
                         onChange={async (address, value) => {
                             await this.setState({newItem: value});
                             if(address != nullAddress){
