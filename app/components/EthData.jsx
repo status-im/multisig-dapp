@@ -5,7 +5,9 @@ import Dropdown from 'react-dropdown';
 import "react-tabs/style/react-tabs.css";
 import HexData from './HexData';
 import EthAddress from './EthAddress';
+import EthAddressList from './EthAddressList';
 import './EthData.css';
+
 
 class EthData extends React.Component {
     constructor(props) {
@@ -85,7 +87,7 @@ class EthData extends React.Component {
         if(!abi) return;
         var methods = [];
         try {
-            methods = JSON.parse(abi).filter(method => method.type == 'function' && !method.constant).map((method) => {
+            methods = abi.filter(method => method.type == 'function' && !method.constant).map((method) => {
                 method.value = web3.eth.abi.encodeFunctionSignature(method).substr(2);
                 method.label = method.name;  
                 return method;
@@ -219,15 +221,23 @@ class EthData extends React.Component {
                             const value = params? params[i] : "";
                             var display;
                             switch (v.type) {
+                                case "address[]": 
+                                    display = (<EthAddressList onChange={this.onUpdateAddressInput.bind(this,i)} values={value} control={control} disabled={disabled} />)
+                                    break;
                                 case "address": 
                                     display = (<EthAddress onChange={this.onUpdateAddressInput.bind(this,i)} value={value} control={control} disabled={disabled} />)
                                     break;
                                 case "uint256":
                                     display = (<input type="number" onChange={this.onUpdateInput.bind(this,i,v.type)} value={value} disabled={disabled} />)
                                     break;
+                                case "string":
+                                    display = (<input type="text" onChange={this.onUpdateInput.bind(this,i,v.type)} value={value} disabled={disabled} />)
+                                    break;
                                 case "bytes":
-                                default:
                                     display = (<textarea onChange={this.onUpdateInput.bind(this,i, v.type)} value={value} disabled={disabled} />)
+                                    break;
+                                default:
+                                    display = (<input type="number" onChange={this.onUpdateInput.bind(this,i,v.type)} value={value} disabled={disabled} />)
                                     break;
                             }
                             return(<li key={i}><small>{v.name} ({v.type}): </small>{display}</li>)
@@ -241,9 +251,18 @@ class EthData extends React.Component {
                     <TabPanel>
                         <h2>Set ABI</h2>
                         <textarea
-                            value={abi}
+                            value={JSON.stringify(abi)}
                             placeholder="[]"
-                            onChange={(event) => this.setABI(event.target.value) } /> 
+                            onChange={(event) => {
+                                var abi = [];
+                                try{
+                                    abi = JSON.parse(event.target.value);  
+                                }catch(e) {
+                                    this.props.onError(e);
+                                } finally {
+                                    this.setABI(abi);
+                                }
+                            }} /> 
                     </TabPanel>
                 </Tabs>
             </div>
