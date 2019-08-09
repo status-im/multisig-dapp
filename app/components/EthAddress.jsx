@@ -186,6 +186,22 @@ class EthAddress extends React.Component {
 		this.setState({ menuVisible: false })	
 	}
 
+	zeroAddress = () => {
+		this.controlRef.current.textContent = nullAddress;
+		this.setState(
+			{
+				value: nullAddress, 
+				address: nullAddress, 
+				validAddress: true, 
+				acceptedOutput: this.props.allowZero,
+				loaded: true, 
+				ensReverse: null, 
+				ensResolve: false,
+				menuVisible: false
+			}
+		);
+	}
+
 
 
 	onBlur(event) {
@@ -230,6 +246,7 @@ class EthAddress extends React.Component {
 			disabled,
 			className,
 			colors,
+			allowZero,
 			blocky,
 			blockySize,
 			blockyScale,
@@ -285,6 +302,7 @@ class EthAddress extends React.Component {
 						{ enableToolBar && acceptedOutput && <a onClick={this.copyAddress}><ClipIcon /> Copy address </a> }
 						{ enableToolBar && ensReverse && <a onClick={this.copyLookup}><ClipIcon /> Copy ENS name </a> }
 						{ enableToolBar && (!acceptedOutput || (address != value && ensReverse != value)) && <a onClick={this.copyValue}><ClipIcon /> Copy input value </a> }
+						{ enableToolBar && allowZero && value != nullAddress && <a onClick={this.zeroAddress}><ClipIcon /> Set to address zero </a> }
 					</nav> }			
 			</span>
 		)
