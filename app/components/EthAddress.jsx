@@ -302,7 +302,7 @@ class EthAddress extends React.Component {
 						{ enableToolBar && acceptedOutput && <a onClick={this.copyAddress}><ClipIcon /> Copy address </a> }
 						{ enableToolBar && ensReverse && <a onClick={this.copyLookup}><ClipIcon /> Copy ENS name </a> }
 						{ enableToolBar && (!acceptedOutput || (address != value && ensReverse != value)) && <a onClick={this.copyValue}><ClipIcon /> Copy input value </a> }
-						{ enableToolBar && allowZero && value != nullAddress && <a onClick={this.zeroAddress}><ClipIcon /> Set to address zero </a> }
+						{ enableToolBar && allowZero && value != nullAddress && <a onClick={this.zeroAddress}> Set to address zero </a> }
 					</nav> }			
 			</span>
 		)
