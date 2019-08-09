@@ -78,8 +78,9 @@ class EthData extends React.Component {
     }
 
     decodeValue(value) {
-        const sig = value.substr(2, 8);
-        const arg = value.substr(10);
+        value = value.replace("0x","");
+        const sig = value.substr(0, 8);
+        const arg = value.substr(8);
         return {sig, arg}
     }
 
@@ -88,7 +89,7 @@ class EthData extends React.Component {
         var methods = [];
         try {
             methods = abi.filter(method => method.type == 'function' && !method.constant).map((method) => {
-                method.value = web3.eth.abi.encodeFunctionSignature(method).substr(2);
+                method.value = web3.eth.abi.encodeFunctionSignature(method).replace("0x","");
                 method.label = method.name;  
                 return method;
             });
@@ -162,9 +163,8 @@ class EthData extends React.Component {
         switch (type) {
 
             case "bytes":
-                if(value.indexOf("0x") != 0) {
-                    value = "0x"+value;
-                }
+                value = value = value.replace("0x","");
+                
                 break;
         }
         try{
@@ -189,9 +189,9 @@ class EthData extends React.Component {
         }catch(e){
             this.props.onError(e);
         }finally{
-            const arg = encoded.substr(2);
+            const arg = encoded.replace("0x","");
             const value = sig + arg ;
-            this.props.onChange(value, {method, params} )
+            this.props.onChange("0x"+value, {method, params} )
             this.setState({arg});
         }
         
