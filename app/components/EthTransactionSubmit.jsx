@@ -11,7 +11,7 @@ class EthTransactionSubmit extends React.Component {
     }
 
     static propTypes = {
-        txObj: PropTypes.object.isRequired,
+        value: PropTypes.object.isRequired,
         onSubmission: PropTypes.func,
         onReceipt: PropTypes.func,
         onResult: PropTypes.func,
@@ -41,13 +41,12 @@ class EthTransactionSubmit extends React.Component {
 
     submitTransaction(e) {
         e.preventDefault();
-        const { txObj, account, onSubmission, onReceipt, onResult, onError } = this.props;
+        const { value, account, onSubmission, onReceipt, onResult, onError } = this.props;
+        const isTxObj = !value.estimateGas || !value.send;
         try{
-            web3.eth.sendTransaction(txObj).estimateGas({ from: account }).then((estimatedGas) => {
+            (isTxObj ? web3.eth.estimateGas(value) : value.estimateGas()).then((estimatedGas) => {
                 this.setState({ txWaiting: true });
-                web3.eth.sendTransaction(txObj).send({
-                    gasLimit: estimatedGas
-                }).once('transactionHash', (txHash) => {
+                (isTxObj ? web3.eth.sendTransaction({...value, gas: estimatedGas}) : value.send({ gasLimit: estimatedGas })).once('transactionHash', (txHash) => {
                     onSubmission(txHash);
                 }).once('receipt', (receipt) =>{
                     onReceipt(receipt);
