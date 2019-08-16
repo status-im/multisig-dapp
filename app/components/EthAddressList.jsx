@@ -20,7 +20,8 @@ class EthAddressList extends React.Component {
         disabled: PropTypes.bool,
         allowAdd: PropTypes.bool,
         allowRemove: PropTypes.bool,
-		onChange: PropTypes.func
+        onChange: PropTypes.func,
+		onLoad: PropTypes.func
 	};
 
 	static defaultProps = {
@@ -35,68 +36,65 @@ class EthAddressList extends React.Component {
         disabled: false,
         allowAdd: true,
         allowRemove: true,
-		onChange: () => { }
+        onChange: () => {},
+        onLoad: () => {}
 	};
 
     constructor(props) {
         super(props);
         this.state = { 
-            values: [] ,
             newItem: "",
             addresses: []
         };
     }
 
-    componentDidMount() {
-        if (this.props.values) {
-            this.setValues(this.props.values);
-        }
-    }
-
-	componentDidUpdate(prevProps, prevState) {
-        if (prevProps.values != this.props.values && this.props.values != this.state.values) {
-            this.setValues(this.props.values);
-        }
-        if(prevState.addresses != this.state.addresses || prevState.values != this.state.values) {
-			this.props.onChange(this.state.addresses,this.state.values);
-		}
-    }
-
-    setValues(values) {
-        const addresses = [...this.state.addresses, ...Array(values.length-this.state.addresses.length).fill(nullAddress)];
-        this.setState({values, addresses});
-    }
     
-    setAddress(address, value, i) {
-        const values = this.state.values.slice(0);
+    setAddress(address, ensReverse, i) {
+        const addresses = this.state.addresses.slice(0);
+        if(addresses[i] == address){
+            return;
+        }
+        addresses[i]=address;
+        this.setState({addresses});
+        this.props.onLoad(addresses);
+    }
+
+    setValue(value, i) {
+        const values = this.props.values.slice(0);
         const addresses = this.state.addresses.slice(0);
         values[i]=value;
-        addresses[i]=address;
-        this.setState({values,addresses});
+        addresses[i]=nullAddress;
+        this.setState({addresses});
+        this.props.onLoad(addresses);
+        this.props.onChange(values);
     }
 
-    newItem(address, value) {
-        const values = this.state.values.slice(0);
+    newItem(address) {
+        const values = this.props.values.slice(0);
         const addresses = this.state.addresses.slice(0);
-        values.push(value);
+        values.push(this.state.newItem);
         addresses.push(address);
-        this.setState({values, addresses, newItem: ''});
+        this.setState({addresses, newItem: ''});
+        this.props.onLoad(addresses);
+        this.props.onChange(values);
     }
 
     removeAddress(i) {
-        const values = this.state.values.filter((item, j) => i !== j);
+        const values = this.props.values.filter((item, j) => i !== j);
         const addresses = this.state.addresses.filter((item, j) => i !== j);
-        this.setState({values,addresses});
+        this.setState({addresses});
+        this.props.onLoad(addresses);
+        this.props.onChange(values);
     }
 
 
     render() {
-        const {values, newItem} = this.state;
-        const {control, disabled, allowZero, blocky, blockySize, blockyScale, colors, allowAdd, allowRemove} = this.props;
+        const {newItem} = this.state;
+        const {values, control, disabled, allowZero, blocky, blockySize, blockyScale, colors, allowAdd, allowRemove} = this.props;
         var list = values.map(
             (value, index, array) => {
                 return(
-                    <div className="d-flex" key={index}>
+                    <li className="d-flex" key={index}>
                         <EthAddress
                             control={control}
                             value={value}
@@ -113,17 +111,24 @@ class EthAddressList extends React.Component {
                                         text: (<><TrashIcon/> Remove</>) 
                                     }
                                 ] : [] }
-                            onChange={(address, value) => {
-                                this.setAddress(address, value, index);
-                            }} />
-                    </div>
+                            onChange={(event) => {
+                                this.setValue(event.target.value, index);
+                            }}
+                            onLoad={(address, ensReverse) => {
+                                this.setAddress(address, ensReverse, index);
+                            }}
+                            onError={(error) => {
+                                this.props.onError(error);
+                            }}
+                             />
+                    </li>
                 );
                 }
         );
         return (
-            <div className="eth-address-list">
+            <ul className="eth-address-list">
                 {list}
-                {control && !disabled && allowAdd && <div className="d-flex new-item">
+                {control && !disabled && allowAdd && <li className="d-flex new-item">
                     <EthAddress
                         control={true}
                         enableToolBar={false}
@@ -133,15 +138,15 @@ class EthAddressList extends React.Component {
                         blocky={blocky}
                         blockySize={blockySize}
                         blockyScale={blockyScale}
-                        colors={colors}  
-                        onChange={async (address, value) => {
-                            await this.setState({newItem: value});
+                        colors={colors}
+                        onChange={(event) => {this.setState({newItem: event.target.value})}}  
+                        onLoad={async (address, ensReverse) => {
                             if(address != nullAddress){
-                                this.newItem(address, value);
+                                this.newItem(address);
                             }
                         }} />
-                    </div>}
-            </div>
+                    </li>}
+            </ul>
         );
     }
 

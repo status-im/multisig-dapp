@@ -8,7 +8,6 @@ class EthValue extends React.Component {
     constructor(props) {
         super(props);
         this.state = {
-            value: '0',
             unit: 'wei',
             dot: false,
             error: null
@@ -39,13 +38,9 @@ class EthValue extends React.Component {
     }
 
     componentDidUpdate(prevProps, prevState){
-        if (prevProps.value != this.props.value && this.props.value != this.state.value) {
-            this.setValue(this.props.value);
-        }
-        
         if (prevProps.unit != this.props.unit) {
             this.setUnit(this.props.unit);
-		}
+        }
     }
     
     setValue(newValue) {
@@ -57,10 +52,16 @@ class EthValue extends React.Component {
                 value = web3.utils.toWei(newValue, unit);
             }
         } catch (e) {
-            error = e;
+            this.props.onError(e);
+        } finally {
+            this.setState({ dot });
+            if(this.props.value != value) {
+                this.props.onChange(value, error);
+            }
         }
-        this.setState({ value, dot, error});
-        this.props.onChange(value, error);
+        
+
+
     }
 
     setUnit(unit) {
@@ -69,8 +70,8 @@ class EthValue extends React.Component {
 
     render() {
         const units = ['ether', 'finney', 'szabo', 'gwei', 'wei']
-        const { value, unit, dot } = this.state;
-        const { control, disabled } = this.props;  
+        const { unit, dot } = this.state;
+        const { control, disabled, value } = this.props;  
         const renderValue = web3.utils.fromWei(value, unit).toString() + (dot ? '.' : '');
         return (
             <div className="eth-value">

@@ -70,8 +70,10 @@
   text-overflow: ellipsis;
   white-space: nowrap;
   overflow: hidden;
-  width:100%;
+  width: 100%;
   display: none;
+  background: none;
+  border: none;
 }
 
 .eth-address .err:hover .control,

@@ -2,7 +2,7 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import { HashLoader } from 'react-spinners';
 
-class EthTransactionSubmit extends React.Component {
+class EthTxSubmit extends React.Component {
     constructor(props) {
         super(props);
         this.state = {
@@ -86,4 +86,4 @@ class EthTransactionSubmit extends React.Component {
     }
 }
 
-export default EthTransactionSubmit;
+export default EthTxSubmit;

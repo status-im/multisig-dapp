@@ -20,6 +20,8 @@ class EthAddress extends React.Component {
 		control: PropTypes.bool,
 		disabled: PropTypes.bool,
 		onChange: PropTypes.func,
+		onLoad: PropTypes.func,
+		onError: PropTypes.func,
 		toolBarActions: PropTypes.arrayOf(PropTypes.object)
 	};
 
@@ -28,13 +30,15 @@ class EthAddress extends React.Component {
 		value: "",
 		defaultValue: "",
 		colors: true,
-		control: false,
+		control: true,
 		allowZero: true,
 		blocky: true,
 		blockySize: 8,
 		blockyScale: 4,
 		disabled: false,
 		onChange: () => { },
+		onLoad: () => { },
+		onError: () => { },
 		enableToolBar: true,
 		ENSReverseLookup: true,
 		toolBarActions: []
@@ -45,8 +49,8 @@ class EthAddress extends React.Component {
 		this.controlRef = React.createRef();
 		this.ref = React.createRef();
 		this.state = {
-			value: "",
-			loaded: true,
+			ensLookup: null,
+			loaded: false,
 			validAddress: false,
 			address: null,
 			acceptedOutput: false,
@@ -60,6 +64,7 @@ class EthAddress extends React.Component {
 		this.setValue(this.props.value || this.props.defaultValue);
 		document.addEventListener("mousedown", this.handleClickOutside);
 	}
+
 	componentWillUnmount() {
 		document.removeEventListener("mousedown", this.handleClickOutside);
 	}
@@ -77,169 +82,126 @@ class EthAddress extends React.Component {
         if (prevProps.value != this.props.value) {
             this.setValue(this.props.value);
 		}
-		if(prevState.value != this.state.value) {
-			this.loadAddressFromENS();	
-		}
-		if(prevState.address != this.state.address) {
-			this.lookupENSReverseName();
-		}
-		if(prevState.loaded == false && this.state.loaded == true) {
-			this.onChange();
-		}
     }
 
 
 	setValue(value){
-		if(this.state.value == value) { 
-			return;
-		}
-		value = value ? value : "";
-		if(this.props.control && this.controlRef.current.textContent != value) {
-			this.controlRef.current.textContent = value;
-		}
+		value = value.trim();
+		const validAddress = /^(0x)?[0-9a-f]{40}$/i.test(value);
+		const acceptedOutput = validAddress && (this.props.allowZero || value != nullAddress);
 		this.setState(
 			{
-				value, 
-				address: nullAddress, 
-				validAddress: false, 
-				acceptedOutput: false,
+				ensLookup: validAddress ? null : value, 
+				address: validAddress ? value : nullAddress, 
+				validAddress, 
+				acceptedOutput,
 				loaded: false, 
 				ensReverse: null, 
 				ensResolve: false 
 			}
 		);
-		/*const validAddress = this.isValid(value);
-		const address = validAddress ? value : nullAddress; 
-		const acceptedOutput = validAddress && (this.props.allowZero || address != nullAddress);*/
-	}
-
-	isValid(value) {
-		return /^(0x)?[0-9a-f]{40}$/i.test(value);
+		if(validAddress) {
+			this.lookupENSReverseName(value);
+		} else {
+			this.loadAddressFromENS(value);
+		}
 	}
 	
-	loadAddressFromENS() {
-		const { value } = this.state;
-		if(this.isValid(value)) {
-			this.setState(
-				{
-					address: value, 
-					validAddress: true, 
-					acceptedOutput: (this.props.allowZero || value != nullAddress),
-					loaded: false, 
-					ensReverse: null, 
-					ensResolve: false 
-				}
-			);
-			return;
-		}
+	loadAddressFromENS(value) {
 		EmbarkJS.Names.resolve(value, (err, address) => {
-			this.setState(err ? {
-				address: nullAddress,
-				ensResolve: false, 
-				validAddress: false, 
-				ensReverse: null,
-				loaded: true,
-				acceptedOutput: false
-			} :	{
-				address, 
-				ensResolve: true, 
-				validAddress: true,
-				ensReverse: null,
-				loaded: false,
-				acceptedOutput:	address != nullAddress
-			});
+			if(err) {
+				this.setState({
+					ensLookup: value,
+					address: nullAddress,
+					ensResolve: false, 
+					validAddress: false, 
+					ensReverse: null,
+					loaded: true,
+					acceptedOutput: false
+				});
+				this.props.onError(err);
+				this.props.onLoad(nullAddress, null);
+			} else {
+				this.setState({
+					ensLookup: value, 
+					address, 
+					ensResolve: true, 
+					validAddress: true,
+					ensReverse: null,
+					loaded: false,
+					acceptedOutput:	address != nullAddress
+				});
+				this.lookupENSReverseName(address);
+			}
 		});
 	
 	}
 
-	lookupENSReverseName() {
-		const { address, validAddress } = this.state;
-		if(this.props.ENSReverseLookup && validAddress){
-			EmbarkJS.Names.lookup(address, (err, name) => {
-				this.setState({ensReverse: name, loaded: true});
+	lookupENSReverseName(address) {
+		if(this.props.ENSReverseLookup){
+			EmbarkJS.Names.lookup(address, (err, ensReverse) => {
+				this.setState({ensReverse, loaded: true});
+				this.props.onLoad(address, ensReverse);
 			})
 		} else {
 			this.setState({ensReverse: null, loaded: true});
+			this.props.onLoad(address, null);
 		}
 	}	
 	
-	onChange() {
-		const { address, value, ensReverse } = this.state;
-		this.props.onChange(address, value, ensReverse);
-	}
 
 	onClick = () => {
 		const { menuVisible, } = this.state
 		this.setState({ menuVisible: !menuVisible });
 	}
-	
 	copyAddress = () => {
 		copy(this.state.address);
 		this.setState({ menuVisible: false })	
 	}
 	copyValue = () => {
-		copy(this.state.value);
+		copy(this.props.value);
 		this.setState({ menuVisible: false })	
 	}
 	copyLookup = () => {
 		copy(this.state.ensReverse);
 		this.setState({ menuVisible: false })	
 	}
-
 	zeroAddress = () => {
-		this.controlRef.current.textContent = nullAddress;
-		this.setState(
-			{
-				value: nullAddress, 
-				address: nullAddress, 
-				validAddress: true, 
-				acceptedOutput: this.props.allowZero,
-				loaded: true, 
-				ensReverse: null, 
-				ensResolve: false,
-				menuVisible: false
-			}
-		);
+		this.setNativeValue(this.controlRef.current, nullAddress);
+		this.setState({ menuVisible: false })	
 	}
 
-
-
-	onBlur(event) {
-		this.setValue(this.controlRef.current.textContent);
-	}
-    onKeyPress(event) {
-        if (event.charCode === 13) {
-			event.preventDefault();
-			this.setValue(this.controlRef.current.textContent);
-        }
-    }
-
-    onKeyUp(event) {
-		clearTimeout(this.keyWait);
-		if(this.controlRef.current.textContent){
-			this.keyWait = setTimeout(() => { this.setValue(this.controlRef.current.textContent)}, 1000);
+    setNativeValue(element, value) {
+		const valueSetter = Object.getOwnPropertyDescriptor(element, 'value').set;
+		const prototype = Object.getPrototypeOf(element);
+		const prototypeValueSetter = Object.getOwnPropertyDescriptor(prototype, 'value').set;
+		
+		if (valueSetter && valueSetter !== prototypeValueSetter) {
+			prototypeValueSetter.call(element, value);
+		} else {
+		  valueSetter.call(element, value);
 		}
-	}
+		element.dispatchEvent(new Event('input', { bubbles: true }));
+	  }
 
     handlePaste(event) {
-		event.stopPropagation();
-		event.preventDefault();
 		var clipboardData, pastedData;
         clipboardData = event.clipboardData || window.clipboardData;
 		pastedData = clipboardData.getData('Text');
-		this.controlRef.current.textContent = pastedData;
-		this.setValue(pastedData);
+		if(/^(0x)?[0-9a-f]{40}$/i.test(pastedData)){
+			event.stopPropagation();
+			event.preventDefault();
+			this.setNativeValue(this.controlRef.current, pastedData);
+		}
     }
 
     focus() {
         this.controlRef.current.focus();
 	}
 	
-
 	getBackgroundGradient(address) {
 		return `linear-gradient(90deg, #${address.substr(2, 6)} 0% 14%, #${address.substr(8, 6)} 14% 28%, #${address.substr(14, 6)} 28% 42%, #${address.substr(19, 6)} 43% 57%, #${address.substr(24, 6)} 58% 72%, #${address.substr(30, 6)} 72% 86%, #${address.substr(36, 6)} 86% 100%)`
 	}
-
 	
 	render() {
 		const {
@@ -252,9 +214,10 @@ class EthAddress extends React.Component {
 			blockyScale,
 			control,
 			enableToolBar,
-			toolBarActions
+			toolBarActions,
+			value
 		} = this.props;
-		const { menuVisible,  ensReverse, value, validAddress, loaded, acceptedOutput, ensResolve} = this.state;
+		const { menuVisible,  ensReverse, validAddress, loaded, acceptedOutput, ensResolve} = this.state;
 		const address = validAddress ? this.state.address : nullAddress; 
 		const colorStyle = colors ? {
 			backgroundImage: this.getBackgroundGradient(address)
@@ -275,15 +238,14 @@ class EthAddress extends React.Component {
 						</span>
 					</span>
 					{ control && 
-					<span 
+					<input 
 						className="control hex"
 						ref={this.controlRef} 
+						value={value}
 						placeholder={nullAddress}
-						onKeyPress={(event) => this.onKeyPress(event)} 
-						onKeyUp={(event) => this.onKeyUp(event)}
+						onChange={(event) => this.props.onChange(event)}
 						onPaste={(event) => this.handlePaste(event)}
-						onBlur={(event) => this.onBlur(event)}
-						contentEditable={!disabled} 
+						disabled={disabled} 
 						/>
 					}
 					{((enableToolBar) || (toolBarActions && toolBarActions.length > 0)) && (loaded ? 
@@ -307,9 +269,6 @@ class EthAddress extends React.Component {
 			</span>
 		)
 	}
-
-	componentWillUnmount() {
-		clearTimeout(this.timeout);
-	}}
+}
 
 export default EthAddress;
