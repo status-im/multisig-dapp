@@ -1,3 +1,4 @@
+import EmbarkJS from 'Embark/EmbarkJS';
 import React from 'react';
 import PropTypes from 'prop-types';
 import Blockies from 'react-blockies';

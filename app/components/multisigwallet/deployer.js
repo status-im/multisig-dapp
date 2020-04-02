@@ -1,6 +1,6 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import MultiSigWallet from 'Embark/contracts/MultiSigWallet';
+import MultiSigWallet from '../../../embarkArtifacts/contracts/MultiSigWallet';
 import TransactionSubmitButton from '../TransactionSubmitButton';
 import { Alert, Form,  Card, ListGroup,  Badge, Col, Row, Button } from 'react-bootstrap';
 import Slider from 'rc-slider';
