@@ -10,14 +10,5 @@ module.exports = {
     strategy: "explicit",
     deploy: {  
     }
-  },
-  travis: {
-    deployment: {
-      accounts: [
-        {
-          mnemonic: process.env.DAPP_MNEMONIC 
-        }
-      ]
-    }
   }
 }
