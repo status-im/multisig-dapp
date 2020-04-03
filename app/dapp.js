@@ -1,6 +1,6 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
-import EmbarkJS from 'Embark/EmbarkJS';
+import EmbarkJS from '../embarkArtifacts/embarkjs';
 import MultiSigWallet from '../embarkArtifacts/contracts/MultiSigWallet';
 import ContractLoader from './components/multisigwallet/loader';
 import MSWDeployer from './components/multisigwallet/deployer';
