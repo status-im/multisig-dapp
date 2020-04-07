@@ -1,33 +1,14 @@
 module.exports = {
   default: {
     enabled: true,
-    rpcHost: "localhost", 
-    rpcPort: 8745, 
-    rpcCorsDomain: {
-      auto: true,
-      additionalCors: []
-    },
-    wsRPC: true,
-    wsOrigins: { 
-      auto: true,
-      additionalCors: []
-    },
-    wsHost: "localhost",
-    wsPort: 8746 
+    client: "geth"
   },
 
   development: {
-    ethereumClientName: "geth", 
-    networkType: "custom", 
-    networkId: 1337,
-    isDev: true,
-    datadir: ".embark/development/datadir",
-    mineWhenNeeded: true, 
-    nodiscover: true, 
-    maxpeers: 0, 
-    proxy: true, 
-    targetGasLimit: 8000000, 
-    simulatorBlocktime: 0
+    client: 'ganache-cli',
+    clientConfig: {
+      miningMode: 'dev'
+    }
   },
 
   testnet: {
@@ -36,7 +17,7 @@ module.exports = {
     accounts: [
       {
         nodeAccounts: true,
-        password: "config/testnet/.password"
+        password: ".password"
       }
     ]
   },
@@ -47,11 +28,11 @@ module.exports = {
     accounts: [
       {
         nodeAccounts: true,
-        password: "config/livenet/.password"
+        password: ".password"
       }
     ]
   },
-  
+
   rinkeby: {
     enabled: true,
     networkType: "rinkeby",
@@ -61,7 +42,7 @@ module.exports = {
     accounts: [
       {
         nodeAccounts: true,
-        password: "config/rinkeby/.password"
+        password: ".password"
       }
     ],
   },

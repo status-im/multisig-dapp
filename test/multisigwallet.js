@@ -1,34 +1,34 @@
 const utils = require('../utils/testUtils');
-const MultiSigWallet = require('Embark/contracts/MultiSigWallet');
+const MultiSigWallet = artifacts.require('MultiSigWallet')
 const requiredConfirmations = 2;
-
+var accounts;
 config({
-  contracts: {
-    MultiSigWallet: {
-        args: [[
-            '$accounts[0]', 
-            '$accounts[1]', 
-            '$accounts[2]'
-        ], requiredConfirmations]
+    contracts: {
+        deploy: {
+            MultiSigWallet: {
+                args: [[
+                    '$accounts[0]', 
+                    '$accounts[1]', 
+                    '$accounts[2]'
+                ], requiredConfirmations]
+            }
+        }
     }
-  }
+}, (_err, web3_accounts) => {
+    accounts = web3_accounts;
 });
 
 contract("MultiSigWallet", function() {
     this.timeout(0);
-
-    const deposit = 1000
+    const deposit = '1000'
     const excludePending = false
     const includePending = true
     const excludeExecuted = false
     const includeExecuted = true
-    const newRequired = 1
-    var accounts;
+    const newRequired = '1'
+
     var txId;
     var txId2;
-    before(async () => {
-        accounts = await web3.eth.getAccounts();
-    });
 
     it('Send money to wallet contract', async () => {
         await new Promise((resolve, reject) => web3.eth.sendTransaction({to: MultiSigWallet.address, value: deposit, from: accounts[0]}, e => (e ? reject(e) : resolve())))
