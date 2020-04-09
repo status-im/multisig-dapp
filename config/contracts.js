@@ -10,5 +10,10 @@ module.exports = {
     strategy: "explicit",
     deploy: {  
     }
+  },
+  livenet: {
+    dappConnection: [
+      "$WEB3"
+    ]
   }
 }
