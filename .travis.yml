@@ -23,6 +23,9 @@ script:
   - npx embark --version
   - npm test
 before_deploy:  
+  - | 
+    ipfs daemon&
+    IPFS_PID=$!
   - npm run travis
 deploy:
   provider: pages
@@ -33,5 +36,6 @@ deploy:
   on:
     branch: master
 after_deploy: 
+  - kill $IPFS_PID
   - rm .password
   - rm -rf .embark/travis/datadir/keystore
