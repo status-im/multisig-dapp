@@ -16,7 +16,11 @@ before_install:
   - sudo apt-get update -qq
   - sudo apt-get install geth -y -qq
   - < /dev/urandom tr -dc _A-Z-a-z-0-9 | head -c${1:-32} > .password
+cache: npm
 script:
+  - geth version
+  - ipfs --version
+  - npx embark --version
   - npm test
 before_deploy:  
   - npm run travis
@@ -28,6 +32,6 @@ deploy:
   keep_history: true
   on:
     branch: master
-after_deploy:
+after_deploy: 
   - rm .password
   - rm -rf .embark/travis/datadir/keystore
