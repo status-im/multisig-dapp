@@ -8,8 +8,7 @@ module.exports = {
     ],
     gas: "auto",
     strategy: "explicit",
-    deploy: {  
-    }
+    dappAutoEnable: true
   },
   livenet: {
     dappConnection: [
