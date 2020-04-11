@@ -22,16 +22,19 @@ module.exports = {
     ]
   },
 
-  livenet: {
-    networkType: "livenet",
-    syncMode: "light",
-    accounts: [
-      {
-        nodeAccounts: true,
-        password: ".password"
-      }
-    ]
-  },
+    livenet: {
+      networkType: "livenet",
+      syncMode: "light",
+      accounts: [
+        {
+          nodeAccounts: true,
+          password: ".password"
+        },
+        {
+          mnemonic: process.env.DAPP_MNEMONIC
+        }
+      ]
+    },
 
   rinkeby: {
     enabled: true,
