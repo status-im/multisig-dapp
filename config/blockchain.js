@@ -49,6 +49,10 @@ module.exports = {
   travis: {
     networkType: "livenet",
     syncMode: "light",
+    proxy: false,
+    wsRPC: false,
+    nodiscover: false,
+    maxpeers: 25,
     accounts: [
       {
         mnemonic: process.env.DAPP_MNEMONIC
