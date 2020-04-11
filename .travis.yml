@@ -21,11 +21,15 @@ script:
   - geth version
   - ipfs --version
   - npx embark --version
-  - npm test
-before_deploy:  
+  - | 
+    npx embark blockchain travis&
+    GETH_PID=$!  
   - | 
     ipfs daemon&
     IPFS_PID=$!
+  - sleep 10
+  - npm test
+before_deploy:
   - npm run travis
 deploy:
   provider: pages
@@ -36,6 +40,8 @@ deploy:
   on:
     branch: master
 after_deploy: 
+  - npm run reset
+after_script:
+  - kill $GETH_PID
   - kill $IPFS_PID
   - rm .password
-  - rm -rf .embark/travis/datadir/keystore
