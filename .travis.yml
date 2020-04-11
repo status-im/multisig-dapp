@@ -27,9 +27,9 @@ script:
   - | 
     ipfs daemon > storage.log &
     IPFS_PID=$!
-  - sleep 60
   - npm test
 before_deploy:
+  - while [ `geth attach /tmp/embark-*/geth.ipc --exec eth.blockNumber` -eq 0 ] ; do echo "Waiting to light sync..."; sleep 10; done
   - npm run travis
 deploy:
   provider: pages
