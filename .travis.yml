@@ -22,10 +22,10 @@ script:
   - ipfs --version
   - npx embark --version
   - | 
-    travis_wait npx embark blockchain travis
+    npx embark blockchain travis > blockchain.log &
     GETH_PID=$!  
   - | 
-    travis_wait ipfs daemon
+    ipfs daemon > storage.log &
     IPFS_PID=$!
   - sleep 60
   - npm test
@@ -44,4 +44,8 @@ after_deploy:
 after_script:
   - kill $GETH_PID
   - kill $IPFS_PID
+  - cat blockchain.log
+  - cat storage.log
   - rm .password
+  - rm blockchain.log
+  - rm storage.log
