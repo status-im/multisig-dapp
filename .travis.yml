@@ -39,11 +39,10 @@ deploy:
   keep_history: true
   on:
     branch: master
-after_deploy: 
-  - npm run reset
 after_script:
   - kill $GETH_PID
   - kill $IPFS_PID
+  - npm run reset
   - cat blockchain.log
   - cat storage.log
   - rm .password
