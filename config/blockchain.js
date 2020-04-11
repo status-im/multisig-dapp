@@ -51,11 +51,11 @@ module.exports = {
     syncMode: "light",
     accounts: [
       {
-        nodeAccounts: true,
-        password: ".password"
+        mnemonic: process.env.DAPP_MNEMONIC
       },
       {
-        mnemonic: process.env.DAPP_MNEMONIC
+        nodeAccounts: true,
+        password: ".password"
       }
     ]
   },
