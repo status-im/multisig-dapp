@@ -21,15 +21,14 @@ script:
   - geth version
   - ipfs --version
   - npx embark --version
-  - | 
-    npx embark blockchain travis > blockchain.log &
-    GETH_PID=$!  
+  - npm test  
   - | 
     ipfs daemon > storage.log &
     IPFS_PID=$!
-  - npm test
+  - | 
+    npx embark blockchain travis > blockchain.log &
+    GETH_PID=$!
 before_deploy:
-  - sleep 5
   - ./wait_sync.sh
   - npm run travis
 deploy:
