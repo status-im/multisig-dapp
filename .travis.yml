@@ -22,12 +22,12 @@ script:
   - ipfs --version
   - npx embark --version
   - | 
-    npx embark blockchain travis&
+    travis_wait npx embark blockchain travis
     GETH_PID=$!  
   - | 
-    ipfs daemon&
+    travis_wait ipfs daemon
     IPFS_PID=$!
-  - sleep 10
+  - sleep 60
   - npm test
 before_deploy:
   - npm run travis
