@@ -605,5 +605,5 @@
   "originalFilename": "contracts/multisig/MultiSigWallet.sol",
   "path": "/home/travis/build/status-im/multisig-dapp/contracts/multisig/MultiSigWallet.sol",
   "type": "file",
-  "deploymentAccount": "0x96207A13013854BCC00597aacb50abbCA813bD9b"
+  "deploymentAccount": "0x811ECF3fF1C75408Ba4719F7915293fcA1C55BDB"
 }
