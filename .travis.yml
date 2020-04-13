@@ -25,9 +25,6 @@ script:
   - | 
     ipfs daemon > storage.log &
     IPFS_PID=$!
-  - | 
-    npx embark blockchain livenet > blockchain.log &
-    GETH_PID=$!
 before_deploy:
   - ./wait_sync.sh
   - npm run travis
@@ -40,11 +37,8 @@ deploy:
   on:
     branch: master
 after_script:
-  - kill $GETH_PID
   - kill $IPFS_PID
   - npm run reset
-  - cat blockchain.log
   - cat storage.log
   - rm .password
-  - rm blockchain.log
   - rm storage.log
