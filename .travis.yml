@@ -26,7 +26,6 @@ script:
     ipfs daemon > storage.log &
     IPFS_PID=$!
 before_deploy:
-  - ./wait_sync.sh
   - npm run travis
 deploy:
   provider: pages
