@@ -13,6 +13,7 @@ config/livenet/password
 config/production/password
 dist
 embarkArtifacts
+embark_demo
 
 # crytic
 crytic-export/
@@ -51,3 +52,4 @@ package-lock.json
 .vs/
 bin/
 .trash/
+*.log

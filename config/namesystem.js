@@ -5,7 +5,5 @@ module.exports = {
     provider: "ens"
   },
   livenet: {
-  },
-  travis: {
-  },
+  }
 };

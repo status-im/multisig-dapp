@@ -23,28 +23,6 @@ module.exports = {
   },
 
   livenet: {
-    networkType: "livenet",
-    syncMode: "light",
-    accounts: [
-      {
-        nodeAccounts: true,
-        password: ".password"
-      }
-    ]
-  },
-
-  rinkeby: {
-    networkType: "rinkeby",
-    syncMode: "light",
-    accounts: [
-      {
-        nodeAccounts: true,
-        password: ".password"
-      }
-    ],
-  },
-
-  travis: {
     endpoint: "ws://localhost:8546",
     networkType: "livenet",
     syncMode: "light",
@@ -61,4 +39,15 @@ module.exports = {
       }
     ]
   },
+
+  rinkeby: {
+    networkType: "rinkeby",
+    syncMode: "light",
+    accounts: [
+      {
+        nodeAccounts: true,
+        password: ".password"
+      }
+    ],
+  }
 };
