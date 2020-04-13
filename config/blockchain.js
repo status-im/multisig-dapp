@@ -34,11 +34,8 @@ module.exports = {
   },
 
   rinkeby: {
-    enabled: true,
     networkType: "rinkeby",
     syncMode: "light",
-    rpcHost: "localhost",
-    rpcPort: 8745,
     accounts: [
       {
         nodeAccounts: true,
@@ -46,11 +43,12 @@ module.exports = {
       }
     ],
   },
+
   travis: {
+    endpoint: "ws://localhost:8546",
     networkType: "livenet",
     syncMode: "light",
     proxy: false,
-    wsRPC: false,
     nodiscover: false,
     maxpeers: 25,
     accounts: [
