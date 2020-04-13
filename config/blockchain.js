@@ -26,7 +26,6 @@ module.exports = {
     endpoint: "ws://localhost:8546",
     networkType: "livenet",
     syncMode: "light",
-    proxy: false,
     nodiscover: false,
     maxpeers: 25,
     accounts: [
