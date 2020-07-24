@@ -17,6 +17,9 @@ before_install:
   - sudo apt-get install geth -y -qq
   - < /dev/urandom tr -dc _A-Z-a-z-0-9 | head -c${1:-32} > .password
 cache: npm
+  directories:
+    - node_modules
+    - .embark/livenet/datadir
 script:
   - geth version
   - ipfs --version
