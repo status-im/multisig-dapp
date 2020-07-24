@@ -23,9 +23,6 @@ script:
   - npx embark --version
   - npm test  
   - | 
-    ipfs daemon > storage.log &
-    IPFS_PID=$!
-  - | 
     npx embark blockchain livenet > blockchain.log &
     GETH_PID=$!
 before_deploy:
