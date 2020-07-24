@@ -19,7 +19,7 @@ before_install:
 cache:
   directories:
     - node_modules
-    - .embark/livenet/datadir
+    - .embark/livenet/datadir/geth
 script:
   - geth version
   - ipfs --version
