@@ -2,6 +2,7 @@
 
 SYNCED=0;
 echo "Waiting for peers..."; 
+echo `geth attach /tmp/embark-*/geth.ipc --exec "admin.nodeInfo.enode"
 while [ $SYNCED -eq 0 ] ; 
 do 
     tail -n 3 blockchain.log; 
