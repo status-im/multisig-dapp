@@ -11,6 +11,7 @@
     "solc": "0.5.11"
   },
   "plugins": {
+    "embark-basic-pipeline": {},
     "embark-profiler": {},
     "embark-geth": {},
     "embark-ipfs": {}

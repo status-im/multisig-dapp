@@ -2,6 +2,7 @@ module.exports = {
   default: {
     enabled: true,
     client: "geth",
+    port: 30303,
     syncMode: "light",
     nodiscover: false,
     maxpeers: 25
