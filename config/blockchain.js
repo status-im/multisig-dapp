@@ -1,7 +1,10 @@
 module.exports = {
   default: {
     enabled: true,
-    client: "geth"
+    client: "geth",
+    syncMode: "light",
+    nodiscover: false,
+    maxpeers: 25
   },
 
   development: {
@@ -23,15 +26,8 @@ module.exports = {
   },
 
   livenet: {
-    endpoint: "ws://localhost:8546",
     networkType: "livenet",
-    syncMode: "light",
-    nodiscover: false,
-    maxpeers: 25,
     accounts: [
-      {
-        mnemonic: process.env.DAPP_MNEMONIC
-      },
       {
         nodeAccounts: true,
         password: ".password"
@@ -41,7 +37,6 @@ module.exports = {
 
   rinkeby: {
     networkType: "rinkeby",
-    syncMode: "light",
     accounts: [
       {
         nodeAccounts: true,
