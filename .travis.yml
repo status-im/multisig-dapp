@@ -19,7 +19,6 @@ before_install:
 cache:
   directories:
     - node_modules
-    - .embark/livenet/datadir/geth
 script:
   - geth version
   - ipfs --version
@@ -43,7 +42,5 @@ after_script:
   - kill $GETH_PID
   - kill $IPFS_PID
   - cat blockchain.log
-  - cat storage.log
   - rm .password
   - rm blockchain.log
-  - rm storage.log
