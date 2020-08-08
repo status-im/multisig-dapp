@@ -1,5 +1,6 @@
 module.exports = {
   default: {
+    library: 'embarkjs',
     dappConnection: [
       "$EMBARK",
       "$WEB3",
