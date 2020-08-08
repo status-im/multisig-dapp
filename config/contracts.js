@@ -10,10 +10,5 @@ module.exports = {
     gas: "auto",
     strategy: "explicit",
     dappAutoEnable: true
-  },
-  livenet: {
-    dappConnection: [
-      "$WEB3"
-    ]
   }
 }
