@@ -34,3 +34,5 @@ Install `Node 10`
 ```
  npm run deploy
 ```
+
+This project is tested with BrowserStack
